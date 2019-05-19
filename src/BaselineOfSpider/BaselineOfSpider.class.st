@@ -19,18 +19,17 @@ BaselineOfSpider >> baselineOf: spec [
 					repository: 'github://SeasideSt/Seaside:v3.3.3/repository';
 					loads: #( 'Core' 'JSON' 'Javascript' 'JQuery' 'Zinc' ) ].
 
-			spec package: 'Spider-Compatibility' with: [ spec requires: #('P3') ].
-			spec package: 'Spider-Model' with: [ spec requires: #('Spider-Compatibility') ].
-			spec package: 'Spider-Model-Tests' with: [ spec requires: #('Spider-Model') ].
-			spec package: 'Spider-MCModel' with: [ spec requires: #('Spider-Model') ].
-			spec package: 'Spider-MCModel-Tests' with: [ spec requires: #('Spider-MCModel') ].
-			spec package: 'Spider-GitModel' with: [ spec requires: #('Spider-Model') ].
-			spec package: 'Spider-GitModel-Tests' with: [ spec requires: #('Spider-GitModel') ].
+			spec package: 'Spider-Model-Core'.
+			spec package: 'Spider-Model-Core-Tests' with: [ spec requires: #('Spider-Model-Core') ].
+			spec package: 'Spider-Model-MC' with: [ spec requires: #('Spider-Model-Core') ].
+			spec package: 'Spider-Model-MC-Tests' with: [ spec requires: #( 'Spider-Model-Core-Tests' 'Spider-Model-Core') ].
+			spec package: 'Spider-Model-Git' with: [ spec requires: #('Spider-Model-MC') ].
+			spec package: 'Spider-Model-Git-Tests' with: [ spec requires: #('Spider-Model-MC-Tests' 'Spider-Model-Git') ].
 
-			spec package: 'Spider-WebAPI' with: [ spec requires: #( 'Spider-Model' 'Seaside3') ].
-			spec package: 'Spider-WebUI' with: [ spec requires: #( 'Spider-Model' 'Seaside3') ].
+			spec package: 'Spider-WebAPI' with: [ spec requires: #( 'Spider-Model-Core' 'Seaside3') ].
+			spec package: 'Spider-WebUI' with: [ spec requires: #( 'Spider-Model-Core' 'Seaside3') ].
 			
 			spec group: 'default' with: #('core' 'tests').
-			spec group: 'core' with: #('Spider-Model' 'Spider-MCModel' 'Spider-GitModel' ).
-			spec group: 'tests' with: #('Spider-Model-Tests' 'Spider-MCModel-Tests' 'Spider-GitModel-Tests' ) ]
+			spec group: 'core' with: #('Spider-Model-Core' 'Spider-Model-MC' 'Spider-Model-Git' ).
+			spec group: 'tests' with: #('Spider-Model-Core-Tests' 'Spider-Model-MC-Tests' 'Spider-Model-Git-Tests' ) ]
 ]
