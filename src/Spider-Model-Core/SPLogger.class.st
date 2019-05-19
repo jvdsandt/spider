@@ -45,7 +45,7 @@ SPLogger class >> defaultClear [
 { #category : #accessing }
 SPLogger class >> initialize [
 
-	GRPlatform current addToShutDownList: self
+	SessionManager default registerToolClassNamed: self name
 ]
 
 { #category : #accessing }
@@ -56,11 +56,11 @@ SPLogger class >> shutDown [
 
 { #category : #accessing }
 SPLogger class >> unload [
-	GRPlatform current
-		removeFromShutDownList: self
+
+	SessionManager default unregisterClassNamed: self name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #logging }
 SPLogger >> logInfo: aSource message: anObject [
 
 	| str |
