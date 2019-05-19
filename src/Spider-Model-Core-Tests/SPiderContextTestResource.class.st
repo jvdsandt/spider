@@ -23,12 +23,6 @@ SPiderContextTestResource class >> bePostgres [
 	ContextCreateMethod := #createPostgresContext
 ]
 
-{ #category : #'as yet unclassified' }
-SPiderContextTestResource class >> beSQLite [
-
-	ContextCreateMethod := #createSQLiteContext
-]
-
 { #category : #accessing }
 SPiderContextTestResource class >> postgresTestDatabaseUrl [
 
@@ -80,18 +74,6 @@ SPiderContextTestResource >> contextCreateMethod [
 SPiderContextTestResource >> createImageContext [
 
 	^ SPiderImageContext new
-]
-
-{ #category : #initialization }
-SPiderContextTestResource >> createPostgresContext [
-
-	^ SPiderPostgreSQLContext openOnUrl: self class postgresTestDatabaseUrl
-]
-
-{ #category : #initialization }
-SPiderContextTestResource >> createSQLiteContext [
-
-	^ SPiderSQLiteContext openInMemory
 ]
 
 { #category : #testing }

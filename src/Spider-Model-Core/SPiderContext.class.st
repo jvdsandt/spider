@@ -40,26 +40,10 @@ SPiderContext >> createClassRepo [
 			yourself
 ]
 
-{ #category : #running }
-SPiderContext >> createGitRepo [ 
-
-	^ SPGitImageRepository new
-			setContext: self;
-			yourself
-]
-
-{ #category : #'initialize-release' }
+{ #category : #actions }
 SPiderContext >> createGlorpSession [
 
 	^ nil
-]
-
-{ #category : #running }
-SPiderContext >> createMCPackageRepo [ 
-
-	^ SPMonticelloPackageImageRepository new
-			setContext: self;
-			yourself
 ]
 
 { #category : #running }

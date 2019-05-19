@@ -4,6 +4,12 @@ Class {
 	#category : #'Spider-Model-RDB-Repos'
 }
 
+{ #category : #accessing }
+SPSessionRDBRepository >> glorpSession [
+
+	^ context glorpSession
+]
+
 { #category : #'accessing - queries' }
 SPSessionRDBRepository >> insertSessionQuery [
 
@@ -14,6 +20,19 @@ SPSessionRDBRepository >> insertSessionQuery [
 SPSessionRDBRepository >> insertTransactionQuery [
 
 	self subclassResponsibility
+]
+
+{ #category : #queries }
+SPSessionRDBRepository >> latestTransactionsBefore: aDateAndTime max: anInteger [ 
+
+	| q |
+	
+	q := (Query read: SPGlorpTransaction where: [ :e | e startedAt < aDateAndTime ])
+		orderBy: [ :e | e startedAt descending ];
+		limit: anInteger;
+		yourself.
+
+	^ self glorpSession execute: q
 ]
 
 { #category : #actions }
