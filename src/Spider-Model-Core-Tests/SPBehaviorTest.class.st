@@ -28,11 +28,11 @@ SPBehaviorTest >> testClassWithClassVar [
 
 	self assert: spiderClass hashSignature equals: 'Hello
 Object
-special
-No comment
+40 special
 
 61 MyVar
 
+No comment
 ' withUnixLineEndings
 ]
 
@@ -52,11 +52,11 @@ SPBehaviorTest >> testClassWithPoolDictionary [
 
 	self assert: spiderClass hashSignature equals: 'Hello
 Object
-normal
-No comment
+40 normal
 
 63 MyPool
 
+No comment
 ' withUnixLineEndings
 ]
 
@@ -72,7 +72,7 @@ SPBehaviorTest >> testClassWithsVars [
 		methodRefs: #()
 		comment: 'Nothing special.'.
 		
-	self assert: spiderClass classHash equals: #[55 101 60 225 72 137 39 236 37 250 208 123 56 44 34 115 67 210 129 29]
+	self assert: spiderClass classHash equals: #[103 219 133 183 253 57 181 208 51 137 249 93 3 125 48 101 187 15 141 121]
 ]
 
 { #category : #tests }
@@ -98,11 +98,11 @@ SPBehaviorTest >> testSimpleClass [
 
 	self assert: spiderClass hashSignature equals: 'Hello
 Object
-normal
-No comment
+40 normal
 
 
 50 4c3fd161c5550db697d4421ccd63c937ae3bcb47 accessing
+No comment
 ' withUnixLineEndings
 ]
 
@@ -122,7 +122,7 @@ SPBehaviorTest >> testSimpleClassExtension [
 		
 	self assert: spiderClass hashSignature equals: 'Hello
 
-
+41 
 
 
 50 4c3fd161c5550db697d4421ccd63c937ae3bcb47 accessing
@@ -151,10 +151,10 @@ SPBehaviorTest >> testSimpleTrait [
 
 	self assert: spiderClass hashSignature equals: 'Hello
 
-
-No comment
+42 
 
 
 50 4c3fd161c5550db697d4421ccd63c937ae3bcb47 accessing
+No comment
 ' withUnixLineEndings
 ]
