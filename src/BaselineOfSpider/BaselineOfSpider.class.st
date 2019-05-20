@@ -25,8 +25,10 @@ BaselineOfSpider >> baselineOf: spec [
 			spec package: 'Spider-Model-MC-Tests' with: [ spec requires: #( 'Spider-Model-Core-Tests' 'Spider-Model-Core') ].
 			spec package: 'Spider-Model-Git' with: [ spec requires: #('Spider-Model-MC') ].
 			spec package: 'Spider-Model-Git-Tests' with: [ spec requires: #('Spider-Model-MC-Tests' 'Spider-Model-Git') ].
+			spec package: 'Spider-Model-RDB' with: [ spec requires: #( 'Spider-Model-Git' 'P3' ) ].
+			spec package: 'Spider-Model-RDB-Tests' with: [ spec requires: #( 'Spider-Model-Git-Tests' 'Spider-Model-RDB' ) ].
 
-			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-Git' 'P3' 'Seaside3') ].
+			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3') ].
 			
 			spec group: 'default' with: #('core' 'tests').
 			spec group: 'core' with: #('Spider-Model-Core' 'Spider-Model-MC' 'Spider-Model-Git' ).
