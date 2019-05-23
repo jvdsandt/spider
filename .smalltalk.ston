@@ -1,0 +1,11 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'Spider',
+      #platforms : [ #pharo ]
+    }
+  ]
+  #testing : {
+     #categories : [ 'Spider-Model-Core-Tests' ]
+  }
+}
