@@ -1,6 +1,6 @@
 Class {
 	#name : #SPGitCommit,
-	#superclass : #Object,
+	#superclass : #SPGlorpNode,
 	#instVars : [
 		'sha',
 		'author',

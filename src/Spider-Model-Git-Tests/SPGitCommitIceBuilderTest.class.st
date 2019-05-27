@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGitCommitIceBuilderP3Test,
+	#name : #SPGitCommitIceBuilderTest,
 	#superclass : #SPiderTestCase,
 	#instVars : [
 		'iceRepo'
@@ -11,25 +11,25 @@ Class {
 }
 
 { #category : #accessing }
-SPGitCommitIceBuilderP3Test class >> baseDirectory [
+SPGitCommitIceBuilderTest class >> baseDirectory [
 
 	^ BaseDirectory ifNil: [ '' ]
 ]
 
 { #category : #accessing }
-SPGitCommitIceBuilderP3Test class >> baseDirectory: aString [
+SPGitCommitIceBuilderTest class >> baseDirectory: aString [
 
 	BaseDirectory := aString
 ]
 
 { #category : #accessing }
-SPGitCommitIceBuilderP3Test >> createIceRepo [
+SPGitCommitIceBuilderTest >> createIceRepo [
 
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
-SPGitCommitIceBuilderP3Test >> iceRepo [
+SPGitCommitIceBuilderTest >> iceRepo [
 
 	^ iceRepo ifNil: [ iceRepo := self createIceRepo ]
 ]

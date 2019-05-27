@@ -1,6 +1,6 @@
 Class {
 	#name : #SPGitImportTest,
-	#superclass : #SPGitCommitIceBuilderP3Test,
+	#superclass : #SPGitCommitIceBuilderTest,
 	#category : #'Spider-Model-Git-Tests'
 }
 

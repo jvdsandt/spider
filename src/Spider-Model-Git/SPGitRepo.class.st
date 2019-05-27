@@ -1,6 +1,6 @@
 Class {
 	#name : #SPGitRepo,
-	#superclass : #Object,
+	#superclass : #SPGlorpNode,
 	#instVars : [
 		'url',
 		'branches'
