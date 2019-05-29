@@ -109,12 +109,6 @@ SPiderContext >> doTransaction: aMessage with: aBlock [
 ]
 
 { #category : #acessing }
-SPiderContext >> gitRepo [
-
-	^ repos at: #gitRepo ifAbsentPut: [ self createGitRepo ]
-]
-
-{ #category : #acessing }
 SPiderContext >> glorpSession [
 
 	^ glorpSession ifNil: [ glorpSession := self createGlorpSession ]
@@ -133,12 +127,6 @@ SPiderContext >> initialize [
 SPiderContext >> logError: anException [
 
 	Transcript cr; show: 'ERROR: ', anException printString
-]
-
-{ #category : #acessing }
-SPiderContext >> mcPackageRepo [
-
-	^ repos at: #mcPackageRepo ifAbsentPut: [ self createMCPackageRepo ]
 ]
 
 { #category : #acessing }

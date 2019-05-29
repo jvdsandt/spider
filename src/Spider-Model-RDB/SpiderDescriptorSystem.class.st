@@ -5,6 +5,45 @@ Class {
 }
 
 { #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPGitCommit: aClassModel [
+
+	aClassModel newAttributeNamed: #id type: Integer.
+	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
+	aClassModel newAttributeNamed: #sha type: ByteArray.
+	aClassModel newAttributeNamed: #authorSignature type: SPGitSignature.
+	aClassModel newAttributeNamed: #message type: String.
+	aClassModel newAttributeNamed: #parents collectionOf: SPGitCommit.
+	aClassModel newAttributeNamed: #packages collectionOf: SPGlorpPackage.
+	aClassModel newAttributeNamed: #sourceDire type: String.
+	aClassModel newAttributeNamed: #format type: Symbol.
+	
+
+
+
+
+
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPGitRepo: aClassModel [
+
+	aClassModel newAttributeNamed: #id type: Integer.
+	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
+	aClassModel newAttributeNamed: #url type: String.
+
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPGitSignature: aClassModel [
+
+	aClassModel newAttributeNamed: #name type: String.
+	aClassModel newAttributeNamed: #email type: String.
+	aClassModel newAttributeNamed: #datetime type: DateAndTime.
+	aClassModel newAttributeNamed: #tzOffset type: Integer.
+
+]
+
+{ #category : #'class models' }
 SpiderDescriptorSystem >> classModelForSPGlorpClass: aClassModel [
 
 	aClassModel newAttributeNamed: #id type: Integer.
@@ -168,6 +207,85 @@ SpiderDescriptorSystem >> classModelForSPGlorpVariable: aClassModel [
 	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
 	aClassModel newAttributeNamed: #variable type: Symbol.	
 
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'GIT_COMMITS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #id to: (table fieldNamed: 'ID').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #sha to: (table fieldNamed: 'SHA').
+	(aDescriptor newMapping: EmbeddedValueOneToOneMapping)
+		attributeName: #authorSignature.
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #transaction;
+		join: (Join
+			from: (table fieldNamed: 'TXID')
+			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: ManyToManyMapping)
+		attributeName: #packages;
+		referenceClass: SPGlorpPackage;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'GIT_COMMIT_PACK_REFS') fieldNamed: 'PACKAGE_ID')).
+
+	(aDescriptor newMapping: ManyToManyMapping)
+		attributeName: #parents;
+		referenceClass: SPGitCommit;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'GIT_COMMIT_PARENT_REFS') fieldNamed: 'PARENT_ID')).
+
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPGitRepo: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'GIT_REPOS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #id to: (table fieldNamed: 'ID').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #url to: (table fieldNamed: 'URL').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #transaction;
+		join: (Join
+			from: (table fieldNamed: 'TXID')
+			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
+
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPGitSignature: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'GIT_COMMITS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #name to: (table fieldNamed: 'AUTHOR_NAME').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #email to: (table fieldNamed: 'AUTHOR_EMAIL').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #datetime to: (table fieldNamed: 'AUTHOR_DATETIME').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #tzOffset to: (table fieldNamed: 'AUTHOR_TZOFFSET').
 ]
 
 { #category : #descriptors }
@@ -679,6 +797,62 @@ SpiderDescriptorSystem >> tableForCLASS_VAR_REFS: aTable [
 	(aTable createFieldNamed: 'TYPE' type: platform integer) bePrimaryKey.
 	(aTable createFieldNamed: 'VARIABLE' type: platform varchar) bePrimaryKey.
 	aTable createFieldNamed: 'EXPRESSION' type: platform text.
+
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForGIT_COMMITS: aTable [
+
+	(aTable createFieldNamed: 'ID' type: (platform serial)) bePrimaryKey.
+	aTable createFieldNamed: 'TXID' type: platform integer.
+	aTable createFieldNamed: 'SHA' type: platform blob.
+	aTable createFieldNamed: 'AUTHOR_DATETIME' type: platform timestamptz.
+	aTable createFieldNamed: 'AUTHOR_TZOFFSET' type: platform integer.
+	aTable createFieldNamed: 'AUTHOR_NAME' type: platform varchar.
+	aTable createFieldNamed: 'AUTHOR_EMAIL' type: platform varchar.
+	aTable createFieldNamed: 'MESSAGE' type: platform varchar.
+	aTable createFieldNamed: 'SOURCE_DIR' type: platform varchar.
+	aTable createFieldNamed: 'FORMAT' type: platform varchar.
+
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForGIT_COMMIT_PACK_REFS: aTable [
+
+	| commitIdField packageIdField |
+
+	commitIdField := aTable createFieldNamed: 'COMMIT_ID' type: platform integer.
+	packageIdField := aTable createFieldNamed: 'PACKAGE_ID' type: platform integer.
+
+	aTable addForeignKeyFrom: commitIdField to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID').
+	aTable addForeignKeyFrom: packageIdField to: ((self tableNamed: 'PACKAGES') fieldNamed: 'ID').
+	
+
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForGIT_COMMIT_PARENT_REFS: aTable [
+
+	| commitIdField parentIdField |
+
+	commitIdField := aTable createFieldNamed: 'COMMIT_ID' type: platform integer.
+	parentIdField := aTable createFieldNamed: 'PARENT_ID' type: platform integer.
+	aTable createFieldNamed: 'SEQNR' type: platform integer.
+	
+	aTable addForeignKeyFrom: commitIdField to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID').
+	aTable addForeignKeyFrom: parentIdField to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID').
+	
+	
+	
+
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForGIT_REPOS: aTable [
+
+	(aTable createFieldNamed: 'ID' type: (platform serial)) bePrimaryKey.
+	aTable createFieldNamed: 'TXID' type: platform integer.
+	aTable createFieldNamed: 'URL' type: platform varchar.
 
 ]
 

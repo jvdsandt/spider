@@ -14,6 +14,12 @@ SPGitCommitLGitBuilderPharoTest >> createLGitRepo [
 ]
 
 { #category : #accessing }
+SPGitCommitLGitBuilderPharoTest >> testBranches [
+
+	self lgitRepo branchNames inspect
+]
+
+{ #category : #accessing }
 SPGitCommitLGitBuilderPharoTest >> testCodeReader [
 
 	| commit reader |

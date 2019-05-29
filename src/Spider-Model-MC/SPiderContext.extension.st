@@ -7,3 +7,9 @@ SPiderContext >> createMCPackageRepo [
 			setContext: self;
 			yourself
 ]
+
+{ #category : #'*Spider-Model-MC' }
+SPiderContext >> mcPackageRepo [
+
+	^ repos at: #mcPackageRepo ifAbsentPut: [ self createMCPackageRepo ]
+]

@@ -3,9 +3,11 @@ Class {
 	#superclass : #SPGitCommitBuilder,
 	#instVars : [
 		'commit',
-		'packages',
+		'codeReader',
 		'sourceDir',
-		'format'
+		'format',
+		'packages',
+		'parents'
 	],
 	#category : #'Spider-Model-Git-Builders'
 }
@@ -13,25 +15,42 @@ Class {
 { #category : #building }
 SPLibGitCommitBuilder >> build [
 
-	| author |
+	| spCommit author |
+	
+	"Already present?"
+	spCommit := self gitRepo getCommitBySha: commit id asByteArray ifAbsent: [ nil ].
+	spCommit notNil
+		ifTrue: [ ^ spCommit ].
 
-	self importPackages.
+	self buildParents.
+	self buildPackages.
 	
 	author := SPGitSignature name: commit author name asByteArray utf8Decoded 
 			email: commit author email asByteArray utf8Decoded
 			datetime: commit time asDateAndTime
 			offset: commit time offset.
 	
-	^ SPGitCommit sha: commit id asByteArray
+	spCommit := SPGitCommit sha: commit id asByteArray
 			authorSignature: author 
 			message: commit message
-			parents: #() 
+			parents: parents
 			packages: packages
 			sourceDir: sourceDir
-			format: format
+			format: format.
+	self gitRepo storeCommit: spCommit.
+	^ spCommit
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #internal }
+SPLibGitCommitBuilder >> buildAllPackages [
+	
+	packages := codeReader packageNames collect: [ :each |
+		| snapshot |
+		snapshot := codeReader getPackageSnapshot: each.
+		self buildPackageFromSnapshot: snapshot name: each ]
+]
+
+{ #category : #internal }
 SPLibGitCommitBuilder >> buildPackageFromSnapshot: mcSnapshot name: aName [
 
 	| packageBuilder |
@@ -43,6 +62,60 @@ SPLibGitCommitBuilder >> buildPackageFromSnapshot: mcSnapshot name: aName [
 	^ packageBuilder build
 ]
 
+{ #category : #internal }
+SPLibGitCommitBuilder >> buildPackages [
+	
+	| resolver diffParents |
+	
+	resolver := SPGitFormatResolver onGitCommit: commit.
+	resolver resolve.
+	resolver packagesPresent 
+		ifFalse: [ ^ self ].
+	
+	codeReader := resolver codeReader.
+	sourceDir := resolver sourceDirectory.
+	format := resolver format.
+	
+	diffParents := parents select: [ :each | each format = format and: [ each hasPackages ] ].
+	diffParents isEmpty
+		ifTrue: [ self buildAllPackages ]
+		ifFalse: [ self buildPackagesFromDiffs: diffParents ]
+
+]
+
+{ #category : #internal }
+SPLibGitCommitBuilder >> buildPackagesFromDiff: aParent [
+
+	| newTree oldTree |
+	
+	newTree := commit tree 
+	
+
+]
+
+{ #category : #internal }
+SPLibGitCommitBuilder >> buildPackagesFromDiffs: aParents [
+
+	self buildPackagesFromDiff: aParents first
+	
+
+]
+
+{ #category : #internal }
+SPLibGitCommitBuilder >> buildParents [
+
+	| parentCommits |
+	
+	parentCommits := commit parents.
+	
+	parents := parentCommits collect: [ :each |
+		self gitRepo getCommitBySha: each id asByteArray ifAbsent: [ 
+			self class new
+				setContext: context;
+				commit: each;
+				build ] ]
+]
+
 { #category : #accessing }
 SPLibGitCommitBuilder >> commit [
 	^ commit
@@ -51,26 +124,6 @@ SPLibGitCommitBuilder >> commit [
 { #category : #accessing }
 SPLibGitCommitBuilder >> commit: anObject [
 	commit := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SPLibGitCommitBuilder >> importPackages [
-	
-	| resolver codeReader |
-	
-	resolver := SPGitFormatResolver onGitCommit: commit.
-	resolver resolve.
-	resolver packagesPresent 
-		ifFalse: [ ^ self ].
-		
-	sourceDir := resolver sourceDirectory.
-	format := resolver format.
-		
-	codeReader := resolver codeReader.
-	codeReader packageNames do: [ :each |
-		| snapshot |
-		snapshot := codeReader getPackageSnapshot: each.
-		packages add: (self buildPackageFromSnapshot: snapshot name: each) ]
 ]
 
 { #category : #initialization }

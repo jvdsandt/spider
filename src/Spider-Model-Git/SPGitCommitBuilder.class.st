@@ -7,6 +7,18 @@ Class {
 	#category : #'Spider-Model-Git-Builders'
 }
 
+{ #category : #acccessing }
+SPGitCommitBuilder >> context [
+
+	^ context
+]
+
+{ #category : #acccessing }
+SPGitCommitBuilder >> gitRepo [
+
+	^ self context gitRepo
+]
+
 { #category : #initialization }
 SPGitCommitBuilder >> setContext: aContext [
 

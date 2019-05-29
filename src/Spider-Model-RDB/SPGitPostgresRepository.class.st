@@ -47,7 +47,7 @@ CREATE INDEX IF NOT EXISTS git_commit_pack_idx ON git_commit_pack_refs(package_i
 CREATE IF NOT EXISTS git_commit_parent_refs (
 	commit_id INT NOT NULL REFERENCES git_commits(id),
 	parent_id INT NOT NULL REFERENCES git_commits(id),
-	seq_nr INT NOT NULL,
+	seqnr INT NOT NULL,
 	PRIMARY KEY (commit_id, parent_id)
 );
 CREATE INDEX IF NOT EXISTS git_commit_parent_idx ON git_commit_parent_refs(parent_id);

@@ -50,6 +50,26 @@ SPGitCommitLGitBuilderP3Test >> testCodeReader [
 ]
 
 { #category : #'as yet unclassified' }
+SPGitCommitLGitBuilderP3Test >> testDiff [
+
+	| commitNew commitOld diff list |
+	
+	commitNew := self lgitRepo revparse: '63d85d6'.
+	commitOld := self lgitRepo revparse: 'f207ef1'.
+	
+	list := OrderedCollection new.
+	
+	diff := commitOld tree diffTo: commitNew tree.
+	diff filesDo: [ :delta :second :third |
+		list add: delta newFile path -> delta oldFile path.
+		0 ].
+	
+	list inspect
+	
+
+]
+
+{ #category : #'as yet unclassified' }
 SPGitCommitLGitBuilderP3Test >> testFileTreeSnapshot [
 
 	| commit reader snapshot |

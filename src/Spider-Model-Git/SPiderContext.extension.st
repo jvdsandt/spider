@@ -7,3 +7,9 @@ SPiderContext >> createGitRepo [
 			setContext: self;
 			yourself
 ]
+
+{ #category : #'*Spider-Model-Git' }
+SPiderContext >> gitRepo [
+
+	^ repos at: #gitRepo ifAbsentPut: [ self createGitRepo ]
+]

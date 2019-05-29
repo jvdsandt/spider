@@ -46,9 +46,20 @@ SPGitCommit >> datetime [
 ]
 
 { #category : #accessing }
+SPGitCommit >> format [
+	^ format
+]
+
+{ #category : #accessing }
 SPGitCommit >> gitId [
 
 	^ sha hex
+]
+
+{ #category : #testing }
+SPGitCommit >> hasPackages [
+
+	^ packages notEmpty
 ]
 
 { #category : #initialization }
@@ -97,4 +108,14 @@ SPGitCommit >> printOn: aStream [
 { #category : #accessing }
 SPGitCommit >> sha [
 	^ sha
+]
+
+{ #category : #accessing }
+SPGitCommit >> shaString [
+	^ self sha hex
+]
+
+{ #category : #accessing }
+SPGitCommit >> sourceDir [
+	^ sourceDir
 ]
