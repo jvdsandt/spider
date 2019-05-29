@@ -14,6 +14,23 @@ SPGitCommitLGitBuilderP3Test >> createLGitRepo [
 ]
 
 { #category : #'as yet unclassified' }
+SPGitCommitLGitBuilderP3Test >> testBuilder [
+
+	| lgCommit commit builder |
+	
+	lgCommit := self lgitRepo revparse: 'v1.2'.
+
+	builder := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: lgCommit;
+		yourself.
+		
+	commit := builder build.
+	
+	self assert: commit packageNames sorted equals: #( 'BaselineOfP3' 'P3' 'P3-Glorp' 'P3-Tests' ).
+]
+
+{ #category : #'as yet unclassified' }
 SPGitCommitLGitBuilderP3Test >> testCodeReader [
 
 	| commit reader |

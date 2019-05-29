@@ -1,7 +1,7 @@
 Class {
 	#name : #SPGitPostgresRepository,
 	#superclass : #SPGitRDBRepository,
-	#category : #'Spider-Model-MC-Repos'
+	#category : #'Spider-Model-RDB-Repos'
 }
 
 { #category : #resources }
@@ -24,11 +24,15 @@ CREATE TABLE IF NOT EXISTS git_commits (
 	txid INTEGER NOT NULL,
 	repo_root_id INTEGER NOT NULL REFERENCES git_repos(id),
 	sha BYTEA NOT NULL,
-	datetime TIMESTAMP WITH TIME ZONE NOT NULL,
+	author_datetime TIMESTAMP WITH TIME ZONE NOT NULL,
+	author_tzoffset INTEGER NOT NULL,
 	author_name VARCHAR NOT NULL,
 	auther_email VARCHAR NOT NULL,
 	message VARCHAR NOT NULL,
+	source_dir VARCHAR,
+	format VARCHAR
 );
+CREATE INDEX IF NOT EXISTS git_commit_hash_idx ON git_commit(sha);
 CREATE INDEX IF NOT EXISTS git_commit_author_name_idx ON git_commits(lower(author_name));
 CREATE INDEX IF NOT EXISTS git_commit_author_email_idx ON git_commits(lower(author_email));
 CREATE INDEX IF NOT EXISTS git_commit_repo_idx ON git_commits(repo_root_id, datetime DESC);

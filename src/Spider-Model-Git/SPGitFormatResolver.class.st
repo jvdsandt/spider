@@ -108,7 +108,7 @@ SPGitFormatResolver >> resolve [
 		ifTrue: [ ^ true ].
 	
 	possibleDirs := #( '' 'src' 'source' 'repo' 'repository' ).
-	(sourceDirectory notNil and: [ (possibleDirs contains: sourceDirectory) not ])
+	(sourceDirectory notNil and: [ (possibleDirs includes: sourceDirectory) not ])
 		ifTrue: [ possibleDirs := (Array with: sourceDirectory), possibleDirs ].
 		
 	possibleDirs do: [ :each |
@@ -127,7 +127,11 @@ SPGitFormatResolver >> resolveFormat [
 	
 	propsFile := fileReference / '.properties'.
 	propsFile exists
-		ifFalse: [ ^ self ].
+		ifFalse: [ 
+			(self sourceDirectory isEmptyOrNil not and: [ self sourceReference exists ])
+				ifTrue: [ propsFile := self sourceReference / '.properties' ].
+			propsFile exists
+				ifFalse: [ ^ self ] ].
 		
 	propsData := self stonParse: propsFile.
 	format := propsData at: #format ifAbsent: [ nil ].
@@ -148,6 +152,11 @@ SPGitFormatResolver >> resolveSourceDirectory [
 		
 	sourceDirectory := projectJson at: 'srcDirectory' ifAbsent: [ nil ].
 	(fileReference / sourceDirectory) exists
+		ifTrue: [ 
+			(sourceDirectory beginsWith: '/')
+				ifTrue: [ sourceDirectory := sourceDirectory allButFirst ].
+			(sourceDirectory endsWith: '/')
+				ifTrue: [ sourceDirectory := sourceDirectory allButLast ] ]
 		ifFalse: [ sourceDirectory := nil ]
 ]
 

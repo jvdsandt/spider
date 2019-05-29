@@ -3,33 +3,46 @@ Class {
 	#superclass : #SPGlorpNode,
 	#instVars : [
 		'sha',
-		'author',
-		'datetime',
+		'authorSignature',
 		'message',
 		'parents',
-		'packages'
+		'packages',
+		'sourceDir',
+		'format'
 	],
 	#category : #'Spider-Model-Git-Domain'
 }
 
-{ #category : #accessing }
-SPGitCommit >> author [
-	^ author
+{ #category : #'instance creation' }
+SPGitCommit class >> sha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages sourceDir: aDir format: aFormat [
+
+	^ self new initWithSha: shaHash 
+			authorSignature: anAuthorSig 
+			message: aMessage 
+			parents: aParents 
+			packages: aPackages 
+			sourceDir: aDir 
+			format: aFormat
 ]
 
 { #category : #accessing }
 SPGitCommit >> authorEmail [
-	^ self author email
+	^ self authorSignature email
 ]
 
 { #category : #accessing }
 SPGitCommit >> authorName [
-	^ self author name
+	^ self authorSignature name
+]
+
+{ #category : #accessing }
+SPGitCommit >> authorSignature [
+	^ authorSignature
 ]
 
 { #category : #accessing }
 SPGitCommit >> datetime [
-	^ datetime
+	^ self authorSignature datetime
 ]
 
 { #category : #accessing }
@@ -39,14 +52,15 @@ SPGitCommit >> gitId [
 ]
 
 { #category : #initialization }
-SPGitCommit >> initWithSha: shaHash author: anAuthor datetime: aDateTime message: aMessage parents: aParents packages: aPackages [
+SPGitCommit >> initWithSha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages sourceDir: aDir format: aFormat [
 
 	sha := shaHash.
-	author := anAuthor.
-	datetime := aDateTime.
+	authorSignature := anAuthorSig.
 	message := aMessage.
 	parents := aParents asArray.
-	packages := aPackages asArray
+	packages := aPackages asArray.
+	sourceDir := aDir.
+	format := aFormat
 ]
 
 { #category : #accessing }
