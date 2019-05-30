@@ -51,7 +51,7 @@ SPPackageRDBRepository >> glorpSession [
 { #category : #storing }
 SPPackageRDBRepository >> storePackage: aPackage [
 
-	| package packageId |
+	| package packageId rows |
 	
 	package := self getPackageByHash: aPackage packageHash ifAbsent: [ nil ].
 	package notNil
@@ -64,10 +64,11 @@ SPPackageRDBRepository >> storePackage: aPackage [
 			with: aPackage packageHash 
 			with: aPackage comment).
 	
-	aPackage classRefs do: [ :each |
+	rows := aPackage classRefs collect: [ :each |
 		| classId |
 		classId := self classIdOf: each spiderClass.
-		self insertPackageClassRelQuery execute: (Array with: packageId with: classId with: each category) ].	
+		Array with: packageId with: classId with: each category ].
+	self insertPackageClassRelQuery executeBatch: rows.	
 	
 	^ packageId
 ]

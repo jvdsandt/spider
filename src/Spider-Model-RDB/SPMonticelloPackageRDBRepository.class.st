@@ -134,6 +134,14 @@ SPMonticelloPackageRDBRepository >> insertMCRepoQuery [
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
+{ #category : #accessing }
+SPMonticelloPackageRDBRepository >> mcPackageIdOf: aMCPackage [
+
+	^ aMCPackage id isNil
+			ifTrue: [ self storeMCPackage: aMCPackage ]
+			ifFalse: [ aMCPackage id ]
+]
+
 { #category : #storing }
 SPMonticelloPackageRDBRepository >> storeMCPackage: aMCPackage [
 
@@ -150,7 +158,7 @@ SPMonticelloPackageRDBRepository >> storeMCPackage: aMCPackage [
 			^ mcPackageId ].
 		
 	"First store the ancestor packages"
-	ancestorIds := aMCPackage ancestors collect: [ :each | self storeMCPackage: each ].
+	ancestorIds := aMCPackage ancestors collect: [ :each | self mcPackageIdOf: each ].
 			
 	"Then the new package"
 	mcPackageId := self insertMCPackageQuery getOne: aMCPackage.

@@ -72,7 +72,7 @@ SPGitRDBRepositoryTest >> testStoreCommit1 [
 { #category : #accessing }
 SPGitRDBRepositoryTest >> testStoreCommit2 [
 
-	| commit builder spCommit |
+	| commit builder spCommit spCommitRead |
 
 	commit := self lgitRepo revparse: '3035b8e'.
 	builder := SPLibGitCommitBuilder new
@@ -80,5 +80,9 @@ SPGitRDBRepositoryTest >> testStoreCommit2 [
 		commit: commit;
 		yourself.
 	spCommit := builder build.
+
+	spCommitRead := self gitRepo getCommitBySha: spCommit sha ifAbsent: [ nil ].
+	self assert: spCommitRead notNil.
+	self assert: spCommit ~~ spCommitRead.
 
 ]

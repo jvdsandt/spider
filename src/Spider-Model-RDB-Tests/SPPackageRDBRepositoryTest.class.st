@@ -63,7 +63,7 @@ SPPackageRDBRepositoryTest >> testStoreRPackage [
 	repo := self packageRepo.
 	
 	package := repo newBuilder 
-		setRPackage: (RPackage organizer packageNamed: 'Spider-Compatibility');
+		setRPackage: (RPackage organizer packageNamed: 'Spider-Model-Core');
 		build.
 	self assert: package classExtensionNames notEmpty.
 	

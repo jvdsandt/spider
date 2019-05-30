@@ -33,6 +33,14 @@ SPClassRDBRepository >> glorpSession [
 	^ context glorpSession
 ]
 
+{ #category : #accessing }
+SPClassRDBRepository >> methodIdOf: aMethod [
+
+	^ aMethod id isNil
+			ifTrue: [ self methodRepo storeMethod: aMethod ]
+			ifFalse: [ aMethod id ]
+]
+
 { #category : #stroring }
 SPClassRDBRepository >> storeClass: aSpiderClass [
 
@@ -96,9 +104,7 @@ SPClassRDBRepository >> storeMethodsOf: aSpiderClass withId: aClassId [
 	
 	list := aSpiderClass methodRefs collect: [ :each |
 		| methodId |
-		methodId := each method id.
-		methodId isNil
-			ifTrue: [ methodId := self methodRepo storeMethod: each method ].
+		methodId := self methodIdOf: each method.
 		Array with: aClassId with: each type with: methodId with: each category ].
 
 	self insertMRelQuery executeBatch: list
