@@ -5,13 +5,17 @@ Class {
 }
 
 { #category : #'API-packages' }
-SPFileTreeCodeReader >> getPackageSnapshot: aPackageName [
+SPFileTreeCodeReader >> getPackageSnapshot: aPackageName ifAbsent: aBlock [
 
 	| ref |
 	
+	ref := fileReference / (aPackageName, '.package').
+	ref exists
+		ifFalse: [ ^ aBlock value ].
+	
 	^ (MCFileTreeStCypressReader on: fileReference)
-		packageDirectory: aPackageName, '.package';
-		snapshot 
+			packageDirectory: ref basename;
+			snapshot 
 ]
 
 { #category : #'API-packages' }

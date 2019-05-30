@@ -16,6 +16,15 @@ SPGlorpPackage class >> name: aPackageName classRefs: aClasses comment: commentS
 	^ self new initWithName: aPackageName classRefs: aClasses comment: commentString
 ]
 
+{ #category : #comparing }
+SPGlorpPackage >> = other [
+
+	self == other ifTrue: [ ^ true ].
+	self species = other species ifFalse: [ ^ false ].
+	
+	^ name = other name and: [ self packageHash = other packageHash ]
+]
+
 { #category : #initialization }
 SPGlorpPackage >> calcPackageHash [
 
@@ -107,6 +116,12 @@ SPGlorpPackage >> createClassDiffsWith: anAncestor [
 		diffs add: nil -> each ].
 
 	^ diffs
+]
+
+{ #category : #comparing }
+SPGlorpPackage >> hash [ 
+
+	^ packageHash hash
 ]
 
 { #category : #initialization }

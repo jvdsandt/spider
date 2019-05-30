@@ -86,11 +86,25 @@ SPLibGitCommitBuilder >> buildPackages [
 { #category : #internal }
 SPLibGitCommitBuilder >> buildPackagesFromDiff: aParent [
 
-	| newTree oldTree |
+	| oldCommit diff tempPackages |
 	
-	newTree := commit tree 
+	oldCommit := commit parents detect: [ :each | each id asByteArray = aParent sha ].
 	
-
+	diff := (SPGitLibGitDiff forFormat: format)
+		initWithOld: oldCommit oldSourceDir: aParent sourceDir new: commit newSourceDir: sourceDir;
+		yourself.
+		
+	tempPackages := aParent packagesByName copy.
+	diff updatedPackages do: [ :each |
+		| snapshot |
+		snapshot := codeReader getPackageSnapshot: each ifAbsent: [ nil ].
+		snapshot isNil
+			ifTrue: [ tempPackages removeKey: each ]
+			ifFalse: [ 
+				| p |
+				p := self buildPackageFromSnapshot: snapshot name: each.
+				tempPackages at: each put: p ] ].
+	packages := tempPackages values asArray
 ]
 
 { #category : #internal }

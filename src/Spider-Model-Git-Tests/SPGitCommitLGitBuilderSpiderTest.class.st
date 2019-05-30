@@ -115,3 +115,74 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit2 [
 
 
 ]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommit3 [
+
+	| spCommit spClass |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: '6806341');
+		build.
+	
+	self assert: spCommit message equals: 'Added class method to SpiderGitDemoClass'.
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+
+	spClass := spCommit packages first classNamed: #SpiderGitDemoClass.
+	self assert: spClass classSelectors equals: #( maxAge ).
+
+]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommit4 [
+
+	| spCommit spClassExt |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: '8f9a029');
+		build.
+	
+	self assert: spCommit message equals: 'Added Date class extension'.
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+
+	spClassExt := spCommit packages first classExtensionNamed: #Date.
+	self assert: spClassExt classSelectors equals: #( spiderDemoMethod ).
+
+]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommit5 [
+
+	| spCommit spPackage |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: 'c80b1fe');
+		build.
+	
+	self assert: spCommit message equals: 'Removed Date class extension'.
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+
+	spPackage := spCommit packages first.
+	self assert: spPackage classNames equals: #( SpiderGitDemoClass ).
+	self assert: spPackage classExtensionNames equals: #().
+]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommit6 [
+
+	| spCommit |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: 'a938376');
+		build.
+	
+	self assert: spCommit message trimRight equals: 'Moved code to src directory'.
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+	self assert: spCommit sourceDir equals: 'src'.
+
+	self assert: spCommit parents first packages equals: spCommit packages
+]

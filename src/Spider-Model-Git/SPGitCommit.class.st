@@ -91,6 +91,13 @@ SPGitCommit >> packages [
 ]
 
 { #category : #accessing }
+SPGitCommit >> packagesByName [
+	^ self packages
+			inject: Dictionary new
+			into: [ :dict :each | dict at: each name put: each; yourself ]
+]
+
+{ #category : #accessing }
 SPGitCommit >> parents [
 	^ parents
 ]
@@ -101,7 +108,7 @@ SPGitCommit >> printOn: aStream [
 	super printOn: aStream.
 	
 	aStream nextPut: $(.
-	aStream nextPutAll: ((sha last: 4) hex first: 7).
+	aStream nextPutAll: ((sha first: 4) hex first: 7).
 	aStream nextPut: $)
 ]
 

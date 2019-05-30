@@ -5,16 +5,17 @@ Class {
 }
 
 { #category : #'API-packages' }
-SPTonelCodeReader >> getPackageSnapshot: aPackageName [
+SPTonelCodeReader >> getPackageSnapshot: aPackageName ifAbsent: aBlock [
 
 	| ref |
 	
 	ref := fileReference / aPackageName.
+	ref exists
+		ifFalse: [ ^ aBlock value ].
 	
 	^ (TonelReader on: fileReference)
-		packageDirectory: aPackageName;
-		snapshot 
-		
+			packageDirectory: aPackageName;
+			snapshot
 ]
 
 { #category : #'API-packages' }
