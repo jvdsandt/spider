@@ -4,6 +4,14 @@ Class {
 	#category : #'Spider-Model-RDB-Repos'
 }
 
+{ #category : #accessing }
+SPPackageRDBRepository >> classIdOf: aSpiderClass [
+
+	^ aSpiderClass id isNil
+		ifTrue: [ self classRepo storeClass: aSpiderClass ]
+		ifFalse: [ aSpiderClass id ]
+]
+
 { #category : #queries }
 SPPackageRDBRepository >> getAllPackageNames [
 
@@ -58,7 +66,7 @@ SPPackageRDBRepository >> storePackage: aPackage [
 	
 	aPackage classRefs do: [ :each |
 		| classId |
-		classId := self classRepo storeClass: each spiderClass.
+		classId := self classIdOf: each spiderClass.
 		self insertPackageClassRelQuery execute: (Array with: packageId with: classId with: each category) ].	
 	
 	^ packageId

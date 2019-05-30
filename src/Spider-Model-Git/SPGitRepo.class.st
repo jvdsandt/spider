@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-SPGitRepo class >> newFromUrl: anUrl [
+SPGitRepo class >> url: anUrl [
 
 	^ self new initFromUrl: anUrl
 ]

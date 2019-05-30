@@ -224,6 +224,12 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 		from: #sha to: (table fieldNamed: 'SHA').
 	(aDescriptor newMapping: EmbeddedValueOneToOneMapping)
 		attributeName: #authorSignature.
+	(aDescriptor newMapping: DirectMapping) 
+		from: #message to: (table fieldNamed: 'MESSAGE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #sourceDir to: (table fieldNamed: 'SOURCE_DIR').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #format to: (table fieldNamed: 'FORMAT').
 
 	(aDescriptor newMapping: OneToOneMapping)
 		attributeName: #transaction;
@@ -236,7 +242,7 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 		referenceClass: SPGlorpPackage;
 		join: (Join
 			from: (table fieldNamed: 'ID')
-			to: ((self tableNamed: 'GIT_COMMIT_PACK_REFS') fieldNamed: 'PACKAGE_ID')).
+			to: ((self tableNamed: 'GIT_COMMIT_PACK_REFS') fieldNamed: 'COMMIT_ID')).
 
 	(aDescriptor newMapping: ManyToManyMapping)
 		attributeName: #parents;

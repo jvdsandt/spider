@@ -92,6 +92,15 @@ SPiderContextTestResource >> resetForClasses [
 ]
 
 { #category : #running }
+SPiderContextTestResource >> resetForGit [
+
+	self resetForPackages.
+	self context gitRepo checkSchema
+
+	
+]
+
+{ #category : #running }
 SPiderContextTestResource >> resetForMCPackages [
 
 	self resetForPackages.

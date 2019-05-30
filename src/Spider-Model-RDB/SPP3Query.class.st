@@ -55,6 +55,9 @@ SPP3Query >> executeBatch: inputs [
 
 	| inputRows |
 	
+	inputs isEmpty
+		ifTrue: [ ^ #() ].
+	
 	inputRows := inputs collect: [ :each | self mapInput: each ].
 	^ statement executeBatch: inputRows.
 ]
@@ -83,6 +86,9 @@ SPP3Query >> getOneBatch: inputs [
 
 	| inputRows results |
 	
+	inputs isEmpty
+		ifTrue: [ ^ #() ].
+
 	inputRows := inputs collect: [ :each | self mapInput: each ].
 	results := statement queryAll: inputRows.
 
