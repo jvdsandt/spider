@@ -186,3 +186,24 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit6 [
 
 	self assert: spCommit parents first packages equals: spCommit packages
 ]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommit7 [
+
+	| spCommit spClass |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: '71ea4ec');
+		build.
+	
+	self assert: spCommit message trimRight equals: 'Added second package and added class comments.'.
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' 'Spider-GitDemo2' ).
+	self assert: spCommit sourceDir equals: 'src'.
+
+	spClass := (spCommit packageNamed: #'Spider-GitDemo1') classNamed: #SpiderGitDemoClass.
+	self assert: 'This is just a useless demo class!' equals: spClass comment.
+	
+	spClass := (spCommit packageNamed: #'Spider-GitDemo2') classNamed: #SpiderGitDemoClass2.
+	self assert: 'This is just another useless demo class!' equals: spClass comment.
+]

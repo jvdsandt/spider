@@ -33,9 +33,3 @@ SPGitCommitLGitBuilderTest >> lgitRepo [
 
 	^ lgitRepo ifNil: [ lgitRepo := self createLGitRepo ]
 ]
-
-{ #category : #accessing }
-SPGitCommitLGitBuilderTest >> testIsBase [
-
-	self assert: self lgitRepo isBare
-]

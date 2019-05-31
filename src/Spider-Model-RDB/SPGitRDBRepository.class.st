@@ -45,6 +45,17 @@ SPGitRDBRepository >> glorpSession [
 	^ context glorpSession
 ]
 
+{ #category : #queries }
+SPGitRDBRepository >> includesCommitWithSha: aBytes [
+
+	| q |
+	
+	q := (Query readOneOf: SPGitCommit where: [ :e | e sha = aBytes ])
+		retrieve: [ :e | e id];
+		yourself.
+	^ (self glorpSession execute: q) notNil
+]
+
 { #category : #'accessing - queries' }
 SPGitRDBRepository >> insertGitBranchQuery [
 

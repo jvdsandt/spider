@@ -1,33 +1,11 @@
 Class {
 	#name : #SPMonticelloImporter,
-	#superclass : #Object,
+	#superclass : #SPImporter,
 	#instVars : [
-		'context',
 		'mcPackageRepo'
 	],
-	#classVars : [
-		'DatabaseUrl'
-	],
-	#category : #'Spider-Import-MC-Spider-Import-MC'
+	#category : #'Spider-Import-MC'
 }
-
-{ #category : #utilities }
-SPMonticelloImporter class >> createContext [
-
-	^ SPiderPostgreSQLContext openOnUrl: self databaseUrl
-]
-
-{ #category : #accessing }
-SPMonticelloImporter class >> databaseUrl [ 
-
-	^ DatabaseUrl ifNil: [ 'psql://spimporter:spimporter@theraver5:5432/postgres' ]
-]
-
-{ #category : #accessing }
-SPMonticelloImporter class >> databaseUrl: anUrl [
-
-	DatabaseUrl := anUrl
-]
 
 { #category : #utilities }
 SPMonticelloImporter class >> importMCRepo: anUrl [
@@ -130,12 +108,6 @@ SPMonticelloImporter class >> importXtreams [
 	self importMCRepo: 'http://www.squeaksource.com/Xtreams'
 
 
-]
-
-{ #category : #'instance creation' }
-SPMonticelloImporter class >> newWithContext: aSPiderContext [
-
-	^ self new initWithContext: aSPiderContext
 ]
 
 { #category : #actions }
@@ -273,7 +245,7 @@ SPMonticelloImporter >> importMagritte3 [
 { #category : #initialization }
 SPMonticelloImporter >> initWithContext: aSPiderContext [
 
-	context := aSPiderContext.
+	super initWithContext: aSPiderContext.
 	mcPackageRepo := aSPiderContext mcPackageRepo
 ]
 

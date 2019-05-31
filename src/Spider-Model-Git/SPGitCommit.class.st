@@ -80,6 +80,12 @@ SPGitCommit >> message [
 ]
 
 { #category : #accessing }
+SPGitCommit >> packageNamed: aName [
+
+	^ self packages detect: [ :each | each name = aName ]
+]
+
+{ #category : #accessing }
 SPGitCommit >> packageNames [
 
 	^ self packages collect: [ :each | each name ]

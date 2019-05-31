@@ -18,7 +18,7 @@ SPGitCommitLGitBuilderP3Test >> testBuilder [
 
 	| lgCommit commit builder |
 	
-	lgCommit := self lgitRepo revparse: 'v1.2'.
+	lgCommit := self lgitRepo revparse: 'v1.0'.
 
 	builder := SPLibGitCommitBuilder new
 		setContext: self context;

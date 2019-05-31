@@ -53,6 +53,19 @@ SPGitFormatResolver >> checkTonelPackagesPresentIn: aDirectory [
 			aDirectory directories anySatisfy: [ :each | (each / 'package.st') exists ] ]
 ]
 
+{ #category : #internal }
+SPGitFormatResolver >> cleanDirectoryName: aDirName [
+
+	| clean |
+	
+	clean := aDirName.
+	(clean beginsWith: '/')
+		ifTrue: [ clean := clean allButFirst ].
+	(clean endsWith: '/')
+		ifTrue: [ clean := clean allButLast ].
+	^ clean
+]
+
 { #category : #accessing }
 SPGitFormatResolver >> codeReader [
 
@@ -151,13 +164,9 @@ SPGitFormatResolver >> resolveSourceDirectory [
 		ifTrue: [ ^ self ].
 		
 	sourceDirectory := projectJson at: 'srcDirectory' ifAbsent: [ nil ].
-	(fileReference / sourceDirectory) exists
-		ifTrue: [ 
-			(sourceDirectory beginsWith: '/')
-				ifTrue: [ sourceDirectory := sourceDirectory allButFirst ].
-			(sourceDirectory endsWith: '/')
-				ifTrue: [ sourceDirectory := sourceDirectory allButLast ] ]
-		ifFalse: [ sourceDirectory := nil ]
+	sourceDirectory := (fileReference / sourceDirectory) exists
+		ifTrue: [ self cleanDirectoryName: sourceDirectory ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #accessing }
@@ -183,7 +192,7 @@ SPGitFormatResolver >> tryFileTreeIn: aDirectory [
 	(self checkFileTreePackagesPresentIn: aDirectory) 
 		ifTrue: [ 
 			format := #filetree.
-			sourceDirectory := aDirectory pathString.
+			sourceDirectory := self cleanDirectoryName: (aDirectory pathString).
 			^ packagesPresent := true ].
 	^ false
 ]
@@ -194,7 +203,7 @@ SPGitFormatResolver >> tryTonelIn: aDirectory [
 	(self checkTonelPackagesPresentIn: aDirectory) 
 		ifTrue: [ 
 			format := #tonel.
-			sourceDirectory := aDirectory pathString.
+			sourceDirectory := self cleanDirectoryName: (aDirectory pathString).
 			^ packagesPresent := true ].
 	^ false
 ]

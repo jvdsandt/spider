@@ -1,26 +1,8 @@
 Class {
 	#name : #SPPharoImporter,
-	#superclass : #Object,
-	#instVars : [
-		'context'
-	],
-	#classVars : [
-		'DatabaseUrl'
-	],
-	#category : #'Spider-Import-MC-Spider-Import-MC'
+	#superclass : #SPImporter,
+	#category : #'Spider-Import-MC'
 }
-
-{ #category : #'as yet unclassified' }
-SPPharoImporter class >> databaseUrl [
-
-	^ DatabaseUrl ifNil: [  ]
-]
-
-{ #category : #'as yet unclassified' }
-SPPharoImporter class >> databaseUrl: anUrl [
-
-	DatabaseUrl := anUrl
-]
 
 { #category : #actions }
 SPPharoImporter class >> importAllUsing: spiderContext [
@@ -51,12 +33,6 @@ SPPharoImporter class >> importAllUsing: spiderContext [
 
 ]
 
-{ #category : #'instance creation' }
-SPPharoImporter class >> newWithContext: spiderContext [
-
-	^ self new initWithContext: spiderContext
-]
-
 { #category : #actions }
 SPPharoImporter >> importAll [
 
@@ -74,12 +50,6 @@ SPPharoImporter >> importRPackage: rPackage [
 		build.
 		
 	self packageRepo storePackage: package
-]
-
-{ #category : #initialization }
-SPPharoImporter >> initWithContext: spiderContext [
-
-	context := spiderContext
 ]
 
 { #category : #accessing }
