@@ -95,7 +95,7 @@ SPLibGitCommitBuilder >> buildPackagesFromDiff: aParent [
 		yourself.
 		
 	tempPackages := aParent packagesByName copy.
-	diff updatedPackages do: [ :each |
+	diff updatedPackages sorted do: [ :each |
 		| snapshot |
 		snapshot := codeReader getPackageSnapshot: each ifAbsent: [ nil ].
 		snapshot isNil
@@ -118,7 +118,7 @@ SPLibGitCommitBuilder >> buildPackagesFromDiffs: aParents [
 { #category : #internal }
 SPLibGitCommitBuilder >> buildParents [
 
-	| parentCommits |
+	| parentCommits ids |
 	
 	parentCommits := commit parents.
 	
@@ -127,7 +127,14 @@ SPLibGitCommitBuilder >> buildParents [
 			self class new
 				setContext: context;
 				commit: each;
-				build ] ]
+				build ] ].
+		
+	"Remove duplicate parents"
+	ids := Set new.
+	parents := parents reject: [ :each | 
+		(ids includes: each sha)
+				ifTrue: [ true ]
+				ifFalse: [ ids add: each sha. false ] ]
 ]
 
 { #category : #accessing }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'context'
 	],
-	#category : #'Spider-Model-RDB-Uncategorized'
+	#category : #'Spider-Model-RDB-Batch'
 }
 
 { #category : #accessing }

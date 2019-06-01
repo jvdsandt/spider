@@ -2,9 +2,7 @@ Class {
 	#name : #SPGitLibGitDiff,
 	#superclass : #Object,
 	#instVars : [
-		'newPackages',
-		'updatedPackages',
-		'removedPackages'
+		'updatedPackages'
 	],
 	#category : #'Spider-Model-Git-Builders'
 }
@@ -28,8 +26,6 @@ SPGitLibGitDiff >> handleDelta: lgitDelta [
 	
 	newFile := lgitDelta newFile.
 	oldFile := lgitDelta oldFile.
-	self logInfo: (newFile ifNotNil: [ :f | f path ]) asString, ' --> ', (oldFile ifNotNil: [ :f | f path ]) asString.
-	
 	path := (newFile ifNil: [ oldFile ]) path.
 	(self isPackagePath: path)
 		ifTrue: [ self updatedPackages add: (self packageNameFromPath: path) ]
@@ -71,5 +67,5 @@ SPGitLibGitDiff >> packageNameFromPath: dirName [
 { #category : #'as yet unclassified' }
 SPGitLibGitDiff >> updatedPackages [
 
-	^ updatedPackages ifNil: [ updatedPackages := OrderedCollection new ]
+	^ updatedPackages ifNil: [ updatedPackages := Set new ]
 ]

@@ -26,9 +26,43 @@ SPGitRDBRepository >> getCommitBySha: aBytes ifAbsent: aBlock [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> getGitCommitIdBySha: aBytes [
+
+	| q |
+	
+	q := (Query readOneOf: SPGitCommit where: [ :e | e sha = aBytes ])
+		retrieve: [ :e | e id ];
+		yourself.
+	^ self glorpSession execute: q
+]
+
+{ #category : #storing }
+SPGitRDBRepository >> getGitRepoByUrl: aRepoUrl [
+
+	| gitRepo gitRepoId |
+	
+	gitRepo := self getGitRepoByUrl: aRepoUrl ifAbsent: [ nil ].
+	gitRepo isNil
+		ifFalse: [ ^ gitRepo ].
+
+	gitRepoId := self insertGitRepoQuery getOne: (Array 
+		with: self transactionId
+		with: aRepoUrl).
+		
+	^ SPGitRepo url: aRepoUrl
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> getGitRepoByUrl: anUrl ifAbsent: aBlock [
 
-	^ self selectGitRepoByUrlQuery getOne: anUrl asLowercase ifNone: aBlock
+	| gitRepo |
+	
+	gitRepo := self glorpSession readOneOf: SPGitRepo 
+		where: [ :e | e url asLowercase = anUrl asLowercase ].
+		
+	^ gitRepo isNil
+			ifTrue: [ aBlock value ]
+			ifFalse: [ gitRepo ]
 ]
 
 { #category : #accessing }
@@ -48,21 +82,7 @@ SPGitRDBRepository >> glorpSession [
 { #category : #queries }
 SPGitRDBRepository >> includesCommitWithSha: aBytes [
 
-	| q |
-	
-	q := (Query readOneOf: SPGitCommit where: [ :e | e sha = aBytes ])
-		retrieve: [ :e | e id];
-		yourself.
-	^ (self glorpSession execute: q) notNil
-]
-
-{ #category : #'accessing - queries' }
-SPGitRDBRepository >> insertGitBranchQuery [
-
-	| sql |
-	
-	sql := 'INSERT INTO git_branch (repo_id, name, head_id) VALUES ($1,$2,$3)'.
-	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+	^ (self getGitCommitIdBySha: aBytes) notNil
 ]
 
 { #category : #'accessing - queries' }
@@ -99,7 +119,19 @@ SPGitRDBRepository >> insertGitRepoQuery [
 
 	| sql |
 	
-	sql := 'INSERT INTO git_repo (txid, root_id, url, forked_from_id) VALUES ($1,$2,$3,$4) RETURNING (id)'.
+	sql := 'INSERT INTO git_repos (txid, url) VALUES ($1,$2) RETURNING (id)'.
+	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
+{ #category : #'accessing - queries' }
+SPGitRDBRepository >> insertGitRepoRefQuery [
+
+	| sql |
+	
+	sql := 'INSERT INTO git_repo_refs (repo_id, name, txid, commit_id) VALUES ($1,$2,$3,$4)
+ON CONFLICT (repo_id, name) DO UPDATE SET
+	txid = $3,
+	commit_id = $4'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
@@ -158,4 +190,19 @@ SPGitRDBRepository >> storeCommit: aGitCommit repo: aRepoUrl [
 	gitRepo isNil
 		ifTrue: [ 
 			 ]
+]
+
+{ #category : #storing }
+SPGitRDBRepository >> storeRepoRef: aRepo named: aName to: aCommit [
+
+	| repoId commitId |
+	
+	repoId := aRepo id ifNil: [ self getGitRepoByUrl: aRepo url ].
+	commitId := aCommit id ifNil: [ self getGitCommitIdBySha: aCommit sha ].
+	
+	self insertGitRepoRefQuery execute: (Array
+		with: repoId
+		with: aName
+		with: self transactionId
+		with: commitId)
 ]

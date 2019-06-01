@@ -1,7 +1,7 @@
 Class {
 	#name : #SPRehashClasses,
 	#superclass : #SPBatchOperation,
-	#category : #'Spider-Model-RDB-Uncategorized'
+	#category : #'Spider-Model-RDB-Batch'
 }
 
 { #category : #'as yet unclassified' }

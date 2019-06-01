@@ -13,7 +13,14 @@ Class {
 { #category : #utilities }
 SPBehaviorBuilder class >> cleanUpString: aString [
 
-	^ aString withUnixLineEndings trimBoth reject: [ :ch | ch asInteger = 0 ]
+	| cleanString |
+
+	aString isNil
+		ifTrue: [ ^ nil ].
+	cleanString := aString withUnixLineEndings trimBoth reject: [ :ch | ch asInteger = 0 ].
+	^ cleanString isEmpty
+			ifTrue: [ nil ]
+			ifFalse: [ cleanString ]
 ]
 
 { #category : #adding }

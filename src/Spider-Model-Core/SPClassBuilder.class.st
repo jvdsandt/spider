@@ -153,7 +153,7 @@ SPClassBuilder >> setMCClass: aMCClassDef methods: aMCMethodDefs [
 	name := aMCClassDef className.
 	classType := aMCClassDef type.
 	superclassName := aMCClassDef superclassName.
-	comment := aMCClassDef comment.
+	comment := self class cleanUpString: aMCClassDef comment.
 
 	traitCompositionString := aMCClassDef traitCompositionString.
 	classTraitCompositionString := aMCClassDef classTraitCompositionString.

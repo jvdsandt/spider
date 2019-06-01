@@ -2,8 +2,7 @@ Class {
 	#name : #SPClassPostgresRepository,
 	#superclass : #SPClassRDBRepository,
 	#instVars : [
-		'client',
-		'queries'
+		'client'
 	],
 	#category : #'Spider-Model-RDB-Repos'
 }
@@ -57,47 +56,9 @@ SPClassPostgresRepository >> checkSchema [
 
 ]
 
-{ #category : #'accessing - queries' }
-SPClassPostgresRepository >> insertClassQuery [
-
-	| sql |
-	
-	sql := 'INSERT INTO classes (txid, type, name, hash, class_type, superclassname, inst_trait, class_trait, comment) 
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING (id)'.
-	
-	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
-]
-
-{ #category : #'accessing - queries' }
-SPClassPostgresRepository >> insertMRelQuery [
-
-	| sql |
-	
-	sql := 'INSERT INTO class_met_refs (class_id, type, method_id, category) VALUES ($1,$2,$3,$4)'.
-	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
-]
-
-{ #category : #'accessing - queries' }
-SPClassPostgresRepository >> insertVarRelQuery [
-
-	| sql |
-	
-	sql := 'INSERT INTO class_var_refs (class_id, type, variable, expression) VALUES ($1,$2,$3,$4)'.
-	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
-]
-
 { #category : #initialization }
 SPClassPostgresRepository >> setClient: p3Client [
 
 	client := p3Client.
 	queries := SPP3Queries new initWithClient: client
-]
-
-{ #category : #'accessing - queries' }
-SPClassPostgresRepository >> updateHashQuery [
-
-	| sql |
-	
-	sql := 'UPDATE classes SET hash = $2 WHERE id = $1'.
-	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]

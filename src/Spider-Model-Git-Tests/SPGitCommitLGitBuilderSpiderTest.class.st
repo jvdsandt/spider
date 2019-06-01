@@ -207,3 +207,18 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit7 [
 	spClass := (spCommit packageNamed: #'Spider-GitDemo2') classNamed: #SpiderGitDemoClass2.
 	self assert: 'This is just another useless demo class!' equals: spClass comment.
 ]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommit8 [
+
+	| spCommit |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: 'c336436');
+		build.
+	
+	self assert: spCommit message trimRight equals: 'Removed second package'.
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+
+]
