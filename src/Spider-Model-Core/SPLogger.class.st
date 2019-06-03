@@ -61,19 +61,43 @@ SPLogger class >> unload [
 ]
 
 { #category : #logging }
+SPLogger >> logDebug: aSource message: anObject [
+
+	self logLevel: 'DEBUG' source: aSource message: anObject
+]
+
+{ #category : #logging }
+SPLogger >> logError: aSource message: anObject [
+
+	self logLevel: 'ERROR' source: aSource message: anObject
+]
+
+{ #category : #logging }
 SPLogger >> logInfo: aSource message: anObject [
+
+	self logLevel: 'INFO' source: aSource message: anObject
+]
+
+{ #category : #logging }
+SPLogger >> logLevel: aLevel source: aSource message: anObject [
 
 	| str |
 	
 	str := self stream.
 	str 
 		nextPutAll: Time now print24;
-		space;
+		nextPutAll: ' ['; nextPutAll: aLevel; nextPutAll: ' ]';
 		nextPutAll: aSource asString;
 		nextPutAll: ' - ';
 		nextPutAll: anObject asString;
 		lf;
 		flush
+]
+
+{ #category : #logging }
+SPLogger >> logWarn: aSource message: anObject [
+
+	self logLevel: 'WARN' source: aSource message: anObject
 ]
 
 { #category : #accessing }

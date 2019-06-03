@@ -55,6 +55,9 @@ SPGitLibGitDiff >> initWithOld: oldCommit oldSourceDir: oldPath new: newCommit n
 { #category : #testing }
 SPGitLibGitDiff >> isPackagePath: aPath [
 
+	(aPath beginsWith: 'monticello.meta')
+		ifTrue: [ ^ false ].
+
 	^ aPath includes: $/
 ]
 
