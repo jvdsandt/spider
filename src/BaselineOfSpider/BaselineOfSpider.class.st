@@ -34,7 +34,7 @@ BaselineOfSpider >> baselineOf: spec [
 
 			spec package: 'Spider-Import-MC' with: [ spec requires: #( 'Spider-Model-MC' 'Spider-Model-Git' ) ].
 
-			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3') ].
+			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3' 'Bootstrap' ) ].
 			
 			spec group: 'default' with: #('core' 'tests').
 			spec group: 'core' with: #('Spider-Model-Core' 'Spider-Model-MC' 'Spider-Model-Git' ).
