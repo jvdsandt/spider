@@ -17,7 +17,11 @@ BaselineOfSpider >> baselineOf: spec [
 			spec baseline: 'Seaside3' with: [ 
 				spec 
 					repository: 'github://SeasideSt/Seaside:v3.3.3/repository';
-					loads: #( 'Core' 'JSON' 'Javascript' 'JQuery' 'Zinc' ) ].
+					loads: #( 'Core' 'JSON' 'Javascript' 'JQuery' 'REST' 'Zinc' 'Seaside-REST-Examples' ) ].
+			spec baseline: 'Bootstrap' with: [ 
+				spec 
+					repository: 'github://astares/Seaside-Bootstrap:master/src';
+					loads: #( 'Core' ) ].
 
 			spec package: 'Spider-Model-Core'.
 			spec package: 'Spider-Model-Core-Tests' with: [ spec requires: #('Spider-Model-Core') ].
@@ -28,9 +32,13 @@ BaselineOfSpider >> baselineOf: spec [
 			spec package: 'Spider-Model-RDB' with: [ spec requires: #( 'Spider-Model-Git' 'P3' ) ].
 			spec package: 'Spider-Model-RDB-Tests' with: [ spec requires: #( 'Spider-Model-Git-Tests' 'Spider-Model-RDB' ) ].
 
+			spec package: 'Spider-Import-MC' with: [ spec requires: #( 'Spider-Model-MC' 'Spider-Model-Git' ) ].
+
 			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3') ].
 			
 			spec group: 'default' with: #('core' 'tests').
 			spec group: 'core' with: #('Spider-Model-Core' 'Spider-Model-MC' 'Spider-Model-Git' ).
-			spec group: 'tests' with: #('Spider-Model-Core-Tests' 'Spider-Model-MC-Tests' 'Spider-Model-Git-Tests' ) ]
+			spec group: 'tests' with: #('Spider-Model-Core-Tests' 'Spider-Model-MC-Tests' 'Spider-Model-Git-Tests' ).
+			
+			spec group: 'all' with: #( 'default' 'Spider-Model-RDB-Tests' 'Spider-Import-MC' 'Spider-Web-Core' ) ]
 ]
