@@ -94,6 +94,27 @@ SPGlorpPackage >> comment [
 	^ comment
 ]
 
+{ #category : #comparing }
+SPGlorpPackage >> compareClassesWith: olderPackage [
+
+	| oldClassRefs result |
+	
+	oldClassRefs := olderPackage classRefsByName.
+	result := OrderedCollection new.
+	
+	self classRefs do: [ :eachRef |
+		| oldRef |
+		oldRef := oldClassRefs removeKey: eachRef name ifAbsent: [ nil ].
+		oldRef isNil
+			ifTrue: [ result add: (SPAddedClass added: eachRef) ]
+			ifFalse: [ 
+				eachRef = oldRef
+					ifFalse: [ result add: (SPUpdatedClass old: oldRef updated: eachRef) ] ] ].
+	oldClassRefs do: [ :eachRef |
+		result add: (SPRemovedClass removed: eachRef) ].
+	^ result
+]
+
 { #category : #actions }
 SPGlorpPackage >> createClassDiffsWith: anAncestor [
 	"Answer a list of associations with the old class version as key and

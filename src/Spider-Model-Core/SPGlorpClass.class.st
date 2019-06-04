@@ -205,6 +205,32 @@ SPGlorpClass >> comment [
 	^ comment
 ]
 
+{ #category : #comparing }
+SPGlorpClass >> compareMethodsWith: olderClass [
+
+	| oldClassMethodRefs oldInstanceMethodRefs result |
+	
+	oldClassMethodRefs := olderClass classMethodRefsBySelector.
+	oldInstanceMethodRefs := olderClass instanceMethodRefsBySelector.
+	result := OrderedCollection new.
+	
+	self methodRefs do: [ :eachRef |
+		| oldRef |
+		oldRef := eachRef isClassSide 
+			ifTrue: [ oldClassMethodRefs removeKey: eachRef selector ifAbsent: [ nil ] ]
+			ifFalse: [ oldInstanceMethodRefs removeKey: eachRef selector ifAbsent: [ nil ] ].
+		oldRef isNil
+			ifTrue: [ result add: (SPAddedMethod added: eachRef) ]
+			ifFalse: [ 
+				eachRef = oldRef
+					ifFalse: [ result add: (SPUpdatedMethod old: oldRef updated: eachRef) ] ] ].
+	oldClassMethodRefs do: [ :eachRef |
+		result add: (SPRemovedMethod removed: eachRef) ].
+	oldInstanceMethodRefs do: [ :eachRef |
+		result add: (SPRemovedMethod removed: eachRef) ].
+	^ result
+]
+
 { #category : #actions }
 SPGlorpClass >> createClassMethodDiffsWith: olderClass [
 	"Answer a list of associations with the old method version as key and
