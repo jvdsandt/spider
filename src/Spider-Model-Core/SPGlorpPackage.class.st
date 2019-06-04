@@ -25,6 +25,11 @@ SPGlorpPackage >> = other [
 	^ name = other name and: [ self packageHash = other packageHash ]
 ]
 
+{ #category : #accessing }
+SPGlorpPackage >> behaviors [
+	^ classRefs collect: [ :each | each spiderClass ]
+]
+
 { #category : #initialization }
 SPGlorpPackage >> calcPackageHash [
 

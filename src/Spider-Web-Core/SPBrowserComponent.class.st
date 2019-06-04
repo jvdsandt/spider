@@ -3,6 +3,7 @@ Class {
 	#superclass : #SPComponent,
 	#instVars : [
 		'browser',
+		'packageListPanel',
 		'classListPanel',
 		'categoryListPanel',
 		'methodListPanel',
@@ -17,6 +18,17 @@ SPBrowserComponent class >> onPackage: aPackage [
 	| browser |
 	
 	browser := SPBrowser onPackage: aPackage.
+	^ self new
+			browser: browser;
+			yourself
+]
+
+{ #category : #'as yet unclassified' }
+SPBrowserComponent class >> onPackages: aPackages [
+
+	| browser |
+	
+	browser := SPBrowser onPackages: aPackages.
 	^ self new
 			browser: browser;
 			yourself
@@ -71,6 +83,16 @@ SPBrowserComponent >> methodListPanel [
 					yourself ]
 ]
 
+{ #category : #accessing }
+SPBrowserComponent >> packageListPanel [
+
+	^ packageListPanel ifNil: [ 
+			packageListPanel := SPPackagesListPanel new
+					browser: browser;
+					classListPanel: self classListPanel;
+					yourself ]
+]
+
 { #category : #rendering }
 SPBrowserComponent >> renderContentOn: html [
 
@@ -81,26 +103,38 @@ SPBrowserComponent >> renderContentOn: html [
 { #category : #rendering }
 SPBrowserComponent >> renderListsOn: html [
 
-	| id |
+	| id colSize |
 
 	html tbsRow: [ 
+		self browser packages size > 1
+			ifTrue: [ 
+				colSize := 3.
+				html tbsColumn 
+					id: (id := html nextId);
+					mediumSize: colSize;
+					with: [ 
+						html render: (self packageListPanel 
+							containerId: id;
+							yourself) ] ]
+			ifFalse: [
+				colSize := 4 ].
 		html tbsColumn 
 			id: (id := html nextId);
-			mediumSize: 4;
+			mediumSize: colSize;
 			with: [ 
 				html render: (self classListPanel 
 					containerId: id;
 					yourself) ].
 		html tbsColumn 
 			id: (id := html nextId);
-			mediumSize: 4;
+			mediumSize: colSize;
 			with: [ 
 				html render: (self categoryListPanel
 					containerId: id;
 					yourself) ].
 		html tbsColumn 
 			id: (id := html nextId);
-			mediumSize: 4;
+			mediumSize: colSize;
 			with: [ 
 				html render: (self methodListPanel
 					containerId: id;

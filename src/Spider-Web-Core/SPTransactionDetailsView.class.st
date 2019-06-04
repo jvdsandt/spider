@@ -14,6 +14,10 @@ SPTransactionDetailsView >> renderClassesOn: html [
 	
 	list := self transaction classes ifEmpty: [ ^ self ].
 	
+	html heading
+		level: 4;
+		with: 'Classes:'.
+
 	html unorderedList 
 		with: [ 
 			list do: [ :each |
@@ -27,9 +31,31 @@ SPTransactionDetailsView >> renderContentOn: html [
 	self renderLabel: 'timestamp' value: self transaction startedAt on: html.
 	self renderLabel: 'message' value: self transaction message on: html.
 	
+	self renderGitCommitsOn: html.
 	self renderMCPackagesOn: html.
 	self renderPackagesOn: html.
 	self renderClassesOn: html.
+]
+
+{ #category : #rendering }
+SPTransactionDetailsView >> renderGitCommitsOn: html [
+
+	| list |
+	
+	list := self transaction gitCommits ifEmpty: [ ^ self ].
+	
+	html heading
+		level: 4;
+		with: 'Git commits:'.
+
+	html unorderedList 
+		with: [ 
+			list do: [ :each |
+				html listItem: [
+					html anchor
+						callback: [ self openGitCommit: each ];
+						with: each shaShortString.
+					html space; text: each message ] ] ]
 ]
 
 { #category : #rendering }
@@ -39,6 +65,10 @@ SPTransactionDetailsView >> renderMCPackagesOn: html [
 	
 	list := self transaction mcPackages ifEmpty: [ ^ self ].
 	
+	html heading
+		level: 4;
+		with: 'MC packages:'.
+
 	html unorderedList 
 		with: [ 
 			list do: [ :each |
@@ -52,10 +82,17 @@ SPTransactionDetailsView >> renderPackagesOn: html [
 	
 	list := self transaction packages ifEmpty: [ ^ self ].
 	
+	html heading
+		level: 4;
+		with: 'Packages:'.
+
 	html unorderedList 
 		with: [ 
 			list do: [ :each |
-				html listItem: each name ] ]
+				html listItem: [ 
+					html anchor
+						callback: [ self openPackage: each ];
+						with: 	each name ] ] ]
 ]
 
 { #category : #accessing }

@@ -40,6 +40,27 @@ SPGitCommit >> authorSignature [
 	^ authorSignature
 ]
 
+{ #category : #comparing }
+SPGitCommit >> comparePackagesWith: olderCommit [
+
+	| oldPackages result |
+	
+	oldPackages := self packagesByName.
+	result := OrderedCollection new.
+	
+	self packages do: [ :each |
+		| oldPackage |
+		oldPackage := oldPackages removeKey: each name ifAbsent: [ nil ].
+		oldPackage isNil
+			ifTrue: [ result add: (SPAddedPackage added: each) ]
+			ifFalse: [ 
+				oldPackage = each
+					ifFalse: [ result add: (SPUpdatePackage old: oldPackage updated: each) ] ] ].
+	oldPackages do: [ :each |
+		result add: (SPRemovedPackage removed: each) ].
+	^ result
+]
+
 { #category : #accessing }
 SPGitCommit >> datetime [
 	^ self authorSignature datetime
@@ -48,12 +69,6 @@ SPGitCommit >> datetime [
 { #category : #accessing }
 SPGitCommit >> format [
 	^ format
-]
-
-{ #category : #accessing }
-SPGitCommit >> gitId [
-
-	^ sha hex
 ]
 
 { #category : #testing }
@@ -114,13 +129,18 @@ SPGitCommit >> printOn: aStream [
 	super printOn: aStream.
 	
 	aStream nextPut: $(.
-	aStream nextPutAll: ((sha first: 4) hex first: 7).
+	aStream nextPutAll: self shaShortString.
 	aStream nextPut: $)
 ]
 
 { #category : #accessing }
 SPGitCommit >> sha [
 	^ sha
+]
+
+{ #category : #accessing }
+SPGitCommit >> shaShortString [
+	^ ((self sha first: 4) hex first: 7)
 ]
 
 { #category : #accessing }

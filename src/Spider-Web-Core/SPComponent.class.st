@@ -23,6 +23,20 @@ SPComponent >> openBrowserOnPackage: aPackage [
 ]
 
 { #category : #actions }
+SPComponent >> openBrowserOnPackages: aPackages [
+
+	self show: (SPBrowserComponent onPackages: aPackages)
+]
+
+{ #category : #actions }
+SPComponent >> openGitCommit: aGitCommit [
+
+	self show: (SPGitCommitDetailsView new
+		gitCommit: aGitCommit;
+		yourself)
+]
+
+{ #category : #actions }
 SPComponent >> openMCAuthor: anAuthor [
 
 	self show: (SPMCAuthorView new
@@ -43,6 +57,14 @@ SPComponent >> openMCRepo: aMCRepo [
 
 	self show: (SPMCRepoDetailsView new
 		mcRepo: aMCRepo;
+		yourself)
+]
+
+{ #category : #actions }
+SPComponent >> openPackage: aPackage [
+
+	self show: (SPPackageDetailsView new
+		package: aPackage;
 		yourself)
 ]
 

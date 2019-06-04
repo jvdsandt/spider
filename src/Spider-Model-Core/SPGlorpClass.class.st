@@ -106,6 +106,12 @@ SPGlorpClass class >> type: aType name: aName classType: aClassType superclassNa
 ]
 
 { #category : #comparing }
+SPGlorpClass >> <= other [
+
+	^ self name <= other name
+]
+
+{ #category : #comparing }
 SPGlorpClass >> = other [
 
 	self == other ifTrue: [ ^ true ].
@@ -126,9 +132,14 @@ SPGlorpClass >> calcClassHash [
 ]
 
 { #category : #accessing }
-SPGlorpClass >> classCategories [ 
+SPGlorpClass >> classCategories [
 
-	^ (self classMethodRefs collect: [ :each | each category ]) asSet sorted
+	^ (self methodRefs 
+			inject: Set new
+			into: [ :coll :each | 
+				(each isClassSide and: [ each category notNil ])
+					ifTrue: [ coll add: each category ].
+				coll ]) sorted
 ]
 
 { #category : #accessing }
@@ -312,9 +323,14 @@ SPGlorpClass >> initType: aType name: aName classType: aClassType superclassName
 ]
 
 { #category : #accessing }
-SPGlorpClass >> instanceCategories [ 
+SPGlorpClass >> instanceCategories [
 
-	^ (self instanceMethodRefs collect: [ :each | each category ]) asSet sorted
+	^ (self methodRefs 
+			inject: Set new
+			into: [ :coll :each | 
+				(each isInstanceSide and: [ each category notNil ])
+					ifTrue: [ coll add: each category ].
+				coll ]) sorted
 ]
 
 { #category : #accessing }
