@@ -15,9 +15,16 @@ Class {
 { #category : #'instance creation' }
 SPBrowser class >> onPackage: aPackage [
 
-	^ self new
-		packages: (Array with: aPackage);
+	^ (self onPackages: (Array with: aPackage))
 		selectedPackage: aPackage;
+		yourself
+]
+
+{ #category : #'instance creation' }
+SPBrowser class >> onPackages: aPackageColl [
+
+	^ self new
+		packages: aPackageColl;
 		yourself
 ]
 

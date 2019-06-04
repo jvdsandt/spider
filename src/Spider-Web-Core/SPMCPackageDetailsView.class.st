@@ -56,7 +56,13 @@ SPMCPackageDetailsView >> renderContentOn: html [
 		html text: 'Message: '.
 		html preformatted
 			style: 'white-space: pre-wrap;';
-			with: self mcPackage message ]
+			with: self mcPackage message ].
+
+	self mcPackage package notNil
+		ifTrue: [ 
+			html anchor 
+				callback: [ self openBrowserOnPackage: self mcPackage package ];
+				with: 'Browse' ]
 ]
 
 { #category : #accessing }
