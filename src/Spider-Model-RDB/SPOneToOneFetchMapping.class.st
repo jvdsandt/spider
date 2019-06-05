@@ -7,9 +7,7 @@ Class {
 { #category : #mapping }
 SPOneToOneFetchMapping >> buildQuery [ 
 
-	| q |
-	
-	q := super buildQuery.
-	q alsoFetch: [ :r | r spiderClass ].
-	^  q
+	query := super buildQuery.
+	query alsoFetch: [ :r | r spiderClass ].
+	^ query
 ]

@@ -726,27 +726,30 @@ SpiderDescriptorSystem >> descriptorForSPPackage: aDescriptor [
 { #category : #descriptors }
 SpiderDescriptorSystem >> descriptorForSPPackageToClassRef: aDescriptor [
 
-	| table classesTable |
+	| table |
 	
 	table := self tableNamed: 'PACKAGE_CLS_REFS'.
-	classesTable := self tableNamed: 'CLASSES'.
 
 	aDescriptor table: table.
-	aDescriptor addTable: classesTable.
-	aDescriptor addMultipleTableJoin: (
-		Join 
-			from: (table fieldNamed: 'CLASS_ID')
-			to: (classesTable fieldNamed: 'ID')).
 		
 	(aDescriptor newMapping: DirectMapping) 
 		from: #category to: (table fieldNamed: 'CATEGORY').
 
-	(aDescriptor newMapping: OneToOneMapping)
+	(aDescriptor newMapping: SPOneToOneFetchMapping)
 		attributeName: #spiderClass;
 		referenceClass: SPGlorpClass;
 		join: (Join
 			from: (table fieldNamed: 'CLASS_ID')
-			to: (classesTable fieldNamed: 'ID')).
+			to: ((self tableNamed: 'CLASSES') fieldNamed: 'ID')).
+			
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #package;
+		beForPseudoVariable;
+		referenceClass: SPPackage;
+		join: (Join
+			from: (table fieldNamed: 'PACKAGE_ID')
+			to: ((self tableNamed: 'PACKAGES') fieldNamed: 'ID')).
+
 
 ]
 
@@ -802,9 +805,9 @@ SpiderDescriptorSystem >> tableForGIT_COMMITS: aTable [
 	aTable createFieldNamed: 'AUTHOR_NAME' type: platform varchar.
 	aTable createFieldNamed: 'AUTHOR_EMAIL' type: platform varchar.
 	aTable createFieldNamed: 'MESSAGE' type: platform varchar.
+	aTable createFieldNamed: 'STATUS' type: platform varchar.
 	aTable createFieldNamed: 'SOURCE_DIR' type: platform varchar.
 	aTable createFieldNamed: 'FORMAT' type: platform varchar.
-
 ]
 
 { #category : #tables }
