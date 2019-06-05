@@ -7,6 +7,7 @@ Class {
 		'message',
 		'parents',
 		'packages',
+		'status',
 		'sourceDir',
 		'format'
 	],
@@ -14,13 +15,14 @@ Class {
 }
 
 { #category : #'instance creation' }
-SPGitCommit class >> sha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages sourceDir: aDir format: aFormat [
+SPGitCommit class >> sha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages status: statusSymbol sourceDir: aDir format: aFormat [
 
 	^ self new initWithSha: shaHash 
 			authorSignature: anAuthorSig 
 			message: aMessage 
 			parents: aParents 
 			packages: aPackages 
+			status: statusSymbol
 			sourceDir: aDir 
 			format: aFormat
 ]
@@ -78,15 +80,28 @@ SPGitCommit >> hasPackages [
 ]
 
 { #category : #initialization }
-SPGitCommit >> initWithSha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages sourceDir: aDir format: aFormat [
+SPGitCommit >> initWithSha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages status: statusSymbol sourceDir: aDir format: aFormat [
 
 	sha := shaHash.
 	authorSignature := anAuthorSig.
 	message := aMessage.
 	parents := aParents asArray.
 	packages := aPackages asArray.
+	status := statusSymbol.
 	sourceDir := aDir.
 	format := aFormat
+]
+
+{ #category : #testing }
+SPGitCommit >> isImportError [
+
+	^ self status = #importerror
+]
+
+{ #category : #testing }
+SPGitCommit >> isImported [
+
+	^ self status = #imported
 ]
 
 { #category : #accessing }
@@ -151,4 +166,9 @@ SPGitCommit >> shaString [
 { #category : #accessing }
 SPGitCommit >> sourceDir [
 	^ sourceDir
+]
+
+{ #category : #accessing }
+SPGitCommit >> status [
+	^ status
 ]

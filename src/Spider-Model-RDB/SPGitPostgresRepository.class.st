@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS git_commits (
 	author_name VARCHAR NOT NULL,
 	author_email VARCHAR NOT NULL,
 	message VARCHAR NOT NULL,
+	status VARCHAR NOT NULL,
 	source_dir VARCHAR,
 	format VARCHAR
 );

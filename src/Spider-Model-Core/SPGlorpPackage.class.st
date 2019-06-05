@@ -17,6 +17,12 @@ SPGlorpPackage class >> name: aPackageName classRefs: aClasses comment: commentS
 ]
 
 { #category : #comparing }
+SPGlorpPackage >> <= other [
+
+	^ self name <= other name
+]
+
+{ #category : #comparing }
 SPGlorpPackage >> = other [
 
 	self == other ifTrue: [ ^ true ].

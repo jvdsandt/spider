@@ -14,7 +14,8 @@ SpiderDescriptorSystem >> classModelForSPGitCommit: aClassModel [
 	aClassModel newAttributeNamed: #message type: String.
 	aClassModel newAttributeNamed: #parents collectionOf: SPGitCommit.
 	aClassModel newAttributeNamed: #packages collectionOf: SPGlorpPackage.
-	aClassModel newAttributeNamed: #sourceDire type: String.
+	aClassModel newAttributeNamed: #status type: Symbol.
+	aClassModel newAttributeNamed: #sourceDir type: String.
 	aClassModel newAttributeNamed: #format type: Symbol.
 	
 
@@ -226,6 +227,8 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 		attributeName: #authorSignature.
 	(aDescriptor newMapping: DirectMapping) 
 		from: #message to: (table fieldNamed: 'MESSAGE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #status to: (table fieldNamed: 'STATUS').
 	(aDescriptor newMapping: DirectMapping) 
 		from: #sourceDir to: (table fieldNamed: 'SOURCE_DIR').
 	(aDescriptor newMapping: DirectMapping) 

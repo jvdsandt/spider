@@ -15,7 +15,7 @@ Class {
 { #category : #building }
 SPLibGitCommitBuilder >> build [
 
-	| spCommit author |
+	| spCommit author status |
 	
 	"Already present?"
 	spCommit := self gitRepo getCommitBySha: commit id asByteArray ifAbsent: [ nil ].
@@ -23,7 +23,13 @@ SPLibGitCommitBuilder >> build [
 		ifTrue: [ ^ spCommit ].
 
 	self buildParents.
-	self buildPackages.
+	[ 
+		self buildPackages.
+		status := #imported.
+	] on: Error do: [ :ex | 
+		status := #importerror.
+		packages := #().
+	].
 	
 	author := SPGitSignature name: commit author name asByteArray utf8Decoded 
 			email: commit author email asByteArray utf8Decoded
@@ -35,6 +41,7 @@ SPLibGitCommitBuilder >> build [
 			message: commit message
 			parents: parents
 			packages: packages
+			status: status
 			sourceDir: sourceDir
 			format: format.
 	self gitRepo storeCommit: spCommit.
