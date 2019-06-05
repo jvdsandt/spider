@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpClassToVariableRef,
+	#name : #SPClassToVariableRef,
 	#superclass : #SPGlorpRef,
 	#instVars : [
 		'type',
@@ -10,73 +10,73 @@ Class {
 }
 
 { #category : #constants }
-SPGlorpClassToVariableRef class >> classInstanceVarType [
+SPClassToVariableRef class >> classInstanceVarType [
 
 	^ 62
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToVariableRef class >> classVar: aVarSymbol [
+SPClassToVariableRef class >> classVar: aVarSymbol [
 
 	^ self type: self classVarType variable: aVarSymbol
 ]
 
 { #category : #constants }
-SPGlorpClassToVariableRef class >> classVarType [
+SPClassToVariableRef class >> classVarType [
 
 	^ 61
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToVariableRef class >> classsInstanceVar: aVarSymbol [
+SPClassToVariableRef class >> classsInstanceVar: aVarSymbol [
 
 	^ self type: self classInstanceVarType variable: aVarSymbol
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToVariableRef class >> instanceVar: aVarSymbol [
+SPClassToVariableRef class >> instanceVar: aVarSymbol [
 
 	^ self type: self instanceVarType variable: aVarSymbol
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToVariableRef class >> instanceVar: aVarSymbol expression: aString [
+SPClassToVariableRef class >> instanceVar: aVarSymbol expression: aString [
 
 	^ self type: self instanceVarType variable: aVarSymbol expression: aString
 ]
 
 { #category : #constants }
-SPGlorpClassToVariableRef class >> instanceVarType [
+SPClassToVariableRef class >> instanceVarType [
 
 	^ 60
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToVariableRef class >> poolVar: aVarSymbol [
+SPClassToVariableRef class >> poolVar: aVarSymbol [
 
 	^ self type: self poolVarType variable: aVarSymbol
 ]
 
 { #category : #constants }
-SPGlorpClassToVariableRef class >> poolVarType [
+SPClassToVariableRef class >> poolVarType [
 
 	^ 63
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToVariableRef class >> type: anInteger variable: aVarSymbol [
+SPClassToVariableRef class >> type: anInteger variable: aVarSymbol [
 
 	^ self type: anInteger variable: aVarSymbol expression: nil
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToVariableRef class >> type: anInteger variable: aVarSymbol expression: aString [
+SPClassToVariableRef class >> type: anInteger variable: aVarSymbol expression: aString [
 
 	^ self new initType: anInteger variable: aVarSymbol expression: aString
 ]
 
 { #category : #comparing }
-SPGlorpClassToVariableRef >> <= other [
+SPClassToVariableRef >> <= other [
 
 	^ type = other type
 			ifTrue: [ variable <= other variable ]
@@ -84,7 +84,7 @@ SPGlorpClassToVariableRef >> <= other [
 ]
 
 { #category : #comparing }
-SPGlorpClassToVariableRef >> = other [
+SPClassToVariableRef >> = other [
 
 	self == other ifTrue: [ ^true ].
 	self class = other class ifFalse: [ ^false ].
@@ -93,24 +93,24 @@ SPGlorpClassToVariableRef >> = other [
 ]
 
 { #category : #accessing }
-SPGlorpClassToVariableRef >> expression [
+SPClassToVariableRef >> expression [
 	^ expression ifNil: [ self variable printString ]
 ]
 
 { #category : #accessing }
-SPGlorpClassToVariableRef >> expressionOrNil [
+SPClassToVariableRef >> expressionOrNil [
 	^ expression
 
 ]
 
 { #category : #comparing }
-SPGlorpClassToVariableRef >> hash [
+SPClassToVariableRef >> hash [
 
 	^ variable hash bitXor: type hash
 ]
 
 { #category : #initialization }
-SPGlorpClassToVariableRef >> initType: anInteger variable: aVarSymbol expression: aString [
+SPClassToVariableRef >> initType: anInteger variable: aVarSymbol expression: aString [
 
 	type := anInteger.
 	variable := aVarSymbol.
@@ -118,31 +118,31 @@ SPGlorpClassToVariableRef >> initType: anInteger variable: aVarSymbol expression
 ]
 
 { #category : #testing }
-SPGlorpClassToVariableRef >> isClassInstanceVar [
+SPClassToVariableRef >> isClassInstanceVar [
 
 	^ self type = self class classInstanceVarType
 ]
 
 { #category : #testing }
-SPGlorpClassToVariableRef >> isClassVar [
+SPClassToVariableRef >> isClassVar [
 
 	^ self type = self class classVarType
 ]
 
 { #category : #testing }
-SPGlorpClassToVariableRef >> isInstanceVar [
+SPClassToVariableRef >> isInstanceVar [
 
 	^ self type = self class instanceVarType
 ]
 
 { #category : #testing }
-SPGlorpClassToVariableRef >> isPoolVar [
+SPClassToVariableRef >> isPoolVar [
 
 	^ self type = self class poolVarType
 ]
 
 { #category : #printing }
-SPGlorpClassToVariableRef >> printHashSignatureOn: aStream [
+SPClassToVariableRef >> printHashSignatureOn: aStream [
 
 	aStream 
 		print: self type;
@@ -151,11 +151,11 @@ SPGlorpClassToVariableRef >> printHashSignatureOn: aStream [
 ]
 
 { #category : #accessing }
-SPGlorpClassToVariableRef >> type [
+SPClassToVariableRef >> type [
 	^ type
 ]
 
 { #category : #accessing }
-SPGlorpClassToVariableRef >> variable [
+SPClassToVariableRef >> variable [
 	^ variable
 ]

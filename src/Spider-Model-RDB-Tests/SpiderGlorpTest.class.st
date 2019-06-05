@@ -71,10 +71,10 @@ SpiderGlorpTest >> testMethods [
 	
 	self assert: session notNil.
 		
-	query := Query read: SPGlorpMethod where: [ :each | each selector = #printOn: ].
+	query := Query read: SPMethod where: [ :each | each selector = #printOn: ].
 	list := session execute: query.
 
-	query := Query read: SPGlorpMethod where: [ :each | each classToMethodRefs anySatisfy: [ :c | c category = 'printing' ] ].
+	query := Query read: SPMethod where: [ :each | each classToMethodRefs anySatisfy: [ :c | c category = 'printing' ] ].
 	list := session execute: query.
 	list inspect
 
@@ -87,9 +87,9 @@ SpiderGlorpTest >> testPackages [
 	
 	self assert: session notNil.
 	
-	(session read: SPGlorpPackage) inspect.
+	(session read: SPPackage) inspect.
 	
-	query := Query read: SPGlorpPackage where: [ :each | each name like: #'Magritte%' ].
+	query := Query read: SPPackage where: [ :each | each name like: #'Magritte%' ].
 	(session execute: query) inspect
 
 ]
@@ -99,9 +99,9 @@ SpiderGlorpTest >> testSetup [
 
 	self assert: session notNil.
 	
-	session readOneOf: SPGlorpMethod where: [ :each | each sourceHash = #[ 1 2 3 ] ].
+	session readOneOf: SPMethod where: [ :each | each sourceHash = #[ 1 2 3 ] ].
 	
-	(session read: SPGlorpMethod where: [ :each | each selector = #printOn: ]) inspect.
+	(session read: SPMethod where: [ :each | each selector = #printOn: ]) inspect.
 	(session read: SPGlorpClass where: [ :each | each name = #MADescription ]) inspect.
 
 	accessor inspect

@@ -20,7 +20,7 @@ SPBehaviorTest >> testClassWithClassVar [
 	spiderClass := SPGlorpClass className: #Hello 
 		classType: #special 
 		superclassName: #Object 
-		variableRefs: (Array with: (SPGlorpClassToVariableRef classVar: #MyVar))
+		variableRefs: (Array with: (SPClassToVariableRef classVar: #MyVar))
 		methodRefs: #()
 		comment: 'No comment'.
 		
@@ -44,7 +44,7 @@ SPBehaviorTest >> testClassWithPoolDictionary [
 	spiderClass := SPGlorpClass className: #Hello 
 		classType: #normal 
 		superclassName: #Object 
-		variableRefs: (Array with: (SPGlorpClassToVariableRef poolVar: #MyPool))
+		variableRefs: (Array with: (SPClassToVariableRef poolVar: #MyPool))
 		methodRefs: #()
 		comment: 'No comment'.
 		
@@ -68,7 +68,7 @@ SPBehaviorTest >> testClassWithsVars [
 	spiderClass := SPGlorpClass className: #MyClass 
 		classType: #normal
 		superclassName: #Object
-		variableRefs: (Array with: (SPGlorpClassToVariableRef instanceVar: #myVar)) 
+		variableRefs: (Array with: (SPClassToVariableRef instanceVar: #myVar)) 
 		methodRefs: #()
 		comment: 'Nothing special.'.
 		
@@ -86,7 +86,7 @@ SPBehaviorTest >> testSimpleClass [
 		classType: #normal 
 		superclassName: #Object 
 		variableRefs: #()
-		methodRefs: (Array with: (SPGlorpClassToMethodRef instanceMethod: m1 category: 'accessing')) 
+		methodRefs: (Array with: (SPClassToMethodRef instanceMethod: m1 category: 'accessing')) 
 		comment: 'No comment'.
 		
 	self assert: spiderClass name equals: #Hello.
@@ -116,8 +116,8 @@ SPBehaviorTest >> testSimpleClassExtension [
 	
 	spiderClass := SPGlorpClass extensionName: #Hello
 		methodRefs: (Array
-			with: (SPGlorpClassToMethodRef instanceMethod: m1 category: 'accessing')
-			with: (SPGlorpClassToMethodRef classMethod: m2 category: 'testing'))
+			with: (SPClassToMethodRef instanceMethod: m1 category: 'accessing')
+			with: (SPClassToMethodRef classMethod: m2 category: 'testing'))
 		comment: nil.
 		
 	self assert: spiderClass hashSignature equals: 'Hello
@@ -139,7 +139,7 @@ SPBehaviorTest >> testSimpleTrait [
 	
 	spiderClass := SPGlorpClass traitName: #Hello 
 		variableRefs: #()
-		methodRefs: (Array with: (SPGlorpClassToMethodRef instanceMethod: m1 category: 'accessing'))
+		methodRefs: (Array with: (SPClassToMethodRef instanceMethod: m1 category: 'accessing'))
 		traitComposition: nil
 		classTraitComposition: nil
 		comment: 'No comment'.

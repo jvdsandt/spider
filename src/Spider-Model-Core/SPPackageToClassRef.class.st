@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpPackageToClassRef,
+	#name : #SPPackageToClassRef,
 	#superclass : #SPGlorpRef,
 	#instVars : [
 		'spiderClass',
@@ -9,25 +9,25 @@ Class {
 }
 
 { #category : #'instance creation' }
-SPGlorpPackageToClassRef class >> spiderClass: aSpiderClass [
+SPPackageToClassRef class >> spiderClass: aSpiderClass [
 
 	^ self spiderClass: aSpiderClass category: nil
 ]
 
 { #category : #'instance creation' }
-SPGlorpPackageToClassRef class >> spiderClass: aSpiderClass category: aCategory [
+SPPackageToClassRef class >> spiderClass: aSpiderClass category: aCategory [
 
 	^ self new initWithClass: aSpiderClass category: aCategory
 ]
 
 { #category : #comparing }
-SPGlorpPackageToClassRef >> <= other [
+SPPackageToClassRef >> <= other [
 
 	^ self name <= other name
 ]
 
 { #category : #comparing }
-SPGlorpPackageToClassRef >> = other [
+SPPackageToClassRef >> = other [
 
 	self == other ifTrue: [ ^true ].
 	self species = other species ifFalse: [ ^false ].
@@ -36,46 +36,46 @@ SPGlorpPackageToClassRef >> = other [
 ]
 
 { #category : #accessing }
-SPGlorpPackageToClassRef >> category [
+SPPackageToClassRef >> category [
 	^ category
 ]
 
 { #category : #comparing }
-SPGlorpPackageToClassRef >> hash [
+SPPackageToClassRef >> hash [
 
 	^ category hash bitXor: spiderClass hash
 ]
 
 { #category : #initialization }
-SPGlorpPackageToClassRef >> initWithClass: aSpiderClass category: aCategory [
+SPPackageToClassRef >> initWithClass: aSpiderClass category: aCategory [
 
 	spiderClass := aSpiderClass.
 	category := aCategory
 ]
 
 { #category : #testing }
-SPGlorpPackageToClassRef >> isSameRef: otherRef [
+SPPackageToClassRef >> isSameRef: otherRef [
 
 	^ self spiderClass = otherRef spiderClass and: [ self category = otherRef category ]
 ]
 
 { #category : #testing }
-SPGlorpPackageToClassRef >> isSpiderClass [
+SPPackageToClassRef >> isSpiderClass [
 	^ self spiderClass isSpiderClass
 ]
 
 { #category : #testing }
-SPGlorpPackageToClassRef >> isSpiderClassExtension [
+SPPackageToClassRef >> isSpiderClassExtension [
 	^ self spiderClass isSpiderClassExtension
 ]
 
 { #category : #accessing }
-SPGlorpPackageToClassRef >> name [
+SPPackageToClassRef >> name [
 	^ self spiderClass name
 ]
 
 { #category : #printing }
-SPGlorpPackageToClassRef >> printHashSignatureOn: aStream [
+SPPackageToClassRef >> printHashSignatureOn: aStream [
 
 	aStream nextPutAll: self spiderClass classHash hex.
 	category notNil
@@ -83,11 +83,11 @@ SPGlorpPackageToClassRef >> printHashSignatureOn: aStream [
 ]
 
 { #category : #accessing }
-SPGlorpPackageToClassRef >> spiderClass [
+SPPackageToClassRef >> spiderClass [
 	^ spiderClass
 ]
 
 { #category : #accessing }
-SPGlorpPackageToClassRef >> spiderClassName [
+SPPackageToClassRef >> spiderClassName [
 	^ self spiderClass name
 ]

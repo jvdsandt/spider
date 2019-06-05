@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpPackage,
+	#name : #SPPackage,
 	#superclass : #SPGlorpNode,
 	#instVars : [
 		'name',
@@ -11,19 +11,19 @@ Class {
 }
 
 { #category : #'instance creation' }
-SPGlorpPackage class >> name: aPackageName classRefs: aClasses comment: commentString [
+SPPackage class >> name: aPackageName classRefs: aClasses comment: commentString [
 
 	^ self new initWithName: aPackageName classRefs: aClasses comment: commentString
 ]
 
 { #category : #comparing }
-SPGlorpPackage >> <= other [
+SPPackage >> <= other [
 
 	^ self name <= other name
 ]
 
 { #category : #comparing }
-SPGlorpPackage >> = other [
+SPPackage >> = other [
 
 	self == other ifTrue: [ ^ true ].
 	self species = other species ifFalse: [ ^ false ].
@@ -32,12 +32,12 @@ SPGlorpPackage >> = other [
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> behaviors [
+SPPackage >> behaviors [
 	^ classRefs collect: [ :each | each spiderClass ]
 ]
 
 { #category : #initialization }
-SPGlorpPackage >> calcPackageHash [
+SPPackage >> calcPackageHash [
 
 	| byteStream charStream |
 	
@@ -48,45 +48,45 @@ SPGlorpPackage >> calcPackageHash [
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classExtensionNamed: aName [
+SPPackage >> classExtensionNamed: aName [
 
 	^ (classRefs detect: [ :each | each isSpiderClassExtension and: [ each name = aName ] ]) spiderClass
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classExtensionNames [
+SPPackage >> classExtensionNames [
 	^ self classExtensions collect: [ :each | each name ]
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classExtensions [
+SPPackage >> classExtensions [
 	^ classRefs select: [ :each | each isSpiderClassExtension ]
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classNamed: aName [
+SPPackage >> classNamed: aName [
 
 	^ (classRefs detect: [ :each | each name = aName and: [ each isSpiderClass ] ]) spiderClass
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classNames [
+SPPackage >> classNames [
 	^ self classes collect: [ :each | each name ]
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classRefNamed: aName [
+SPPackage >> classRefNamed: aName [
 
 	^ classRefs detect: [ :each | each name = aName ]
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classRefs [
+SPPackage >> classRefs [
 	^ classRefs
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classRefsByName [
+SPPackage >> classRefsByName [
 	^ self classRefs
 			inject: Dictionary new
 			into: [ :dict :each |
@@ -96,17 +96,17 @@ SPGlorpPackage >> classRefsByName [
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> classes [
+SPPackage >> classes [
 	^ classRefs select: [ :each | each isSpiderClass ]
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> comment [
+SPPackage >> comment [
 	^ comment
 ]
 
 { #category : #comparing }
-SPGlorpPackage >> compareClassesWith: olderPackage [
+SPPackage >> compareClassesWith: olderPackage [
 
 	| oldClassRefs result |
 	
@@ -127,7 +127,7 @@ SPGlorpPackage >> compareClassesWith: olderPackage [
 ]
 
 { #category : #actions }
-SPGlorpPackage >> createClassDiffsWith: anAncestor [
+SPPackage >> createClassDiffsWith: anAncestor [
 	"Answer a list of associations with the old class version as key and
 	the new class as value. For a new class the old version will be nil,
 	for a removed class the new version will be nil."
@@ -151,19 +151,19 @@ SPGlorpPackage >> createClassDiffsWith: anAncestor [
 ]
 
 { #category : #comparing }
-SPGlorpPackage >> hash [ 
+SPPackage >> hash [ 
 
 	^ packageHash hash
 ]
 
 { #category : #initialization }
-SPGlorpPackage >> initPackageHash [
+SPPackage >> initPackageHash [
 
 	packageHash := self calcPackageHash 
 ]
 
 { #category : #initialization }
-SPGlorpPackage >> initWithName: aPackageName classRefs: aClassRefs comment: commentString [
+SPPackage >> initWithName: aPackageName classRefs: aClassRefs comment: commentString [
 
 	name := aPackageName.
 	classRefs := aClassRefs sorted asArray.
@@ -173,17 +173,17 @@ SPGlorpPackage >> initWithName: aPackageName classRefs: aClassRefs comment: comm
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> name [
+SPPackage >> name [
 	^ name
 ]
 
 { #category : #accessing }
-SPGlorpPackage >> packageHash [
+SPPackage >> packageHash [
 	^ packageHash
 ]
 
 { #category : #printing }
-SPGlorpPackage >> printHashSignatureOn: stream [
+SPPackage >> printHashSignatureOn: stream [
 
 	stream 
 		nextPutAll: name; lf.
@@ -192,7 +192,7 @@ SPGlorpPackage >> printHashSignatureOn: stream [
 ]
 
 { #category : #printing }
-SPGlorpPackage >> printOn: aStream [
+SPPackage >> printOn: aStream [
 
 	super printOn: aStream.
 	

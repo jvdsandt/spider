@@ -43,11 +43,11 @@ SPMethodPostgresRepository >> allSelectors [
 
 	| q1 q2 query |
 	
-	q1 := (Query read: SPGlorpMethodToSelectorRef)
+	q1 := (Query read: SPMethodToSelectorRef)
 		retrieve: [ :e | e selector ];
 		yourself.
 		
-	q2 := (Query read: SPGlorpMethod)
+	q2 := (Query read: SPMethod)
 		retrieve: [ :e | e selector ];
 		yourself.
 		
@@ -63,7 +63,7 @@ SPMethodPostgresRepository >> allVariables [
 
 	| query |
 	
-	query := (Query read: SPGlorpMethodToVariableRef)
+	query := (Query read: SPMethodToVariableRef)
 		retrieve: [ :e | e variable distinct ];
 		orderBy: [ :e | e variable ];
 		yourself.

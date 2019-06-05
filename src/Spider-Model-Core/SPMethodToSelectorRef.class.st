@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpMethodToSelectorRef,
+	#name : #SPMethodToSelectorRef,
 	#superclass : #SPGlorpRef,
 	#instVars : [
 		'selector',
@@ -9,43 +9,43 @@ Class {
 }
 
 { #category : #constants }
-SPGlorpMethodToSelectorRef class >> flagPragma [
+SPMethodToSelectorRef class >> flagPragma [
 
 	^ 2r10000000
 ]
 
 { #category : #constants }
-SPGlorpMethodToSelectorRef class >> flagSelfSend [
+SPMethodToSelectorRef class >> flagSelfSend [
 
 	^ 2r00000010
 ]
 
 { #category : #constants }
-SPGlorpMethodToSelectorRef class >> flagSend [
+SPMethodToSelectorRef class >> flagSend [
 
 	^ 2r00000001
 ]
 
 { #category : #constants }
-SPGlorpMethodToSelectorRef class >> flagSuperSend [
+SPMethodToSelectorRef class >> flagSuperSend [
 
 	^ 2r00000100
 ]
 
 { #category : #'instance creation' }
-SPGlorpMethodToSelectorRef class >> selector: aSymbol flags: anInteger [
+SPMethodToSelectorRef class >> selector: aSymbol flags: anInteger [
 
 	^self new initSelector: aSymbol flags: anInteger
 ]
 
 { #category : #comparing }
-SPGlorpMethodToSelectorRef >> <= other [
+SPMethodToSelectorRef >> <= other [
 
 	^selector <= other selector
 ]
 
 { #category : #comparing }
-SPGlorpMethodToSelectorRef >> = other [
+SPMethodToSelectorRef >> = other [
 
 	self == other ifTrue: [ ^true ].
 	self class = other class ifFalse: [ ^false ].
@@ -54,49 +54,49 @@ SPGlorpMethodToSelectorRef >> = other [
 ]
 
 { #category : #accessing }
-SPGlorpMethodToSelectorRef >> flags [
+SPMethodToSelectorRef >> flags [
 	^ flags
 ]
 
 { #category : #comparing }
-SPGlorpMethodToSelectorRef >> hash [ 
+SPMethodToSelectorRef >> hash [ 
 
 	^selector hash bitXor: flags hash
 ]
 
 { #category : #initialization }
-SPGlorpMethodToSelectorRef >> initSelector: aSymbol flags: anInteger [
+SPMethodToSelectorRef >> initSelector: aSymbol flags: anInteger [
 
 	selector := aSymbol.
 	flags := anInteger.
 ]
 
 { #category : #testing }
-SPGlorpMethodToSelectorRef >> isPragma [
+SPMethodToSelectorRef >> isPragma [
 
 	^(flags bitAnd: self class flagPragma) ~= 0
 ]
 
 { #category : #testing }
-SPGlorpMethodToSelectorRef >> isSend [
+SPMethodToSelectorRef >> isSend [
 
 	^(flags bitAnd: self class flagSend) ~= 0
 ]
 
 { #category : #testing }
-SPGlorpMethodToSelectorRef >> isToSelf [
+SPMethodToSelectorRef >> isToSelf [
 
 	^(flags bitAnd: self class flagSelfSend) ~= 0
 ]
 
 { #category : #testing }
-SPGlorpMethodToSelectorRef >> isToSuper [
+SPMethodToSelectorRef >> isToSuper [
 
 	^(flags bitAnd: self class flagSuperSend) ~= 0
 ]
 
 { #category : #printing }
-SPGlorpMethodToSelectorRef >> printOn: aStream [
+SPMethodToSelectorRef >> printOn: aStream [
 
 	super printOn: aStream.
 	
@@ -106,6 +106,6 @@ SPGlorpMethodToSelectorRef >> printOn: aStream [
 ]
 
 { #category : #accessing }
-SPGlorpMethodToSelectorRef >> selector [
+SPMethodToSelectorRef >> selector [
 	^ selector
 ]

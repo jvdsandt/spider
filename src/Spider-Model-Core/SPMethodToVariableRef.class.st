@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpMethodToVariableRef,
+	#name : #SPMethodToVariableRef,
 	#superclass : #SPGlorpRef,
 	#instVars : [
 		'variable',
@@ -9,29 +9,29 @@ Class {
 }
 
 { #category : #constants }
-SPGlorpMethodToVariableRef class >> flagRead [
+SPMethodToVariableRef class >> flagRead [
 	^ 2r00000001
 ]
 
 { #category : #constants }
-SPGlorpMethodToVariableRef class >> flagWrite [
+SPMethodToVariableRef class >> flagWrite [
 	^ 2r00000010
 ]
 
 { #category : #'instance creation' }
-SPGlorpMethodToVariableRef class >> variable: aSymbol flags: anInteger [
+SPMethodToVariableRef class >> variable: aSymbol flags: anInteger [
 
 	^self new initVariable: aSymbol flags: anInteger
 ]
 
 { #category : #comparing }
-SPGlorpMethodToVariableRef >> <= other [
+SPMethodToVariableRef >> <= other [
 
 	^variable <= other variable
 ]
 
 { #category : #comparing }
-SPGlorpMethodToVariableRef >> = other [
+SPMethodToVariableRef >> = other [
 
 	self == other ifTrue: [ ^true ].
 	self class = other class ifFalse: [ ^false ].
@@ -40,37 +40,37 @@ SPGlorpMethodToVariableRef >> = other [
 ]
 
 { #category : #accessing }
-SPGlorpMethodToVariableRef >> flags [
+SPMethodToVariableRef >> flags [
 	^ flags
 ]
 
 { #category : #comparing }
-SPGlorpMethodToVariableRef >> hash [ 
+SPMethodToVariableRef >> hash [ 
 
 	^variable hash bitXor: flags hash
 ]
 
 { #category : #initialization }
-SPGlorpMethodToVariableRef >> initVariable: aSymbol flags: anInteger [
+SPMethodToVariableRef >> initVariable: aSymbol flags: anInteger [
 
 	variable := aSymbol.
 	flags := anInteger 
 ]
 
 { #category : #testing }
-SPGlorpMethodToVariableRef >> isRead [
+SPMethodToVariableRef >> isRead [
 
 	^(flags bitAnd: self class flagRead) ~= 0
 ]
 
 { #category : #testing }
-SPGlorpMethodToVariableRef >> isWrite [
+SPMethodToVariableRef >> isWrite [
 
 	^(flags bitAnd: self class flagWrite) ~= 0
 ]
 
 { #category : #printing }
-SPGlorpMethodToVariableRef >> printOn: aStream [
+SPMethodToVariableRef >> printOn: aStream [
 
 	super printOn: aStream.
 	
@@ -80,6 +80,6 @@ SPGlorpMethodToVariableRef >> printOn: aStream [
 ]
 
 { #category : #accessing }
-SPGlorpMethodToVariableRef >> variable [
+SPMethodToVariableRef >> variable [
 	^ variable
 ]

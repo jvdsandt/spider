@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpMethod,
+	#name : #SPMethod,
 	#superclass : #SPGlorpNode,
 	#instVars : [
 		'selector',
@@ -12,19 +12,19 @@ Class {
 }
 
 { #category : #constants }
-SPGlorpMethod class >> flagPragma [
+SPMethod class >> flagPragma [
 
 	^ 2r10000000
 ]
 
 { #category : #constants }
-SPGlorpMethod class >> flagSelfSend [
+SPMethod class >> flagSelfSend [
 
 	^ 2r00000010
 ]
 
 { #category : #'instance creation' }
-SPGlorpMethod class >> selector: aSelector source: aSource hash: aSourceHash selectorRefs: selRefs variableRefs: varRefs [ 
+SPMethod class >> selector: aSelector source: aSource hash: aSourceHash selectorRefs: selRefs variableRefs: varRefs [ 
 
 	^ self new initSelector: aSelector 
 			source: aSource 
@@ -34,13 +34,13 @@ SPGlorpMethod class >> selector: aSelector source: aSource hash: aSourceHash sel
 ]
 
 { #category : #comparing }
-SPGlorpMethod >> <= other [
+SPMethod >> <= other [
 
 	^ selector <= other selector
 ]
 
 { #category : #comparing }
-SPGlorpMethod >> = other [
+SPMethod >> = other [
 
 	self == other ifTrue: [ ^ true ].
 	self species = other species ifFalse: [ ^ false ].
@@ -49,19 +49,19 @@ SPGlorpMethod >> = other [
 ]
 
 { #category : #converting }
-SPGlorpMethod >> asSPMethod [
+SPMethod >> asSPMethod [
 
 	^ self createSPMethod
 ]
 
 { #category : #comparing }
-SPGlorpMethod >> hash [ 
+SPMethod >> hash [ 
 
 	^ sourceHash hash
 ]
 
 { #category : #initialization }
-SPGlorpMethod >> initSelector: aSelector source: aSource hash: aSourceHash selectorRefs: selRefs variableRefs: varRefs [ 
+SPMethod >> initSelector: aSelector source: aSource hash: aSourceHash selectorRefs: selRefs variableRefs: varRefs [ 
 
 	selector := aSelector.
 	source := aSource.
@@ -71,30 +71,30 @@ SPGlorpMethod >> initSelector: aSelector source: aSource hash: aSourceHash selec
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> messages [
+SPMethod >> messages [
 	"Answer a collection of all the message selectors sent by this method."
 
 	^ self selectorRefs select: [ :e | e isSend ] thenCollect: [ :e | e selector ]
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> messagesToSelf [
+SPMethod >> messagesToSelf [
 	^ self selectorRefs select: [ :each | each isToSelf ] thenCollect: [ :each | each selector ]
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> messagesToSuper [
+SPMethod >> messagesToSuper [
 	^ self selectorRefs select: [ :each | each isToSuper ] thenCollect: [ :each | each selector ]
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> pragmas [
+SPMethod >> pragmas [
 
 	^ self selectorRefs select: [ :e | e isPragma ] thenCollect: [ :e | e selector ]
 ]
 
 { #category : #printing }
-SPGlorpMethod >> printOn: aStream [
+SPMethod >> printOn: aStream [
 
 	super printOn: aStream.
 	
@@ -106,49 +106,49 @@ SPGlorpMethod >> printOn: aStream [
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> selector [
+SPMethod >> selector [
 	^ selector
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> selectorRefAt: aSymbol [
+SPMethod >> selectorRefAt: aSymbol [
 	^ selectorRefs detect: [ :each | each selector = aSymbol ]
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> selectorRefs [
+SPMethod >> selectorRefs [
 	^ selectorRefs
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> source [
+SPMethod >> source [
 	^ source
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> sourceHash [
+SPMethod >> sourceHash [
 	^ sourceHash
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> variableRefs [
+SPMethod >> variableRefs [
 	^ variableRefs
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> variables [ 
+SPMethod >> variables [ 
 
 	^ self variableRefs collect: [ :each | each variable ]
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> variablesRead [ 
+SPMethod >> variablesRead [ 
 
 	^ self variableRefs select: [ :each | each isRead ] thenCollect:  [ :each | each variable ]
 ]
 
 { #category : #accessing }
-SPGlorpMethod >> variablesWritten [
+SPMethod >> variablesWritten [
 
 	^ self variableRefs select: [ :each | each isWrite ] thenCollect:  [ :each | each variable ]
 ]

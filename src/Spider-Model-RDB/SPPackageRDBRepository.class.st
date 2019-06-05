@@ -29,7 +29,7 @@ SPPackageRDBRepository >> getAllPackageNames [
 
 	| query |
 	
-	query := (Query read: SPGlorpPackage)
+	query := (Query read: SPPackage)
 		retrieve: [ :e | e name ];
 		orderBy: [ :e | e name ];
 		yourself.
@@ -42,7 +42,7 @@ SPPackageRDBRepository >> getPackageByHash: aBytes ifAbsent: aBlock [
 
 	| package |
 	
-	package := self glorpSession readOneOf: SPGlorpPackage where: [ :e | e packageHash = aBytes ].
+	package := self glorpSession readOneOf: SPPackage where: [ :e | e packageHash = aBytes ].
 	^ package isNil
 			ifTrue: [ aBlock value ]
 			ifFalse: [ package ]
@@ -51,7 +51,7 @@ SPPackageRDBRepository >> getPackageByHash: aBytes ifAbsent: aBlock [
 { #category : #queries }
 SPPackageRDBRepository >> getPackageById: anId [
 
-	^ self glorpSession readOneOf: SPGlorpPackage where: [ :e | e id = anId ]
+	^ self glorpSession readOneOf: SPPackage where: [ :e | e id = anId ]
 ]
 
 { #category : #accessing }

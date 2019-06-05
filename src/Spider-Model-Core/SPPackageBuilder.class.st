@@ -27,7 +27,7 @@ SPPackageBuilder >> addClass: aSpiderClass category: aCategory [
 			subCategory isEmpty
 				ifTrue: [ subCategory := nil ] ].
 
-	^ classes add: (SPGlorpPackageToClassRef spiderClass: aSpiderClass category: subCategory)
+	^ classes add: (SPPackageToClassRef spiderClass: aSpiderClass category: subCategory)
 ]
 
 { #category : #adding }
@@ -36,7 +36,7 @@ SPPackageBuilder >> addClassExtension: aSpiderClassExtension [
 	(self isNameUnique: aSpiderClassExtension name)
 		ifFalse: [ self error: 'Class extension name not unique in package' ].
 
-	^ classes add: (SPGlorpPackageToClassRef spiderClass: aSpiderClassExtension)
+	^ classes add: (SPPackageToClassRef spiderClass: aSpiderClassExtension)
 ]
 
 { #category : #building }
@@ -44,7 +44,7 @@ SPPackageBuilder >> build [
 
 	| newPackage existingPackage hash |
 
-	newPackage := SPGlorpPackage name: name classRefs: classes comment: comment.
+	newPackage := SPPackage name: name classRefs: classes comment: comment.
 	hash := newPackage packageHash.
 	
 	existingPackage := self repo getPackageByHash: hash ifAbsent: [ nil ].

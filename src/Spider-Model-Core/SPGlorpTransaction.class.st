@@ -60,7 +60,7 @@ SPGlorpTransaction >> methods [
 
 	| query |
 	
-	query := Query read: SPGlorpMethod where: [ :each | each transaction = self ].
+	query := Query read: SPMethod where: [ :each | each transaction = self ].
 	
 	^ self glorpSession execute: query
 ]
@@ -70,7 +70,7 @@ SPGlorpTransaction >> packages [
 
 	| query |
 	
-	query := Query read: SPGlorpPackage where: [ :each | each transaction = self ].
+	query := Query read: SPPackage where: [ :each | each transaction = self ].
 	
 	^ self glorpSession execute: query
 ]

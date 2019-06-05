@@ -41,8 +41,8 @@ SPPackageRDBRepositoryTest >> testSimplePackage [
 		setClass: Boolean;
 		build.
 
-	package := SPGlorpPackage name: 'MyBooleanPackage'
-		classRefs: (Array with: (SPGlorpPackageToClassRef spiderClass: spiderClass category: 'MyCat')) 
+	package := SPPackage name: 'MyBooleanPackage'
+		classRefs: (Array with: (SPPackageToClassRef spiderClass: spiderClass category: 'MyCat')) 
 		comment: 'Just testing ...'.
 		
 	packageId := repo storePackage: package.

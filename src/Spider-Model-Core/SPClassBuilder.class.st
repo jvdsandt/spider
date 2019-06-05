@@ -20,7 +20,7 @@ SPClassBuilder >> addClassInstanceVarSlot: aSlot [
 	expression := aSlot definitionString.
 
 	variableRefs add: (
-		SPGlorpClassToVariableRef type: SPGlorpClassToVariableRef classInstanceVarType 
+		SPClassToVariableRef type: SPClassToVariableRef classInstanceVarType 
 			variable: aSlot name
 			expression: (aSlot name printString = expression ifTrue: [ nil ] ifFalse: [ expression ]))
 
@@ -29,7 +29,7 @@ SPClassBuilder >> addClassInstanceVarSlot: aSlot [
 { #category : #adding }
 SPClassBuilder >> addClassVar: aVarName [
 
-	variableRefs add: (SPGlorpClassToVariableRef classVar: aVarName)
+	variableRefs add: (SPClassToVariableRef classVar: aVarName)
 ]
 
 { #category : #adding }
@@ -40,7 +40,7 @@ SPClassBuilder >> addInstanceVarSlot: aSlot [
 	expression := aSlot definitionString.
 
 	variableRefs add: (
-		SPGlorpClassToVariableRef type: SPGlorpClassToVariableRef instanceVarType 
+		SPClassToVariableRef type: SPClassToVariableRef instanceVarType 
 			variable: aSlot name
 			expression: (aSlot name printString = expression ifTrue: [ nil ] ifFalse: [ expression ]))
 
@@ -50,13 +50,13 @@ SPClassBuilder >> addInstanceVarSlot: aSlot [
 SPClassBuilder >> addMCVar: aVarName type: aVarType [
 
 	variableRefs add: (
-		SPGlorpClassToVariableRef type: aVarType variable: aVarName)
+		SPClassToVariableRef type: aVarType variable: aVarName)
 ]
 
 { #category : #adding }
 SPClassBuilder >> addPoolVar: aVarName [
 
-	variableRefs add: (SPGlorpClassToVariableRef poolVar: aVarName)
+	variableRefs add: (SPClassToVariableRef poolVar: aVarName)
 ]
 
 { #category : #building }
@@ -161,10 +161,10 @@ SPClassBuilder >> setMCClass: aMCClassDef methods: aMCMethodDefs [
 	"Make sure that the variables collection is initialized."
 	aMCClassDef variables.
 	
-	aMCClassDef instVarNames do: [ :each | self addMCVar: each type: SPGlorpClassToVariableRef instanceVarType ].
-	aMCClassDef classVarNames do: [ :each | self addMCVar: each type: SPGlorpClassToVariableRef classVarType ].
-	aMCClassDef classInstVarNames do: [ :each | self addMCVar: each type: SPGlorpClassToVariableRef classInstanceVarType ].
-	aMCClassDef poolDictionaries do: [ :each | self addMCVar: each type: SPGlorpClassToVariableRef poolVarType ].
+	aMCClassDef instVarNames do: [ :each | self addMCVar: each type: SPClassToVariableRef instanceVarType ].
+	aMCClassDef classVarNames do: [ :each | self addMCVar: each type: SPClassToVariableRef classVarType ].
+	aMCClassDef classInstVarNames do: [ :each | self addMCVar: each type: SPClassToVariableRef classInstanceVarType ].
+	aMCClassDef poolDictionaries do: [ :each | self addMCVar: each type: SPClassToVariableRef poolVarType ].
 	
 	self privateImportMCMethods: aMCMethodDefs
 ]

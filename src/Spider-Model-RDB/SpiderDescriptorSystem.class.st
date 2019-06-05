@@ -5,6 +5,23 @@ Class {
 }
 
 { #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPClassToMethodRef: aClassModel [
+
+	aClassModel newAttributeNamed: #type type: Integer.	
+	aClassModel newAttributeNamed: #category type: Symbol.
+	aClassModel newAttributeNamed: #method type: SPMethod.
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPClassToVariableRef: aClassModel [
+
+	aClassModel newAttributeNamed: #type type: Integer.	
+	aClassModel newAttributeNamed: #variable type: Symbol.
+	aClassModel newAttributeNamed: #expression type: String.
+
+]
+
+{ #category : #'class models' }
 SpiderDescriptorSystem >> classModelForSPGitCommit: aClassModel [
 
 	aClassModel newAttributeNamed: #id type: Integer.
@@ -13,7 +30,7 @@ SpiderDescriptorSystem >> classModelForSPGitCommit: aClassModel [
 	aClassModel newAttributeNamed: #authorSignature type: SPGitSignature.
 	aClassModel newAttributeNamed: #message type: String.
 	aClassModel newAttributeNamed: #parents collectionOf: SPGitCommit.
-	aClassModel newAttributeNamed: #packages collectionOf: SPGlorpPackage.
+	aClassModel newAttributeNamed: #packages collectionOf: SPPackage.
 	aClassModel newAttributeNamed: #status type: Symbol.
 	aClassModel newAttributeNamed: #sourceDir type: String.
 	aClassModel newAttributeNamed: #format type: Symbol.
@@ -55,58 +72,12 @@ SpiderDescriptorSystem >> classModelForSPGlorpClass: aClassModel [
 	aClassModel newAttributeNamed: #classHash type: ByteArray.	
 	aClassModel newAttributeNamed: #classType type: Symbol.	
 	aClassModel newAttributeNamed: #superclassName type: Symbol.
-	aClassModel newAttributeNamed: #methodRefs collection: Array of: SPGlorpClassToMethodRef.
-	aClassModel newAttributeNamed: #variableRefs collection: Array of: SPGlorpClassToVariableRef.
+	aClassModel newAttributeNamed: #methodRefs collection: Array of: SPClassToMethodRef.
+	aClassModel newAttributeNamed: #variableRefs collection: Array of: SPClassToVariableRef.
 	aClassModel newAttributeNamed: #traitCompositionString type: String.
 	aClassModel newAttributeNamed: #classTraitCompositionString type: String.
 
 
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpClassToMethodRef: aClassModel [
-
-	aClassModel newAttributeNamed: #type type: Integer.	
-	aClassModel newAttributeNamed: #category type: Symbol.
-	aClassModel newAttributeNamed: #method type: SPGlorpMethod.
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpClassToVariableRef: aClassModel [
-
-	aClassModel newAttributeNamed: #type type: Integer.	
-	aClassModel newAttributeNamed: #variable type: Symbol.
-	aClassModel newAttributeNamed: #expression type: String.
-
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpMethod: aClassModel [
-
-	aClassModel
-		newAttributeNamed: #id type: Integer;
-		newAttributeNamed: #transaction type: SPGlorpTransaction;
-		newAttributeNamed: #selector type: Symbol;
-		newAttributeNamed: #source type: String;
-		newAttributeNamed: #sourceHash type: ByteArray;
-		newAttributeNamed: #selectorRefs collection: Array of: SPGlorpMethodToSelectorRef;
-		newAttributeNamed: #variableRefs collection: Array of: SPGlorpMethodToVariableRef
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpMethodToSelectorRef: aClassModel [
-
-	aClassModel
-		newAttributeNamed: #selector type: Symbol;
-		newAttributeNamed: #flags type: Integer
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpMethodToVariableRef: aClassModel [
-
-	aClassModel
-		newAttributeNamed: #variable type: Symbol;
-		newAttributeNamed: #flags type: Integer
 ]
 
 { #category : #'class models' }
@@ -131,8 +102,8 @@ SpiderDescriptorSystem >> classModelForSPGlorpMonticelloPackage: aClassModel [
 	aClassModel newAttributeNamed: #author type: String.
 	aClassModel newAttributeNamed: #datetime type: DateAndTime.
 	aClassModel newAttributeNamed: #message type: String.
-	aClassModel newAttributeNamed: #package type: SPGlorpPackage.
-	aClassModel newAttributeNamed: #ancestors collectionOf: SPGlorpPackage.
+	aClassModel newAttributeNamed: #package type: SPPackage.
+	aClassModel newAttributeNamed: #ancestors collectionOf: SPPackage.
 	aClassModel newAttributeNamed: #rootId type: Integer.
 
 ]
@@ -155,36 +126,6 @@ SpiderDescriptorSystem >> classModelForSPGlorpMonticelloRepository: aClassModel 
 ]
 
 { #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpPackage: aClassModel [
-
-	aClassModel newAttributeNamed: #id type: Integer.
-	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
-	aClassModel newAttributeNamed: #name type: Symbol.	
-	aClassModel newAttributeNamed: #comment type: String.
-	aClassModel newAttributeNamed: #packageHash type: ByteArray.	
-	aClassModel newAttributeNamed: #classRefs collection: Array of: SPGlorpPackageToClassRef.
-
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpPackageToClassRef: aClassModel [
-
-	aClassModel newAttributeNamed: #spiderClass type: SPGlorpClass.	
-	aClassModel newAttributeNamed: #category type: Symbol.
-	aClassModel newAttributeNamed: #spiderClassName type: Symbol.
-
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpSelector: aClassModel [
-
-	aClassModel newAttributeNamed: #id type: Integer.
-	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
-	aClassModel newAttributeNamed: #selector type: Symbol.	
-
-]
-
-{ #category : #'class models' }
 SpiderDescriptorSystem >> classModelForSPGlorpSession: aClassModel [
 
 	aClassModel newAttributeNamed: #id type: Integer.
@@ -202,12 +143,103 @@ SpiderDescriptorSystem >> classModelForSPGlorpTransaction: aClassModel [
 ]
 
 { #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpVariable: aClassModel [
+SpiderDescriptorSystem >> classModelForSPMethod: aClassModel [
+
+	aClassModel
+		newAttributeNamed: #id type: Integer;
+		newAttributeNamed: #transaction type: SPGlorpTransaction;
+		newAttributeNamed: #selector type: Symbol;
+		newAttributeNamed: #source type: String;
+		newAttributeNamed: #sourceHash type: ByteArray;
+		newAttributeNamed: #selectorRefs collection: Array of: SPMethodToSelectorRef;
+		newAttributeNamed: #variableRefs collection: Array of: SPMethodToVariableRef
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPMethodToSelectorRef: aClassModel [
+
+	aClassModel
+		newAttributeNamed: #selector type: Symbol;
+		newAttributeNamed: #flags type: Integer
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPMethodToVariableRef: aClassModel [
+
+	aClassModel
+		newAttributeNamed: #variable type: Symbol;
+		newAttributeNamed: #flags type: Integer
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPPackage: aClassModel [
 
 	aClassModel newAttributeNamed: #id type: Integer.
 	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
-	aClassModel newAttributeNamed: #variable type: Symbol.	
+	aClassModel newAttributeNamed: #name type: Symbol.	
+	aClassModel newAttributeNamed: #comment type: String.
+	aClassModel newAttributeNamed: #packageHash type: ByteArray.	
+	aClassModel newAttributeNamed: #classRefs collection: Array of: SPPackageToClassRef.
 
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPPackageToClassRef: aClassModel [
+
+	aClassModel newAttributeNamed: #spiderClass type: SPGlorpClass.	
+	aClassModel newAttributeNamed: #category type: Symbol.
+	aClassModel newAttributeNamed: #spiderClassName type: Symbol.
+
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPClassToMethodRef: aDescriptor [
+
+	| table methodsTable |
+	
+	table := self tableNamed: 'CLASS_MET_REFS'.
+	methodsTable := self tableNamed: 'METHODS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #type to: (table fieldNamed: 'TYPE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #category to: (table fieldNamed: 'CATEGORY').
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #method;
+		referenceClass: SPMethod;
+		shouldProxy: false;
+		join: (Join
+			from: (table fieldNamed: 'METHOD_ID')
+			to: (methodsTable fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #class;
+		beForPseudoVariable;
+		referenceClass: SPGlorpClass;
+		join: (Join
+			from: (table fieldNamed: 'CLASS_ID')
+			to: ((self tableNamed: 'CLASSES') fieldNamed: 'ID')).
+
+
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPClassToVariableRef: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'CLASS_VAR_REFS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #variable to: (table fieldNamed: 'VARIABLE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #type to: (table fieldNamed: 'TYPE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #expression to: (table fieldNamed: 'EXPRESSION').
 ]
 
 { #category : #descriptors }
@@ -242,7 +274,7 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 
 	(aDescriptor newMapping: ManyToManyMapping)
 		attributeName: #packages;
-		referenceClass: SPGlorpPackage;
+		referenceClass: SPPackage;
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: ((self tableNamed: 'GIT_COMMIT_PACK_REFS') fieldNamed: 'COMMIT_ID')).
@@ -336,156 +368,18 @@ SpiderDescriptorSystem >> descriptorForSPGlorpClass: aDescriptor [
 
 	(aDescriptor newMapping: OneToManyMapping)
 		attributeName: #variableRefs;
-		referenceClass: SPGlorpClassToVariableRef;
+		referenceClass: SPClassToVariableRef;
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: (varRefsTable fieldNamed: 'CLASS_ID')).
 		
 	(aDescriptor newMapping: OneToManyMapping)
 		attributeName: #methodRefs;
-		referenceClass: SPGlorpClassToMethodRef;
+		referenceClass: SPClassToMethodRef;
 		orderBy: [ :e | e method selector ];
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: (methodRefsTable fieldNamed: 'CLASS_ID')).
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpClassToMethodRef: aDescriptor [
-
-	| table methodsTable |
-	
-	table := self tableNamed: 'CLASS_MET_REFS'.
-	methodsTable := self tableNamed: 'METHODS'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #type to: (table fieldNamed: 'TYPE').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #category to: (table fieldNamed: 'CATEGORY').
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #method;
-		referenceClass: SPGlorpMethod;
-		shouldProxy: false;
-		join: (Join
-			from: (table fieldNamed: 'METHOD_ID')
-			to: (methodsTable fieldNamed: 'ID')).
-
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #class;
-		beForPseudoVariable;
-		referenceClass: SPGlorpClass;
-		join: (Join
-			from: (table fieldNamed: 'CLASS_ID')
-			to: ((self tableNamed: 'CLASSES') fieldNamed: 'ID')).
-
-
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpClassToVariableRef: aDescriptor [
-
-	| table |
-	
-	table := self tableNamed: 'CLASS_VAR_REFS'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #variable to: (table fieldNamed: 'VARIABLE').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #type to: (table fieldNamed: 'TYPE').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #expression to: (table fieldNamed: 'EXPRESSION').
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpMethod: aDescriptor [
-
-	| table varRefsTable msgSendsTable |
-	
-	table := self tableNamed: 'METHODS'.
-	varRefsTable := self tableNamed: 'METHOD_VAR_REFS'.
-	msgSendsTable := self tableNamed: 'METHOD_SEL_REFS'.
-	
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #id to: (table fieldNamed: 'ID').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #selector to: (table fieldNamed: 'SELECTOR').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #source to: (table fieldNamed: 'SOURCE').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #sourceHash to: (table fieldNamed: 'HASH').
-		
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #transaction;
-		join: (Join
-			from: (table fieldNamed: 'TXID')
-			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
-
-	(aDescriptor newMapping: OneToManyMapping)
-		attributeName: #variableRefs;
-		referenceClass: SPGlorpMethodToVariableRef;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: (varRefsTable fieldNamed: 'METHOD_ID')).
-		
-	(aDescriptor newMapping: OneToManyMapping)
-		attributeName: #selectorRefs;
-		referenceClass: SPGlorpMethodToSelectorRef;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: (msgSendsTable fieldNamed: 'METHOD_ID')).
-			
-		
-	(aDescriptor newMapping: OneToManyMapping)
-		attributeName: #classToMethodRefs;
-		beForPseudoVariable;
-		referenceClass: SPGlorpClassToMethodRef;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: ((self tableNamed: 'CLASS_MET_REFS') fieldNamed: 'METHOD_ID')).
-"	(aDescriptor newMapping: ManyToManyMapping)
-		attributeName: #classes;
-		beForPseudoVariable;
-		referenceClass: SPGlorpClass;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: ((self tableNamed: 'CLASS_MET_REFS') fieldNamed: 'METHOD_ID')).
-"
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpMethodToSelectorRef: aDescriptor [
-
-	| table |
-	
-	table := self tableNamed: 'METHOD_SEL_REFS'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #selector to: (table fieldNamed: 'SELECTOR').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #flags to: (table fieldNamed: 'FLAGS').
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpMethodToVariableRef: aDescriptor [
-
-	| table |
-	
-	table := self tableNamed: 'METHOD_VAR_REFS'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #variable to: (table fieldNamed: 'VARIABLE').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #flags to: (table fieldNamed: 'FLAGS').
 ]
 
 { #category : #descriptors }
@@ -628,67 +522,6 @@ SpiderDescriptorSystem >> descriptorForSPGlorpMonticelloRepository: aDescriptor 
 ]
 
 { #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpPackage: aDescriptor [
-
-	| table classRefsTable |
-	
-	table := self tableNamed: 'PACKAGES'.
-	classRefsTable := self tableNamed: 'PACKAGE_CLS_REFS'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #id to: (table fieldNamed: 'ID').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #name to: (table fieldNamed: 'NAME').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #packageHash to: (table fieldNamed: 'HASH').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #comment to: (table fieldNamed: 'COMMENT').
-
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #transaction;
-		join: (Join
-			from: (table fieldNamed: 'TXID')
-			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
-
-	(aDescriptor newMapping: OneToManyMapping)
-		attributeName: #classRefs;
-		referenceClass: SPGlorpPackageToClassRef;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: (classRefsTable fieldNamed: 'PACKAGE_ID')).
-
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpPackageToClassRef: aDescriptor [
-
-	| table classesTable |
-	
-	table := self tableNamed: 'PACKAGE_CLS_REFS'.
-	classesTable := self tableNamed: 'CLASSES'.
-
-	aDescriptor table: table.
-	aDescriptor addTable: classesTable.
-	aDescriptor addMultipleTableJoin: (
-		Join 
-			from: (table fieldNamed: 'CLASS_ID')
-			to: (classesTable fieldNamed: 'ID')).
-		
-	(aDescriptor newMapping: DirectMapping) 
-		from: #category to: (table fieldNamed: 'CATEGORY').
-
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #spiderClass;
-		referenceClass: SPGlorpClass;
-		join: (Join
-			from: (table fieldNamed: 'CLASS_ID')
-			to: (classesTable fieldNamed: 'ID')).
-
-]
-
-{ #category : #descriptors }
 SpiderDescriptorSystem >> descriptorForSPGlorpSelector: aDescriptor [
 
 	| table |
@@ -765,6 +598,155 @@ SpiderDescriptorSystem >> descriptorForSPGlorpVariable: aDescriptor [
 		join: (Join
 			from: (table fieldNamed: 'TXID')
 			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID'))
+
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPMethod: aDescriptor [
+
+	| table varRefsTable msgSendsTable |
+	
+	table := self tableNamed: 'METHODS'.
+	varRefsTable := self tableNamed: 'METHOD_VAR_REFS'.
+	msgSendsTable := self tableNamed: 'METHOD_SEL_REFS'.
+	
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #id to: (table fieldNamed: 'ID').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #selector to: (table fieldNamed: 'SELECTOR').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #source to: (table fieldNamed: 'SOURCE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #sourceHash to: (table fieldNamed: 'HASH').
+		
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #transaction;
+		join: (Join
+			from: (table fieldNamed: 'TXID')
+			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToManyMapping)
+		attributeName: #variableRefs;
+		referenceClass: SPMethodToVariableRef;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: (varRefsTable fieldNamed: 'METHOD_ID')).
+		
+	(aDescriptor newMapping: OneToManyMapping)
+		attributeName: #selectorRefs;
+		referenceClass: SPMethodToSelectorRef;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: (msgSendsTable fieldNamed: 'METHOD_ID')).
+			
+		
+	(aDescriptor newMapping: OneToManyMapping)
+		attributeName: #classToMethodRefs;
+		beForPseudoVariable;
+		referenceClass: SPClassToMethodRef;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'CLASS_MET_REFS') fieldNamed: 'METHOD_ID')).
+"	(aDescriptor newMapping: ManyToManyMapping)
+		attributeName: #classes;
+		beForPseudoVariable;
+		referenceClass: SPGlorpClass;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'CLASS_MET_REFS') fieldNamed: 'METHOD_ID')).
+"
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPMethodToSelectorRef: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'METHOD_SEL_REFS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #selector to: (table fieldNamed: 'SELECTOR').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #flags to: (table fieldNamed: 'FLAGS').
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPMethodToVariableRef: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'METHOD_VAR_REFS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #variable to: (table fieldNamed: 'VARIABLE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #flags to: (table fieldNamed: 'FLAGS').
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPPackage: aDescriptor [
+
+	| table classRefsTable |
+	
+	table := self tableNamed: 'PACKAGES'.
+	classRefsTable := self tableNamed: 'PACKAGE_CLS_REFS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #id to: (table fieldNamed: 'ID').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #name to: (table fieldNamed: 'NAME').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #packageHash to: (table fieldNamed: 'HASH').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #comment to: (table fieldNamed: 'COMMENT').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #transaction;
+		join: (Join
+			from: (table fieldNamed: 'TXID')
+			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToManyMapping)
+		attributeName: #classRefs;
+		referenceClass: SPPackageToClassRef;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: (classRefsTable fieldNamed: 'PACKAGE_ID')).
+
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPPackageToClassRef: aDescriptor [
+
+	| table classesTable |
+	
+	table := self tableNamed: 'PACKAGE_CLS_REFS'.
+	classesTable := self tableNamed: 'CLASSES'.
+
+	aDescriptor table: table.
+	aDescriptor addTable: classesTable.
+	aDescriptor addMultipleTableJoin: (
+		Join 
+			from: (table fieldNamed: 'CLASS_ID')
+			to: (classesTable fieldNamed: 'ID')).
+		
+	(aDescriptor newMapping: DirectMapping) 
+		from: #category to: (table fieldNamed: 'CATEGORY').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #spiderClass;
+		referenceClass: SPGlorpClass;
+		join: (Join
+			from: (table fieldNamed: 'CLASS_ID')
+			to: (classesTable fieldNamed: 'ID')).
 
 ]
 

@@ -36,7 +36,7 @@ SPBehaviorBuilder >> addClassMethod: spiderMethod category: catName [
 				ifTrue: [ ^ self ]
 				ifFalse: [ self error: 'Duplicate selector on class side: ', spiderMethod selector asString ] ].
 	
-	methodRefs add: (SPGlorpClassToMethodRef classMethod: spiderMethod category: catName)
+	methodRefs add: (SPClassToMethodRef classMethod: spiderMethod category: catName)
 ]
 
 { #category : #adding }
@@ -69,7 +69,7 @@ SPBehaviorBuilder >> addInstanceMethod: spiderMethod category: catName [
 				ifTrue: [ ^ self ]
 				ifFalse: [ self error: 'Duplicate selector on instance side: ', spiderMethod selector asString ] ].
 
-	methodRefs add: (SPGlorpClassToMethodRef instanceMethod: spiderMethod category: catName)
+	methodRefs add: (SPClassToMethodRef instanceMethod: spiderMethod category: catName)
 ]
 
 { #category : #adding }

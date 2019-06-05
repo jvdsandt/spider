@@ -38,7 +38,7 @@ SPRehashPackages >> readBatch: batchSize last: lastId [
 
 	| q |
 	
-	q := (Query read: SPGlorpPackage where: [ :e | e id > lastId ])
+	q := (Query read: SPPackage where: [ :e | e id > lastId ])
 		orderBy: [ :e | e id ];
 		limit: batchSize;
 		yourself.

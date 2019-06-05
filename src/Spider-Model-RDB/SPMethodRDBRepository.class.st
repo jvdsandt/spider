@@ -22,7 +22,7 @@ SPMethodRDBRepository >> getMethodById: anId [
 
 	| method |
 	
-	method := self glorpSession readOneOf: SPGlorpMethod where: [ :each | each id = anId ].
+	method := self glorpSession readOneOf: SPMethod where: [ :each | each id = anId ].
 	method isNil
 		ifTrue: [ self error: 'Method not found' ].
 	^ method
@@ -39,7 +39,7 @@ SPMethodRDBRepository >> selectMethodByHash: aBytes ifAbsent: aBlock [
 
 	| method |
 	
-	method := self glorpSession readOneOf: SPGlorpMethod where: [ :each | each sourceHash = aBytes ].
+	method := self glorpSession readOneOf: SPMethod where: [ :each | each sourceHash = aBytes ].
 	^ method isNil
 			ifTrue: [ aBlock value ]
 			ifFalse: [ method ]
@@ -65,7 +65,7 @@ SPMethodRDBRepository >> sendersOf: aSelector [
 	| query |
 	
 	query := Query 
-		read: SPGlorpMethod 
+		read: SPMethod 
 		where: [ :m | m selectorRefs anySatisfy: [ :ref | ref selector = aSelector ] ].
 		
 	^ self glorpSession execute: query

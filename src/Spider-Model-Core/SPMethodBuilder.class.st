@@ -25,7 +25,7 @@ SPMethodBuilder >> addPragma: aKeywordSelector arguments: anArgArray [
 	| flags |
 	
 	flags := messages at: aKeywordSelector ifAbsent: [ 0 ].
-	flags := flags bitOr: SPGlorpMethodToSelectorRef flagPragma.
+	flags := flags bitOr: SPMethodToSelectorRef flagPragma.
 	messages at: aKeywordSelector put: flags
 ]
 
@@ -35,11 +35,11 @@ SPMethodBuilder >> addSend: aSelector toSelf: toSelf toSuper: toSuper [
 	| flags |
 	
 	flags := messages at: aSelector ifAbsent: [ 0 ].
-	flags := flags bitOr: SPGlorpMethodToSelectorRef flagSend.
+	flags := flags bitOr: SPMethodToSelectorRef flagSend.
 	toSelf 
-		ifTrue: [ flags := flags bitOr: SPGlorpMethodToSelectorRef flagSelfSend ].
+		ifTrue: [ flags := flags bitOr: SPMethodToSelectorRef flagSelfSend ].
 	toSuper 
-		ifTrue: [ flags := flags bitOr: SPGlorpMethodToSelectorRef flagSuperSend ].
+		ifTrue: [ flags := flags bitOr: SPMethodToSelectorRef flagSuperSend ].
 	messages at: aSelector put: flags
 ]
 
@@ -52,9 +52,9 @@ SPMethodBuilder >> addVariable: anIdentifier read: isRead write: isWritten [
 	flags := variables at: varName ifAbsent: [ 0 ].
 
 	isRead 
-		ifTrue: [ flags := flags bitOr: SPGlorpMethodToVariableRef flagRead ].
+		ifTrue: [ flags := flags bitOr: SPMethodToVariableRef flagRead ].
 	isWritten 
-		ifTrue: [ flags := flags bitOr: SPGlorpMethodToVariableRef flagWrite ].
+		ifTrue: [ flags := flags bitOr: SPMethodToVariableRef flagWrite ].
 	
 	variables at: varName put: flags
 ]
@@ -71,7 +71,7 @@ SPMethodBuilder >> build [
 
 	self parseSource.
 	
-	^ SPGlorpMethod selector: selector 
+	^ SPMethod selector: selector 
 			source: self source
 			hash: self sourceHash
 			selectorRefs: self createMethodToSelectorRefs 
@@ -85,7 +85,7 @@ SPMethodBuilder >> createMethodToSelectorRefs [
 	
 	list := OrderedCollection new: variables size.
 	messages keysAndValuesDo: [ :eachSelector :eachFlags |
-		list add: (SPGlorpMethodToSelectorRef selector: eachSelector flags: eachFlags) ].
+		list add: (SPMethodToSelectorRef selector: eachSelector flags: eachFlags) ].
 	^list asArray
 ]
 
@@ -96,7 +96,7 @@ SPMethodBuilder >> createMethodToVariableRefs [
 	
 	list := OrderedCollection new: variables size.
 	variables keysAndValuesDo: [ :eachName :eachFlags |
-		list add: (SPGlorpMethodToVariableRef variable: eachName flags: eachFlags) ].
+		list add: (SPMethodToVariableRef variable: eachName flags: eachFlags) ].
 	^list asArray
 
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpClassToMethodRef,
+	#name : #SPClassToMethodRef,
 	#superclass : #SPGlorpRef,
 	#instVars : [
 		'type',
@@ -10,37 +10,37 @@ Class {
 }
 
 { #category : #'instance creation' }
-SPGlorpClassToMethodRef class >> classMethod: aMethod category: aCategory [
+SPClassToMethodRef class >> classMethod: aMethod category: aCategory [
 
 	^ self type: self classType method: aMethod category: aCategory
 ]
 
 { #category : #constants }
-SPGlorpClassToMethodRef class >> classType [
+SPClassToMethodRef class >> classType [
 
 	^ 51
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToMethodRef class >> instanceMethod: aMethod category: aCategory [
+SPClassToMethodRef class >> instanceMethod: aMethod category: aCategory [
 
 	^ self type: self instanceType method: aMethod category: aCategory
 ]
 
 { #category : #constants }
-SPGlorpClassToMethodRef class >> instanceType [
+SPClassToMethodRef class >> instanceType [
 
 	^ 50
 ]
 
 { #category : #'instance creation' }
-SPGlorpClassToMethodRef class >> type: anInteger method: aMethod category: aCategory [
+SPClassToMethodRef class >> type: anInteger method: aMethod category: aCategory [
 
 	^ self new initType: anInteger method: aMethod category: aCategory
 ]
 
 { #category : #comparing }
-SPGlorpClassToMethodRef >> <= other [
+SPClassToMethodRef >> <= other [
 
 	^ type = other type
 			ifTrue: [ self selector <= other selector ]
@@ -48,7 +48,7 @@ SPGlorpClassToMethodRef >> <= other [
 ]
 
 { #category : #comparing }
-SPGlorpClassToMethodRef >> = other [
+SPClassToMethodRef >> = other [
 
 	self == other ifTrue: [ ^true ].
 	self species = other species ifFalse: [ ^false ].
@@ -59,18 +59,18 @@ SPGlorpClassToMethodRef >> = other [
 ]
 
 { #category : #accessing }
-SPGlorpClassToMethodRef >> category [
+SPClassToMethodRef >> category [
 	^ category
 ]
 
 { #category : #comparing }
-SPGlorpClassToMethodRef >> hash [
+SPClassToMethodRef >> hash [
 
 	^ self method hash bitXor: type hash
 ]
 
 { #category : #initialization }
-SPGlorpClassToMethodRef >> initType: anInteger method: aMethod category: aCategory [
+SPClassToMethodRef >> initType: anInteger method: aMethod category: aCategory [
 
 	type := anInteger.
 	method := aMethod.
@@ -78,19 +78,19 @@ SPGlorpClassToMethodRef >> initType: anInteger method: aMethod category: aCatego
 ]
 
 { #category : #testing }
-SPGlorpClassToMethodRef >> isClassSide [
+SPClassToMethodRef >> isClassSide [
 
 	^ type = self class classType
 ]
 
 { #category : #testing }
-SPGlorpClassToMethodRef >> isInstanceSide [
+SPClassToMethodRef >> isInstanceSide [
 
 	^ type = self class instanceType
 ]
 
 { #category : #testing }
-SPGlorpClassToMethodRef >> isSameRef: otherRef [
+SPClassToMethodRef >> isSameRef: otherRef [
 
 	^ self method = otherRef method and: [ 
 			self type = otherRef type and: [ 
@@ -98,12 +98,12 @@ SPGlorpClassToMethodRef >> isSameRef: otherRef [
 ]
 
 { #category : #accessing }
-SPGlorpClassToMethodRef >> method [
+SPClassToMethodRef >> method [
 	^ method
 ]
 
 { #category : #printing }
-SPGlorpClassToMethodRef >> printHashSignatureOn: aStream [
+SPClassToMethodRef >> printHashSignatureOn: aStream [
 
 	aStream 
 		print: self type;
@@ -114,7 +114,7 @@ SPGlorpClassToMethodRef >> printHashSignatureOn: aStream [
 ]
 
 { #category : #printing }
-SPGlorpClassToMethodRef >> printOn: aStream [
+SPClassToMethodRef >> printOn: aStream [
 
 	super printOn: aStream.
 	
@@ -125,12 +125,12 @@ SPGlorpClassToMethodRef >> printOn: aStream [
 ]
 
 { #category : #testing }
-SPGlorpClassToMethodRef >> selector [
+SPClassToMethodRef >> selector [
 
 	^ self method selector
 ]
 
 { #category : #accessing }
-SPGlorpClassToMethodRef >> type [
+SPClassToMethodRef >> type [
 	^ type
 ]
