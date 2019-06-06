@@ -332,7 +332,7 @@ SpiderDescriptorSystem >> descriptorForSPGitSignature: aDescriptor [
 { #category : #descriptors }
 SpiderDescriptorSystem >> descriptorForSPGlorpClass: aDescriptor [
 
-	| table varRefsTable methodRefsTable |
+	| table varRefsTable methodRefsTable mapping |
 	
 	table := self tableNamed: 'CLASSES'.
 
@@ -366,20 +366,21 @@ SpiderDescriptorSystem >> descriptorForSPGlorpClass: aDescriptor [
 			from: (table fieldNamed: 'TXID')
 			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
 
-	(aDescriptor newMapping: OneToManyMapping)
+	(aDescriptor newMapping: ToManyMapping)
 		attributeName: #variableRefs;
 		referenceClass: SPClassToVariableRef;
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: (varRefsTable fieldNamed: 'CLASS_ID')).
 		
-	(aDescriptor newMapping: OneToManyMapping)
+	mapping := (aDescriptor newMapping: ToManyMapping)
 		attributeName: #methodRefs;
 		referenceClass: SPClassToMethodRef;
 		orderBy: [ :e | e method selector ];
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: (methodRefsTable fieldNamed: 'CLASS_ID')).
+	mapping query alsoFetch: [ :each | each method ].
 ]
 
 { #category : #descriptors }
@@ -692,7 +693,7 @@ SpiderDescriptorSystem >> descriptorForSPMethodToVariableRef: aDescriptor [
 { #category : #descriptors }
 SpiderDescriptorSystem >> descriptorForSPPackage: aDescriptor [
 
-	| table classRefsTable |
+	| table classRefsTable mapping |
 	
 	table := self tableNamed: 'PACKAGES'.
 	classRefsTable := self tableNamed: 'PACKAGE_CLS_REFS'.
@@ -714,13 +715,13 @@ SpiderDescriptorSystem >> descriptorForSPPackage: aDescriptor [
 			from: (table fieldNamed: 'TXID')
 			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
 
-	(aDescriptor newMapping: OneToManyMapping)
+	mapping := (aDescriptor newMapping: ToManyMapping)
 		attributeName: #classRefs;
 		referenceClass: SPPackageToClassRef;
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: (classRefsTable fieldNamed: 'PACKAGE_ID')).
-
+	mapping query alsoFetch: [ :each | each spiderClass ].
 ]
 
 { #category : #descriptors }
@@ -735,7 +736,7 @@ SpiderDescriptorSystem >> descriptorForSPPackageToClassRef: aDescriptor [
 	(aDescriptor newMapping: DirectMapping) 
 		from: #category to: (table fieldNamed: 'CATEGORY').
 
-	(aDescriptor newMapping: SPOneToOneFetchMapping)
+	(aDescriptor newMapping: OneToOneMapping)
 		attributeName: #spiderClass;
 		referenceClass: SPGlorpClass;
 		join: (Join

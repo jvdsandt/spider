@@ -117,9 +117,18 @@ SPLibGitCommitBuilder >> buildPackagesFromDiff: aParent [
 { #category : #internal }
 SPLibGitCommitBuilder >> buildPackagesFromDiffs: aParents [
 
-	self buildPackagesFromDiff: aParents first
+	| parentForDiff |
 	
-
+	parentForDiff := parents first.
+	[ parentForDiff notNil and: [ parentForDiff isImportError ] ]
+		whileTrue: [ 
+			parentForDiff := parentForDiff parents isEmpty
+				ifTrue: [ nil ]
+				ifFalse: [ parentForDiff parents first ] ].
+			
+	parentForDiff isNil
+		ifTrue: [ self buildAllPackages ]
+		ifFalse: [ self buildPackagesFromDiff: parentForDiff ]
 ]
 
 { #category : #internal }
