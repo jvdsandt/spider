@@ -22,6 +22,10 @@ SPGitCommitDetailsView >> renderContentOn: html [
 
 	self renderTitle: 'Git commit details' on: html. 
 
+	self renderLabel: 'sha' value: self gitCommit shaString on: html.
+	self renderLabel: 'Author' value: self gitCommit authorName on: html.
+	self renderLabel: 'Datetime' value: self gitCommit datetime on: html.
+
 	html paragraph: [ 
 		html text: 'Message: '.
 		html preformatted

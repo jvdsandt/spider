@@ -48,7 +48,7 @@ SPBrowser >> classes [
 
 	^ self selectedPackage 
 			ifNil: [ #() ]
-			ifNotNil: [ self selectedPackage behaviors sorted ]
+			ifNotNil: [ self selectedPackage behaviors ]
 ]
 
 { #category : #accessing }
@@ -76,8 +76,8 @@ SPBrowser >> methods [
 			ifNil: [ #() ]
 			ifNotNil: [ 
 				self showInstance 
-					ifTrue: [ self selectedClass instanceMethods sorted ]
-					ifFalse: [ self selectedClass classMethods sorted ] ]
+					ifTrue: [ self selectedClass instanceMethods ]
+					ifFalse: [ self selectedClass classMethods ] ]
 ]
 
 { #category : #accessing }

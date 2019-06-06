@@ -275,6 +275,7 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 	(aDescriptor newMapping: ManyToManyMapping)
 		attributeName: #packages;
 		referenceClass: SPPackage;
+		orderBy: [ :each | each name ];
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: ((self tableNamed: 'GIT_COMMIT_PACK_REFS') fieldNamed: 'COMMIT_ID')).
@@ -376,11 +377,11 @@ SpiderDescriptorSystem >> descriptorForSPGlorpClass: aDescriptor [
 	mapping := (aDescriptor newMapping: ToManyMapping)
 		attributeName: #methodRefs;
 		referenceClass: SPClassToMethodRef;
-		orderBy: [ :e | e method selector ];
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: (methodRefsTable fieldNamed: 'CLASS_ID')).
 	mapping query alsoFetch: [ :each | each method ].
+	mapping query orderBy: [ :each | each method selector ].
 ]
 
 { #category : #descriptors }
@@ -722,6 +723,7 @@ SpiderDescriptorSystem >> descriptorForSPPackage: aDescriptor [
 			from: (table fieldNamed: 'ID')
 			to: (classRefsTable fieldNamed: 'PACKAGE_ID')).
 	mapping query alsoFetch: [ :each | each spiderClass ].
+	mapping query orderBy: [ :each | each spiderClass name ].
 ]
 
 { #category : #descriptors }
