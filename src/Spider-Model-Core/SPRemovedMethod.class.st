@@ -4,6 +4,11 @@ Class {
 	#category : #'Spider-Model-Core-Diff'
 }
 
+{ #category : #visiting }
+SPRemovedMethod >> accept: aVisitor [
+	aVisitor visitDiffRemovedMethod: self
+]
+
 { #category : #accessing }
 SPRemovedMethod >> selector [
 

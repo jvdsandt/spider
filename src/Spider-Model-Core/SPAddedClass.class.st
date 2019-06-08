@@ -3,3 +3,8 @@ Class {
 	#superclass : #SPDiffAdd,
 	#category : #'Spider-Model-Core-Diff'
 }
+
+{ #category : #visiting }
+SPAddedClass >> accept: aVisitor [
+	aVisitor visitDiffAddedClass: self
+]

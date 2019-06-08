@@ -14,6 +14,11 @@ SPDiffUpdate class >> old: anOldObject updated: aNewObject [
 	^ self new initOld: anOldObject updated: aNewObject
 ]
 
+{ #category : #visiting }
+SPDiffUpdate >> accept: aVisitor [
+	aVisitor visitDiffUpdate: self
+]
+
 { #category : #initialization }
 SPDiffUpdate >> initOld: anOldObject updated: aNewObject [
 

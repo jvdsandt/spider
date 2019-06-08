@@ -13,6 +13,11 @@ SPDiffAdd class >> added: aNewObject [
 	^self new initNew: aNewObject
 ]
 
+{ #category : #visiting }
+SPDiffAdd >> accept: aVisitor [
+	aVisitor visitDiffAdd: self
+]
+
 { #category : #initialization }
 SPDiffAdd >> initNew: aNewObject [
 

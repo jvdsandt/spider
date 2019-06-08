@@ -57,7 +57,7 @@ SPGitCommit >> comparePackagesWith: olderCommit [
 			ifTrue: [ result add: (SPAddedPackage added: each) ]
 			ifFalse: [ 
 				oldPackage = each
-					ifFalse: [ result add: (SPUpdatePackage old: oldPackage updated: each) ] ] ].
+					ifFalse: [ result add: (SPUpdatedPackage old: oldPackage updated: each) ] ] ].
 	oldPackages do: [ :each |
 		result add: (SPRemovedPackage removed: each) ].
 	^ result

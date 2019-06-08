@@ -7,6 +7,11 @@ Class {
 	#category : #'Spider-Model-Core-Diff'
 }
 
+{ #category : #visiting }
+SPUpdatedClass >> accept: aVisitor [
+	aVisitor visitDiffUpdatedClass: self
+]
+
 { #category : #accessing }
 SPUpdatedClass >> methodDiffs [
 

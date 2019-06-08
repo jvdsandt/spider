@@ -13,6 +13,11 @@ SPDiffRemove class >> removed: anOldObject [
 	^self new initOld: anOldObject
 ]
 
+{ #category : #visiting }
+SPDiffRemove >> accept: aVisitor [
+	aVisitor visitDiffRemove: self
+]
+
 { #category : #initialization }
 SPDiffRemove >> initOld: anOldObject [
 

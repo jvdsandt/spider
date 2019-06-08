@@ -4,6 +4,11 @@ Class {
 	#category : #'Spider-Model-Core-Diff'
 }
 
+{ #category : #visiting }
+SPDiff >> accept: aVisitor [
+	aVisitor visitDiff: self
+]
+
 { #category : #accessing }
 SPDiff >> newObject [
 	^ nil
