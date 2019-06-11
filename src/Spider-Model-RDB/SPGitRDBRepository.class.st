@@ -36,22 +36,6 @@ SPGitRDBRepository >> getGitCommitIdBySha: aBytes [
 	^ self glorpSession execute: q
 ]
 
-{ #category : #storing }
-SPGitRDBRepository >> getGitRepoByUrl: aRepoUrl [
-
-	| gitRepo gitRepoId |
-	
-	gitRepo := self getGitRepoByUrl: aRepoUrl ifAbsent: [ nil ].
-	gitRepo isNil
-		ifFalse: [ ^ gitRepo ].
-
-	gitRepoId := self insertGitRepoQuery getOne: (Array 
-		with: self transactionId
-		with: aRepoUrl).
-		
-	^ SPGitRepo url: aRepoUrl
-]
-
 { #category : #queries }
 SPGitRDBRepository >> getGitRepoByUrl: anUrl ifAbsent: aBlock [
 
@@ -193,11 +177,27 @@ SPGitRDBRepository >> storeCommit: aGitCommit repo: aRepoUrl [
 ]
 
 { #category : #storing }
+SPGitRDBRepository >> storeRepo: aGitRepo [
+
+	| gitRepo |
+	
+	gitRepo := self getGitRepoByUrl: aGitRepo url ifAbsent: [ nil ].
+	gitRepo isNil
+		ifFalse: [ ^ gitRepo ].
+
+	self insertGitRepoQuery getOne: (Array 
+		with: self transactionId
+		with: aGitRepo url).
+		
+	^ self getGitRepoByUrl: aGitRepo url ifAbsent: [ nil ]
+]
+
+{ #category : #storing }
 SPGitRDBRepository >> storeRepoRef: aRepo named: aName to: aCommit [
 
 	| repoId commitId |
 	
-	repoId := aRepo id ifNil: [ self getGitRepoByUrl: aRepo url ].
+	repoId := aRepo id ifNil: [ (self storeRepo: aRepo) id ].
 	commitId := aCommit id ifNil: [ self getGitCommitIdBySha: aCommit sha ].
 	
 	self insertGitRepoRefQuery execute: (Array

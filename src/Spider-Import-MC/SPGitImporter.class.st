@@ -167,6 +167,30 @@ SPGitImporter >> doImportBranches [
 ]
 
 { #category : #'actions-internal' }
+SPGitImporter >> doImportBranches: aBranches [
+
+	| startTS duration message |
+
+	message := 'Import branches from {1}' format: { self spGitRepo url }.
+	self logInfo: 'Starting ', message, ' ...'.
+		
+	startTS := Time millisecondClockValue.	
+	context
+		doTransaction: message
+		with: [ 
+			self branches keysAndValuesDo: [ :eachName :eachCommit |
+				| spCommit |
+				spCommit := self gitRepo getCommitBySha: eachCommit id asByteArray ifAbsent: [ nil ].
+				spCommit notNil
+					ifTrue: [ 
+						self gitRepo storeRepoRef: self spGitRepo named: eachName to: spCommit ] ] ].
+
+	duration := Time millisecondClockValue - startTS.
+	self logInfo: 'Finished in ', duration asString, 'ms.'
+
+]
+
+{ #category : #'actions-internal' }
 SPGitImporter >> getRemoteUrl [
 
 	^ (LGitRemote of: self lgitRepo named: 'origin') 
@@ -193,20 +217,19 @@ SPGitImporter >> import: lgitCommit [
 { #category : #actions }
 SPGitImporter >> importAll [
 
-	| branchNames |
+	| branches |
 	
 	self logInfo: 'Import all from ', self spGitRepo url.
 
-	branchNames := OrderedCollection new.
+	branches := Dictionary new.
+	self lgitRepo remoteBranchesDo: [ :each |
+		branches at: each name put: each object ].
 
-	self lgitRepo allBranchesDo: [ :each |
-		| lgitCommit |
-		branchNames add: each name.
-		lgitCommit := each object.
-		(self isAlreadyImported: lgitCommit)
-			ifFalse: [ self import: lgitCommit ] ].
+	branches do: [ :each |
+		(self isAlreadyImported: each)
+			ifFalse: [ self import: each ] ].
 		
-	self doImportBranches
+	self doImportBranches: branches
 ]
 
 { #category : #actions }
@@ -217,6 +240,18 @@ SPGitImporter >> importRevparse: aString [
 	lgitCommit := self lgitRepo revparse: aString.
 	(lgitCommit notNil and: [ lgitCommit isCommit ])
 		ifTrue: [ self import: lgitCommit ]
+]
+
+{ #category : #initialization }
+SPGitImporter >> initSpiderGitRepo [
+
+	spGitRepo := self gitRepo getGitRepoByUrl: self getRemoteUrl ifAbsent: [ nil ].
+	spGitRepo isNil
+		ifTrue: [ 
+			context
+				doTransaction: 'Create git repo ', self getRemoteUrl
+				with: [ 
+					spGitRepo := self gitRepo storeRepo: (SPGitRepo url: self getRemoteUrl) ] ].
 ]
 
 { #category : #testing }
@@ -233,11 +268,12 @@ SPGitImporter >> lgitRepo [
 { #category : #initialization }
 SPGitImporter >> setLGitRepo: aRepo [
 
-	lgitRepo := aRepo
+	lgitRepo := aRepo.
+	self initSpiderGitRepo.
 ]
 
 { #category : #accessing }
 SPGitImporter >> spGitRepo [
 
-	^ spGitRepo ifNil: [ spGitRepo := self gitRepo getGitRepoByUrl: self getRemoteUrl ]
+	^ spGitRepo
 ]
