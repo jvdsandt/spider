@@ -26,6 +26,11 @@ SPDiffUpdate >> initOld: anOldObject updated: aNewObject [
 	newObject := aNewObject
 ]
 
+{ #category : #visiting }
+SPDiffUpdate >> name [
+	^ self newObject name
+]
+
 { #category : #accessing }
 SPDiffUpdate >> newObject [
 	^ newObject

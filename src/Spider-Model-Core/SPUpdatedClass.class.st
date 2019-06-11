@@ -15,5 +15,17 @@ SPUpdatedClass >> accept: aVisitor [
 { #category : #accessing }
 SPUpdatedClass >> methodDiffs [
 
-	^ methodDiffs ifNil: [ methodDiffs := self newObject compareMethodsWith: self oldObject ]
+	^ methodDiffs ifNil: [ methodDiffs := self newSpiderClass compareMethodsWith: self oldSpiderClass ]
+]
+
+{ #category : #'as yet unclassified' }
+SPUpdatedClass >> newSpiderClass [
+
+	^ self newObject spiderClass
+]
+
+{ #category : #'as yet unclassified' }
+SPUpdatedClass >> oldSpiderClass [
+
+	^ self oldObject spiderClass
 ]

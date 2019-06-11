@@ -9,6 +9,11 @@ SPUpdatedMethod >> accept: aVisitor [
 	aVisitor visitDiffUpdatedMethod: self
 ]
 
+{ #category : #visiting }
+SPUpdatedMethod >> name [
+	^ self selector
+]
+
 { #category : #accessing }
 SPUpdatedMethod >> selector [
 

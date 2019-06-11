@@ -26,6 +26,17 @@ SPGitRDBRepository >> getCommitBySha: aBytes ifAbsent: aBlock [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> getCommitByShaString: aString ifAbsent: aBlock [
+
+	| gitCommit |
+
+	aString size = 40
+		ifTrue: [ ^ self getCommitBySha: (ByteArray readHexFrom: aString) ifAbsent: aBlock ].
+		
+	^ aBlock value
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> getGitCommitIdBySha: aBytes [
 
 	| q |
@@ -47,6 +58,19 @@ SPGitRDBRepository >> getGitRepoByUrl: anUrl ifAbsent: aBlock [
 	^ gitRepo isNil
 			ifTrue: [ aBlock value ]
 			ifFalse: [ gitRepo ]
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> getRepo: aDomain owner: anOwner name: aName ifAbsent: aBlock [
+
+	| searchUrl repo |
+	
+	searchUrl := SPGitRepo searchUrlFor: aDomain owner: anOwner name: aName.
+	repo := self glorpSession readOneOf: SPGitRepo 
+			where: [ :e | e url asLowercase like: searchUrl asLowercase ].
+	^ repo isNil
+			ifTrue: [ aBlock value ]
+			ifFalse: [ repo ]
 ]
 
 { #category : #accessing }
@@ -125,6 +149,25 @@ SPGitRDBRepository >> packageIdOf: aPackage [
 	^ aPackage id isNil
 			ifTrue: [ self packageRepo storePackage: aPackage ]
 			ifFalse: [ aPackage id ]
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> selectChildrenOf: aCommitId [
+
+	^ self glorpSession read: SPGitCommit 
+			where: [ :e | e parents anySatisfy: [ :p | p id = aCommitId ] ]
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> selectReposByUrl [
+
+	| q |
+	
+	q := Query read: SPGitRepo.
+	q orderBy: [ :e | e url ].
+	q limit: 100.
+	
+	^ self glorpSession execute: q
 ]
 
 { #category : #storing }

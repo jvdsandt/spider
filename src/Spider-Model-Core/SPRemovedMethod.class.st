@@ -10,6 +10,11 @@ SPRemovedMethod >> accept: aVisitor [
 ]
 
 { #category : #accessing }
+SPRemovedMethod >> name [
+	^ self selector
+]
+
+{ #category : #accessing }
 SPRemovedMethod >> selector [
 
 	^ self oldObject selector

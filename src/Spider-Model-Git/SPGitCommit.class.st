@@ -47,7 +47,7 @@ SPGitCommit >> comparePackagesWith: olderCommit [
 
 	| oldPackages result |
 	
-	oldPackages := self packagesByName.
+	oldPackages := olderCommit packagesByName.
 	result := OrderedCollection new.
 	
 	self packages do: [ :each |
@@ -66,6 +66,16 @@ SPGitCommit >> comparePackagesWith: olderCommit [
 { #category : #accessing }
 SPGitCommit >> datetime [
 	^ self authorSignature datetime
+]
+
+{ #category : #accessing }
+SPGitCommit >> diffs [
+
+	self parents isEmpty
+		ifTrue: [ 
+			^ self packages collect: [ :each | SPAddedPackage added: each ] ].
+		
+	^ self comparePackagesWith: self parents first
 ]
 
 { #category : #accessing }

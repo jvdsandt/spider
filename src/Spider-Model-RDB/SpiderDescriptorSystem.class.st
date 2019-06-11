@@ -48,7 +48,15 @@ SpiderDescriptorSystem >> classModelForSPGitRepo: aClassModel [
 	aClassModel newAttributeNamed: #id type: Integer.
 	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
 	aClassModel newAttributeNamed: #url type: String.
+	aClassModel newAttributeNamed: #commitRefs collectionOf: SPGitRepoToCommitRef.
 
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPGitRepoToCommitRef: aClassModel [
+
+	aClassModel newAttributeNamed: #name type: String.
+	aClassModel newAttributeNamed: #commit type: SPGitCommit.
 ]
 
 { #category : #'class models' }
@@ -292,7 +300,7 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 { #category : #descriptors }
 SpiderDescriptorSystem >> descriptorForSPGitRepo: aDescriptor [
 
-	| table |
+	| table mapping |
 	
 	table := self tableNamed: 'GIT_REPOS'.
 
@@ -308,6 +316,34 @@ SpiderDescriptorSystem >> descriptorForSPGitRepo: aDescriptor [
 		join: (Join
 			from: (table fieldNamed: 'TXID')
 			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
+
+	mapping := (aDescriptor newMapping: ToManyMapping)
+		attributeName: #commitRefs;
+		referenceClass: SPGitRepoToCommitRef;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'GIT_REPO_REFS') fieldNamed: 'REPO_ID')).
+	mapping query alsoFetch: [ :each | each commit ].
+	mapping query orderBy: [ :each | each commit authorSignature datetime ].
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPGitRepoToCommitRef: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'GIT_REPO_REFS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #name to: (table fieldNamed: 'NAME').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #commit;
+		join: (Join
+			from: (table fieldNamed: 'COMMIT_ID')
+			to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID')).
 
 ]
 
@@ -850,6 +886,16 @@ SpiderDescriptorSystem >> tableForGIT_REPOS: aTable [
 	(aTable createFieldNamed: 'ID' type: (platform serial)) bePrimaryKey.
 	aTable createFieldNamed: 'TXID' type: platform integer.
 	aTable createFieldNamed: 'URL' type: platform varchar.
+
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForGIT_REPO_REFS: aTable [
+
+	(aTable createFieldNamed: 'REPO_ID' type: (platform integer)) bePrimaryKey.
+	(aTable createFieldNamed: 'NAME' type: (platform varchar)) bePrimaryKey.
+	aTable createFieldNamed: 'TXID' type: platform integer.
+	aTable createFieldNamed: 'COMMIT_ID' type: platform varchar.
 
 ]
 

@@ -25,6 +25,11 @@ SPDiffRemove >> initOld: anOldObject [
 ]
 
 { #category : #accessing }
+SPDiffRemove >> name [
+	^ self oldObject name
+]
+
+{ #category : #accessing }
 SPDiffRemove >> oldObject [
 	^ oldObject
 ]

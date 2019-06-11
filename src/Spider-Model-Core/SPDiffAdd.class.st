@@ -25,6 +25,11 @@ SPDiffAdd >> initNew: aNewObject [
 ]
 
 { #category : #accessing }
+SPDiffAdd >> name [
+	^ self newObject name
+]
+
+{ #category : #accessing }
 SPDiffAdd >> newObject [
 	^ newObject
 ]
