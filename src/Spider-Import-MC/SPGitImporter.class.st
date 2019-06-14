@@ -120,6 +120,29 @@ SPGitImporter class >> updateRepoAt: aLocation [
 ]
 
 { #category : #'actions-internal' }
+SPGitImporter >> branchNameFromRef: aRefName [
+
+	| index |
+	
+	index := aRefName lastIndexOf: $/.
+	^ aRefName allButFirst: index
+]
+
+{ #category : #'actions-internal' }
+SPGitImporter >> deleteRefs: aRefColl [
+
+	| message |
+	
+	aRefColl isEmptyOrNil
+		ifTrue: [ ^ self ].
+
+	message := 'Removing {1} refs from {2}' format: { aRefColl size. self spGitRepo url }.
+	context
+		doTransaction: message
+		with: [ self gitRepo deleteRepoRefs: aRefColl from: self spGitRepo ]
+]
+
+{ #category : #'actions-internal' }
 SPGitImporter >> doImport: lgitCommit [
 
 	| startTS duration message |
@@ -137,54 +160,6 @@ SPGitImporter >> doImport: lgitCommit [
 				setContext: self context;
 				commit: lgitCommit;
 				build ].		
-	duration := Time millisecondClockValue - startTS.
-	self logInfo: 'Finished in ', duration asString, 'ms.'
-
-]
-
-{ #category : #'actions-internal' }
-SPGitImporter >> doImportBranches [
-
-	| startTS duration message |
-
-	message := 'Import branches from {1}' format: { self spGitRepo url }.
-	self logInfo: 'Starting ', message, ' ...'.
-		
-	startTS := Time millisecondClockValue.	
-	context
-		doTransaction: message
-		with: [ 
-			self lgitRepo branchesDo: [ :each |
-				| spCommit |
-				spCommit := self gitRepo getCommitBySha: each object id asByteArray ifAbsent: [ nil ].
-				spCommit notNil
-					ifTrue: [ 
-						self gitRepo storeRepoRef: self spGitRepo named: each name to: spCommit ] ] ].
-
-	duration := Time millisecondClockValue - startTS.
-	self logInfo: 'Finished in ', duration asString, 'ms.'
-
-]
-
-{ #category : #'actions-internal' }
-SPGitImporter >> doImportBranches: aBranches [
-
-	| startTS duration message |
-
-	message := 'Import branches from {1}' format: { self spGitRepo url }.
-	self logInfo: 'Starting ', message, ' ...'.
-		
-	startTS := Time millisecondClockValue.	
-	context
-		doTransaction: message
-		with: [ 
-			self branches keysAndValuesDo: [ :eachName :eachCommit |
-				| spCommit |
-				spCommit := self gitRepo getCommitBySha: eachCommit id asByteArray ifAbsent: [ nil ].
-				spCommit notNil
-					ifTrue: [ 
-						self gitRepo storeRepoRef: self spGitRepo named: eachName to: spCommit ] ] ].
-
 	duration := Time millisecondClockValue - startTS.
 	self logInfo: 'Finished in ', duration asString, 'ms.'
 
@@ -217,19 +192,54 @@ SPGitImporter >> import: lgitCommit [
 { #category : #actions }
 SPGitImporter >> importAll [
 
-	| branches |
+	| existingTags existingBranches tags branches |
 	
-	self logInfo: 'Import all from ', self spGitRepo url.
+	self logInfo: 'Checking ', self spGitRepo url.
+	
+	existingTags := Dictionary new.
+	existingBranches := Dictionary new.
+	(self gitRepo selectRepoRefsOf: self spGitRepo id) do: [ :eachRef |
+		eachRef isBranch 
+			ifTrue: [ existingBranches at: eachRef name put: eachRef ].
+		eachRef isTag
+			ifTrue: [ existingTags at: eachRef name put: eachRef ] ].
+		
+	tags := Dictionary new.
+	self lgitRepo tags do: [ :each |
+		| object ref |
+		object := (self lgitRepo revparse: each) object.
+		(object notNil and: [ object isCommit ])
+			ifTrue: [ 
+				ref := existingTags removeKey: each ifAbsent: [ nil ].
+				(ref notNil and: [ ref shaString = object id hexString ])
+					ifFalse: [ tags at: each put: object ] ] ].
 
 	branches := Dictionary new.
 	self lgitRepo remoteBranchesDo: [ :each |
-		branches at: each name put: each object ].
-
-	branches do: [ :each |
-		(self isAlreadyImported: each)
-			ifFalse: [ self import: each ] ].
+		| branchName object ref |
+		branchName := self branchNameFromRef: each name.
+		object := each object.
+		ref := existingBranches removeKey: branchName ifAbsent: [ nil ].
+		(ref notNil and: [ ref shaString = object id hexString ])
+			ifFalse: [ branches at: branchName put: object ] ].
 		
-	self doImportBranches: branches
+	(branches notEmpty or: [ tags notEmpty ])
+		ifTrue: [ 
+			self logInfo: ('Importing {1} branches and {2} tags from {3}' format: { branches size. tags size. self spGitRepo url }).
+			branches do: [ :each |
+				(self isAlreadyImported: each)
+					ifFalse: [ self import: each ] ].
+			tags do: [ :each |
+				(self isAlreadyImported: each)
+					ifFalse: [ self import: each ] ].
+			self updateBranches: branches.
+			self updateTags: tags ].
+		
+	(existingBranches notEmpty or: [ existingTags notEmpty ])
+		ifTrue: [ 
+			self logInfo: ('Removing {1} branches and {2} tags from {3}' format: { existingBranches size. existingTags size. self spGitRepo url }).
+			self deleteRefs: existingBranches values, existingTags values ].
+
 ]
 
 { #category : #actions }
@@ -276,4 +286,45 @@ SPGitImporter >> setLGitRepo: aRepo [
 SPGitImporter >> spGitRepo [
 
 	^ spGitRepo
+]
+
+{ #category : #'actions-internal' }
+SPGitImporter >> updateBranches: aBranches [
+
+	| message |
+	
+	aBranches isEmptyOrNil
+		ifTrue: [ ^ self ].
+
+	message := 'Import {1} branches from {2}' format: { aBranches size. self spGitRepo url }.
+	context
+		doTransaction: message
+		with: [ 
+			aBranches keysAndValuesDo: [ :eachName :eachCommit |
+				| spCommit |
+				spCommit := self gitRepo getCommitBySha: eachCommit id asByteArray ifAbsent: [ nil ].
+				spCommit notNil
+					ifTrue: [ 
+						self gitRepo storeRepoRef: self spGitRepo type: SPGitRepoToCommitRef typeBranch named: eachName to: spCommit ] ] ]
+]
+
+{ #category : #'actions-internal' }
+SPGitImporter >> updateTags: aTags [
+
+	| message |
+
+	aTags isEmptyOrNil
+		ifTrue: [ ^ self ].
+		
+	message := 'Import {1} tags from {2}' format: { aTags size. self spGitRepo url }.
+	context
+		doTransaction: message
+		with: [ 
+			aTags keysAndValuesDo: [ :eachName :eachCommit |
+				| spCommit |
+				spCommit := self gitRepo getCommitBySha: eachCommit id asByteArray ifAbsent: [ nil ].
+				spCommit notNil
+					ifTrue: [ 
+						self gitRepo storeRepoRef: self spGitRepo type: SPGitRepoToCommitRef typeTag named: eachName to: spCommit ] ] ].
+
 ]

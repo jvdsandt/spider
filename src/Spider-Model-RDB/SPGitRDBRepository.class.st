@@ -14,6 +14,28 @@ SPGitRDBRepository >> createGitRepoFrom: anArray [
 	self todo
 ]
 
+{ #category : #'accessing - queries' }
+SPGitRDBRepository >> deleteGitRepoRefQuery [
+
+	| sql |
+	
+	sql := 'DELETE FROM git_repo_refs WHERE repo_id = $1 AND type = $2 AND name = $3'.
+	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
+{ #category : #storing }
+SPGitRDBRepository >> deleteRepoRefs: aRefColl from: aRepo [
+
+	| repoId rows |
+	
+	repoId := aRepo id ifNil: [ (self storeRepo: aRepo) id ].
+
+	rows := aRefColl collect: [ :each |
+		Array with: repoId with: each type with: each name ].
+	
+	self deleteGitRepoRefQuery executeBatch: rows.
+]
+
 { #category : #queries }
 SPGitRDBRepository >> getCommitBySha: aBytes ifAbsent: aBlock [
 
@@ -136,10 +158,10 @@ SPGitRDBRepository >> insertGitRepoRefQuery [
 
 	| sql |
 	
-	sql := 'INSERT INTO git_repo_refs (repo_id, name, txid, commit_id) VALUES ($1,$2,$3,$4)
-ON CONFLICT (repo_id, name) DO UPDATE SET
-	txid = $3,
-	commit_id = $4'.
+	sql := 'INSERT INTO git_repo_refs (repo_id, type, name, txid, commit_id) VALUES ($1,$2,$3,$4,$5)
+ON CONFLICT (repo_id, type, name) DO UPDATE SET
+	txid = $4,
+	commit_id = $5'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
@@ -156,6 +178,15 @@ SPGitRDBRepository >> selectChildrenOf: aCommitId [
 
 	^ self glorpSession read: SPGitCommit 
 			where: [ :e | e parents anySatisfy: [ :p | p id = aCommitId ] ]
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> selectRepoRefsOf: aRepoId [
+
+	| q |
+	
+	q := Query read: SPGitRepoToCommitRef where: [ :e | e repo id = aRepoId ].
+	^ self glorpSession execute: q
 ]
 
 { #category : #queries }
@@ -236,7 +267,7 @@ SPGitRDBRepository >> storeRepo: aGitRepo [
 ]
 
 { #category : #storing }
-SPGitRDBRepository >> storeRepoRef: aRepo named: aName to: aCommit [
+SPGitRDBRepository >> storeRepoRef: aRepo type: aTypeChar named: aName to: aCommit [
 
 	| repoId commitId |
 	
@@ -245,6 +276,7 @@ SPGitRDBRepository >> storeRepoRef: aRepo named: aName to: aCommit [
 	
 	self insertGitRepoRefQuery execute: (Array
 		with: repoId
+		with: aTypeChar
 		with: aName
 		with: self transactionId
 		with: commitId)

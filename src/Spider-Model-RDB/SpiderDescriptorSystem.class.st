@@ -56,6 +56,7 @@ SpiderDescriptorSystem >> classModelForSPGitRepo: aClassModel [
 SpiderDescriptorSystem >> classModelForSPGitRepoToCommitRef: aClassModel [
 
 	aClassModel newAttributeNamed: #name type: String.
+	aClassModel newAttributeNamed: #type type: Character.
 	aClassModel newAttributeNamed: #commit type: SPGitCommit.
 ]
 
@@ -337,6 +338,8 @@ SpiderDescriptorSystem >> descriptorForSPGitRepoToCommitRef: aDescriptor [
 	aDescriptor table: table.
 	
 	(aDescriptor newMapping: DirectMapping) 
+		from: #type to: (table fieldNamed: 'TYPE').
+	(aDescriptor newMapping: DirectMapping) 
 		from: #name to: (table fieldNamed: 'NAME').
 
 	(aDescriptor newMapping: OneToOneMapping)
@@ -344,6 +347,15 @@ SpiderDescriptorSystem >> descriptorForSPGitRepoToCommitRef: aDescriptor [
 		join: (Join
 			from: (table fieldNamed: 'COMMIT_ID')
 			to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID')).
+			
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #repo;
+		beForPseudoVariable;
+		referenceClass: SPGitRepo;
+		join: (Join
+			from: (table fieldNamed: 'REPO_ID')
+			to: ((self tableNamed: 'GIT_REPOS') fieldNamed: 'ID')).
+
 
 ]
 
@@ -893,6 +905,7 @@ SpiderDescriptorSystem >> tableForGIT_REPOS: aTable [
 SpiderDescriptorSystem >> tableForGIT_REPO_REFS: aTable [
 
 	(aTable createFieldNamed: 'REPO_ID' type: (platform integer)) bePrimaryKey.
+	(aTable createFieldNamed: 'TYPE' type: (platform varchar: 1)) bePrimaryKey.
 	(aTable createFieldNamed: 'NAME' type: (platform varchar)) bePrimaryKey.
 	aTable createFieldNamed: 'TXID' type: platform integer.
 	aTable createFieldNamed: 'COMMIT_ID' type: platform varchar.

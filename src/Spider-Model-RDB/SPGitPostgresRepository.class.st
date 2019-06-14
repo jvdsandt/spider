@@ -52,10 +52,11 @@ CREATE INDEX IF NOT EXISTS git_commit_parent_idx ON git_commit_parent_refs(paren
 
 CREATE TABLE IF NOT EXISTS git_repo_refs (
 	repo_id INT NOT NULL REFERENCES git_repos(id),
+	type VARCHAR(1) NOT NULL,
 	name VARCHAR NOT NULL,
 	txid INTEGER NOT NULL,
 	commit_id INT NOT NULL REFERENCES git_commits(id),
-	PRIMARY KEY (repo_id, name)
+	PRIMARY KEY (repo_id, type, name)
 );
 CREATE INDEX IF NOT EXISTS git_repo_ref_commit_idx ON git_repo_refs(commit_id);
 '
