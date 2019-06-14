@@ -66,7 +66,7 @@ SPBehaviorBuilder >> addInstanceMethod: spiderMethod category: catName [
 	existingRef notNil
 		ifTrue: [ 
 			spiderMethod = existingRef method
-				ifFalse: [ self logWarn: 'Duplicate selector on instance side: ', spiderMethod selector asString ].
+				ifFalse: [ self error: 'Duplicate selector on instance side: ', spiderMethod selector asString ].
 			^ self ].
 
 	methodRefs add: (SPClassToMethodRef instanceMethod: spiderMethod category: catName)
