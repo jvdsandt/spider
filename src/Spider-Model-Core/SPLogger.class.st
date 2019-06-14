@@ -86,7 +86,7 @@ SPLogger >> logLevel: aLevel source: aSource message: anObject [
 	str := self stream.
 	str 
 		nextPutAll: Time now print24;
-		nextPutAll: ' ['; nextPutAll: aLevel; nextPutAll: ' ]';
+		nextPutAll: ' ['; nextPutAll: aLevel; nextPutAll: '] ';
 		nextPutAll: aSource asString;
 		nextPutAll: ' - ';
 		nextPutAll: anObject asString;
