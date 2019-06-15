@@ -22,6 +22,7 @@ SPGitImporter class >> cloneRepo: repoUrl to: aLocation [
 
 	location ensureCreateDirectory.
 	repo := LGitRepository on: location.
+	self logInfo: 'Performing git clone'.
 	repo clone: repoUrl options: self defaultCloneOptions.
 	
 	^ repo
@@ -111,6 +112,7 @@ SPGitImporter class >> updateRepoAt: aLocation [
 	repo := LGitRepository on: location.
 	repo open.
 	
+	self logInfo: 'Performing git fetch'.
 	"(LGitRemote of: repo named: 'origin') 
 		lookup; 
 		fetch."
