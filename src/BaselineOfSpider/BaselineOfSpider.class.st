@@ -40,5 +40,6 @@ BaselineOfSpider >> baselineOf: spec [
 			spec group: 'core' with: #('Spider-Model-Core' 'Spider-Model-MC' 'Spider-Model-Git' ).
 			spec group: 'tests' with: #('Spider-Model-Core-Tests' 'Spider-Model-MC-Tests' 'Spider-Model-Git-Tests' ).
 			
+			spec group: 'importer' with: #( 'default' 'P3' 'Spider-Import-MC' ).
 			spec group: 'all' with: #( 'default' 'Spider-Model-RDB-Tests' 'Spider-Import-MC' 'Spider-Web-Core' ) ]
 ]
