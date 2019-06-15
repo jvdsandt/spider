@@ -138,8 +138,8 @@ SPGitRDBRepository >> insertGitCommitQuery [
 
 	| sql |
 	
-	sql := 'INSERT INTO git_commits (txid, sha, author_datetime, author_tzoffset, author_name, author_email, message, source_dir, format)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING (id)'.
+	sql := 'INSERT INTO git_commits (txid, sha, author_datetime, author_tzoffset, author_name, author_email, message, status, source_dir, format)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING (id)'.
 
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
@@ -219,6 +219,7 @@ SPGitRDBRepository >> storeCommit: aGitCommit [
 			add: aGitCommit authorSignature name;
 			add: aGitCommit authorSignature email;
 			add: aGitCommit message;
+			add: aGitCommit status;
 			add: aGitCommit sourceDir;
 			add: aGitCommit format;
 			yourself ).
@@ -237,17 +238,6 @@ SPGitRDBRepository >> storeCommit: aGitCommit [
 	self insertGitCommitParentRefQuery executeBatch: rows.
 	
 	^ gitCommitId
-]
-
-{ #category : #storing }
-SPGitRDBRepository >> storeCommit: aGitCommit repo: aRepoUrl [
-
-	| gitRepo |
-	
-	gitRepo := self getGitRepoByUrl: aRepoUrl ifAbsent: [ nil ].
-	gitRepo isNil
-		ifTrue: [ 
-			 ]
 ]
 
 { #category : #storing }

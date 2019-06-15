@@ -56,7 +56,7 @@ SpiderDescriptorSystem >> classModelForSPGitRepo: aClassModel [
 SpiderDescriptorSystem >> classModelForSPGitRepoToCommitRef: aClassModel [
 
 	aClassModel newAttributeNamed: #name type: String.
-	aClassModel newAttributeNamed: #type type: Character.
+	aClassModel newAttributeNamed: #type type: String.
 	aClassModel newAttributeNamed: #commit type: SPGitCommit.
 ]
 
