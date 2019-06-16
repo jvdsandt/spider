@@ -14,6 +14,26 @@ Class {
 { #category : #actions }
 SPGitImporter class >> cloneRepo: repoUrl to: aLocation [
 
+	| location |
+
+	location := aLocation asFileReference.
+	location exists
+		ifTrue: [ self error: 'Location already exists' ].
+	location parent ensureCreateDirectory.
+		
+	self logInfo: 'Creating git clone ', location fullName, ' ...'.
+	"Use the external git executable to update the clone"	
+	SPGitProcess new
+		directory: location parent;
+		url: repoUrl;
+		clone.
+
+	^ self updateRepoAt: aLocation
+]
+
+{ #category : #actions }
+SPGitImporter class >> cloneRepoLGit: repoUrl to: aLocation [
+
 	| location repo |
 
 	location := aLocation asFileReference.
@@ -102,6 +122,26 @@ SPGitImporter class >> reposLocation: aString [
 
 { #category : #actions }
 SPGitImporter class >> updateRepoAt: aLocation [
+
+	| location repo |
+
+	location := aLocation asFileReference.
+	location exists
+		ifFalse: [ self error: 'Location does not exist' ].
+
+	self logInfo: 'Updating git clone ', location fullName, ' ...'.
+	"Use the external git executable to update the clone"	
+	SPGitProcess new
+		directory: location;
+		fetch.
+	
+	repo := LGitRepository on: location.
+	repo open.
+	^ repo
+]
+
+{ #category : #actions }
+SPGitImporter class >> updateRepoAtLGit: aLocation [
 
 	| location repo |
 

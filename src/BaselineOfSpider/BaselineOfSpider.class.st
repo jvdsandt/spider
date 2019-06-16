@@ -10,6 +10,10 @@ BaselineOfSpider >> baselineOf: spec [
 	spec
 		for: #common
 		do: [
+			spec baseline: 'OSSubprocess' with: [ 
+				spec 
+					repository: 'github://pharo-contributions/OSSubprocess:v1.0.1/repository';
+					loads: 'OSSubprocess' ].
 			spec baseline: 'P3' with: [ 
 				spec 
 					repository: 'github://svenvc/P3:master/repository';
@@ -32,7 +36,7 @@ BaselineOfSpider >> baselineOf: spec [
 			spec package: 'Spider-Model-RDB' with: [ spec requires: #( 'Spider-Model-Git' 'P3' ) ].
 			spec package: 'Spider-Model-RDB-Tests' with: [ spec requires: #( 'Spider-Model-Git-Tests' 'Spider-Model-RDB' ) ].
 
-			spec package: 'Spider-Import-MC' with: [ spec requires: #( 'Spider-Model-MC' 'Spider-Model-Git' 'Spider-Model-RDB' ) ].
+			spec package: 'Spider-Import-MC' with: [ spec requires: #( 'Spider-Model-MC' 'Spider-Model-Git' 'Spider-Model-RDB' 'OSSubprocess' ) ].
 
 			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3' 'Bootstrap' ) ].
 			
