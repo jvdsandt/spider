@@ -30,7 +30,7 @@ SPPackageRDBRepository >> getAllPackageNames [
 	| query |
 	
 	query := (Query read: SPPackage)
-		retrieve: [ :e | e name ];
+		retrieve: [ :e | e name distinct ];
 		orderBy: [ :e | e name ];
 		yourself.
 

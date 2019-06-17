@@ -53,7 +53,7 @@ SPTransactionDetailsView >> renderGitCommitsOn: html [
 			list do: [ :each |
 				html listItem: [
 					html anchor
-						callback: [ self openGitCommit: each ];
+						url: (self router pathForGitCommit: each);
 						with: each shaShortString.
 					html space; text: each message ] ] ]
 ]

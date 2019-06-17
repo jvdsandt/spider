@@ -2,14 +2,26 @@ Class {
 	#name : #SPWebContext,
 	#superclass : #Object,
 	#instVars : [
-		'context',
-		'glorpSession'
+		'context'
 	],
 	#classVars : [
+		'DatabaseUrl',
 		'Default'
 	],
 	#category : #'Spider-Web-Core'
 }
+
+{ #category : #accessing }
+SPWebContext class >> databaseUrl [
+
+	^ DatabaseUrl
+]
+
+{ #category : #accessing }
+SPWebContext class >> databaseUrl: aString [
+
+	DatabaseUrl := aString
+]
 
 { #category : #accessing }
 SPWebContext class >> default [
@@ -34,7 +46,7 @@ SPWebContext class >> newDefault [
 
 	| context |
 	
-	context := SPiderPostgreSQLContext openOnUrl: 'psql://spreader:spreader@theraver5:5432/postgres'.
+	context := SPiderPostgreSQLContext openOnUrl: self databaseUrl.
 
 	^ self new
 			context: context;

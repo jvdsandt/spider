@@ -1,8 +1,21 @@
 Class {
 	#name : #SPListView,
 	#superclass : #SPComponent,
+	#instVars : [
+		'list'
+	],
 	#category : #'Spider-Web-Core'
 }
+
+{ #category : #accessing }
+SPListView >> list [
+	^ list
+]
+
+{ #category : #accessing }
+SPListView >> list: anObject [
+	list := anObject
+]
 
 { #category : #rendering }
 SPListView >> renderContentOn: html [

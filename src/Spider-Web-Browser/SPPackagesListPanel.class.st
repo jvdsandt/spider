@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'classListPanel'
 	],
-	#category : #'Spider-Web-Core-Browser'
+	#category : #'Spider-Web-Browser'
 }
 
 { #category : #accessing }

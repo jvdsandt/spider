@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'sourcePanel'
 	],
-	#category : #'Spider-Web-Core-Browser'
+	#category : #'Spider-Web-Browser'
 }
 
 { #category : #updating }

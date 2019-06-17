@@ -1,16 +1,13 @@
 Class {
 	#name : #SPMCRepoListView,
 	#superclass : #SPListView,
-	#instVars : [
-		'mcRepos'
-	],
 	#category : #'Spider-Web-Core'
 }
 
 { #category : #accessing }
-SPMCRepoListView >> mcRepos [
+SPMCRepoListView >> list [
 
-	^ mcRepos ifNil: [ mcRepos := self queries allMCRepositories   ]
+	^ list ifNil: [ list := self queries allMCRepositories   ]
 ]
 
 { #category : #rendering }
@@ -25,7 +22,7 @@ SPMCRepoListView >> renderRow: mcRepo on: html [
 { #category : #rendering }
 SPMCRepoListView >> renderTableBodyOn: html [
 
-	self mcRepos do: [ :each |
+	self list do: [ :each |
 		html tableRow: [  
 			self renderRow: each on: html ] ]
 ]

@@ -9,10 +9,21 @@ Class {
 		'methodListPanel',
 		'sourcePanel'
 	],
-	#category : #'Spider-Web-Core-Browser'
+	#category : #'Spider-Web-Browser'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
+SPBrowserComponent class >> onGitCommit: aGitCommit [
+
+	| browser |
+	
+	browser := SPBrowser onGitCommit: aGitCommit.
+	^ self new
+			browser: browser;
+			yourself
+]
+
+{ #category : #'instance creation' }
 SPBrowserComponent class >> onPackage: aPackage [
 
 	| browser |
@@ -23,7 +34,7 @@ SPBrowserComponent class >> onPackage: aPackage [
 			yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SPBrowserComponent class >> onPackages: aPackages [
 
 	| browser |

@@ -1,11 +1,14 @@
 Class {
 	#name : #SPTransactionsListView,
 	#superclass : #SPListView,
-	#instVars : [
-		'transactions'
-	],
 	#category : #'Spider-Web-Core'
 }
+
+{ #category : #accessing }
+SPTransactionsListView >> list [
+
+	^ list ifNil: [ list := self context sessionRepo latestTransactions: 40 ]
+]
 
 { #category : #accessing }
 SPTransactionsListView >> openItem: aTransaction [
@@ -29,7 +32,7 @@ SPTransactionsListView >> renderRow: aTransaction on: html [
 { #category : #accessing }
 SPTransactionsListView >> renderTableBodyOn: html [
 
-	self transactions do: [ :each |
+	self list do: [ :each |
 		html tableRow: [ 
 			self renderRow: each on: html ] ]
 ]
@@ -46,10 +49,4 @@ SPTransactionsListView >> renderTableHeadOn: html [
 SPTransactionsListView >> title [
 
 	^ 'Latest import transactions'
-]
-
-{ #category : #accessing }
-SPTransactionsListView >> transactions [
-
-	^ transactions ifNil: [ transactions := self context sessionRepo latestTransactions: 40 ]
 ]

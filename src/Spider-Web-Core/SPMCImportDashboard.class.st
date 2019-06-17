@@ -27,6 +27,11 @@ SPMCImportDashboard >> children [
 	^ Array with: mainPanel 
 ]
 
+{ #category : #hooks }
+SPMCImportDashboard >> initialRequest: aRequest [
+	super initialRequest: aRequest.
+]
+
 { #category : #'as yet unclassified' }
 SPMCImportDashboard >> initialize [
 

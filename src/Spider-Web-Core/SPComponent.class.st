@@ -83,6 +83,12 @@ SPComponent >> renderDateTime: dt on: html [
 		BasicDatePrinter default printHMS: dt separatedBy: $: on: s ])
 ]
 
+{ #category : #'as yet unclassified' }
+SPComponent >> router [
+
+	^ SPWebRouter new
+]
+
 { #category : #accessing }
 SPComponent >> webContext [
 

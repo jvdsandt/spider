@@ -9,8 +9,16 @@ Class {
 		'selectedCategory',
 		'selectedMethod'
 	],
-	#category : #'Spider-Web-Core-Browser'
+	#category : #'Spider-Web-Browser'
 }
+
+{ #category : #'instance creation' }
+SPBrowser class >> onGitCommit: aGitCommit [
+
+	^ self new
+		gitCommit: aGitCommit;
+		yourself
+]
 
 { #category : #'instance creation' }
 SPBrowser class >> onPackage: aPackage [
@@ -67,6 +75,12 @@ SPBrowser >> doShowInstanceSide [
 	
 	selectedCategory := nil.
 	selectedMethod := nil.
+]
+
+{ #category : #accessing }
+SPBrowser >> gitCommit: aGitCommit [
+
+	self packages: aGitCommit packages
 ]
 
 { #category : #accessing }

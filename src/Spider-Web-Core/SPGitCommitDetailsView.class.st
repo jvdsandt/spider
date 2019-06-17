@@ -18,6 +18,25 @@ SPGitCommitDetailsView >> gitCommit: anObject [
 ]
 
 { #category : #rendering }
+SPGitCommitDetailsView >> renderChildrenOn: html [
+
+	| children |
+	
+	children := self context gitRepo selectChildrenOf: self gitCommit id.
+	children isEmpty
+		ifTrue: [ ^ self ].
+		
+	html paragraph: [ 
+		html text: 'Children: '.
+		children
+			do: [ :each |
+				html anchor
+					url: (self router pathForGitCommit: each);
+					with: each shaShortString ]
+			separatedBy: [ html space ] ]
+]
+
+{ #category : #rendering }
 SPGitCommitDetailsView >> renderContentOn: html [
 
 	self renderTitle: 'Git commit details' on: html. 
@@ -33,12 +52,33 @@ SPGitCommitDetailsView >> renderContentOn: html [
 			with: self gitCommit message ].
 		
 	self renderParentsOn: html.
+	self renderChildrenOn: html.
 
 	self gitCommit packages notEmpty
 		ifTrue: [ 
 			html anchor 
 				callback: [ self openBrowserOnPackages: self gitCommit packages ];
-				with: 'Browse' ]
+				with: 'Browse' ].
+			
+	self renderDiffsOn: html.
+			
+		
+]
+
+{ #category : #rendering }
+SPGitCommitDetailsView >> renderDiffsOn: html [
+
+	| diffs |
+	
+	diffs := self gitCommit diffs.
+	diffs isEmpty
+		ifTrue: [ 
+			html paragraph: 'No changed packages'.
+			^ self ].
+		
+	html render: (SPDiffsComponent new
+		diffs: diffs;
+		yourself)
 ]
 
 { #category : #rendering }
@@ -52,7 +92,18 @@ SPGitCommitDetailsView >> renderParentsOn: html [
 		self gitCommit parents 
 			do: [ :each |
 				html anchor
-					callback: [ self openGitCommit: each ];
+					url: (self router pathForGitCommit: each);
 					with: each shaShortString ]
 			separatedBy: [ html space ] ]
+]
+
+{ #category : #updating }
+SPGitCommitDetailsView >> updateUrl: anUrl [
+
+	super updateUrl: anUrl.
+	anUrl
+		addToPath: 'git_commit';
+		addToPath: self gitCommit shaString
+	
+
 ]

@@ -1,20 +1,12 @@
 Class {
 	#name : #SPMCPackageNamesListView,
 	#superclass : #SPListView,
-	#instVars : [
-		'list'
-	],
 	#category : #'Spider-Web-Core'
 }
 
 { #category : #accessing }
 SPMCPackageNamesListView >> list [
 	^ list ifNil: [ self queries allMCPackageNamesByName ]
-]
-
-{ #category : #accessing }
-SPMCPackageNamesListView >> list: anObject [
-	list := anObject
 ]
 
 { #category : #rendering }

@@ -1,20 +1,12 @@
 Class {
 	#name : #SPMCAuthorsListView,
 	#superclass : #SPListView,
-	#instVars : [
-		'list'
-	],
 	#category : #'Spider-Web-Core'
 }
 
 { #category : #accessing }
 SPMCAuthorsListView >> list [
 	^ list ifNil: [ list := self queries allMCAuthorsByName ]
-]
-
-{ #category : #accessing }
-SPMCAuthorsListView >> list: anObject [
-	list := anObject
 ]
 
 { #category : #rendering }
