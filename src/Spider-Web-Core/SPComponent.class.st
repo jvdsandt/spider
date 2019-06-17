@@ -11,6 +11,12 @@ SPComponent >> context [
 ]
 
 { #category : #accessing }
+SPComponent >> gitRepo [ 
+
+	^ self context gitRepo
+]
+
+{ #category : #accessing }
 SPComponent >> mcPackageRepo [ 
 
 	^ self context mcPackageRepo

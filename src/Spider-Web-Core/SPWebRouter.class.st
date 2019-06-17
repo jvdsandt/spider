@@ -31,6 +31,15 @@ SPWebRouter >> pathForGitCommit: aGitCommit [
 ]
 
 { #category : #'as yet unclassified' }
+SPWebRouter >> pathForGitCommitBrowser: aGitCommit [
+
+	^ baseUrl copy 
+		addToPath: 'spider-browser';
+		addField: 'commit' value: aGitCommit shaString;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SPWebRouter >> pathForGitRepo: aGitRepo [
 
 	^ baseUrl copy 

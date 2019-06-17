@@ -57,7 +57,7 @@ SPGitCommitDetailsView >> renderContentOn: html [
 	self gitCommit packages notEmpty
 		ifTrue: [ 
 			html anchor 
-				callback: [ self openBrowserOnPackages: self gitCommit packages ];
+				url: (self router pathForGitCommitBrowser: self gitCommit);
 				with: 'Browse' ].
 			
 	self renderDiffsOn: html.

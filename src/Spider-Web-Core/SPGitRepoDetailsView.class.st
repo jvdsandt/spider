@@ -8,11 +8,6 @@ Class {
 }
 
 { #category : #accessing }
-SPGitRepoDetailsView >> gitRepo [
-	^ gitRepo
-]
-
-{ #category : #accessing }
 SPGitRepoDetailsView >> gitRepo: anObject [
 	gitRepo := anObject
 ]

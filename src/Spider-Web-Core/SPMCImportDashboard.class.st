@@ -1,6 +1,6 @@
 Class {
 	#name : #SPMCImportDashboard,
-	#superclass : #SPComponent,
+	#superclass : #SPPage,
 	#instVars : [
 		'mainPanel'
 	],
@@ -13,10 +13,6 @@ SPMCImportDashboard class >> register [
 	| app |
 	
 	app := WAAdmin register: self asApplicationAt: 'spider'.
-	app
-		addLibrary: JQDeploymentLibrary;
-		addLibrary: TBSDeploymentLibrary
-
 	
 
 ]
@@ -123,10 +119,4 @@ SPMCImportDashboard >> returnHome [
 SPMCImportDashboard >> title [
 
 	^ 'Spider MC Import Dashboard'
-]
-
-{ #category : #updating }
-SPMCImportDashboard >> updateRoot: htmlRoot [
-
-	htmlRoot title: self title
 ]

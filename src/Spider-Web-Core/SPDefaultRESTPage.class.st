@@ -1,6 +1,6 @@
 Class {
 	#name : #SPDefaultRESTPage,
-	#superclass : #SPComponent,
+	#superclass : #SPPage,
 	#instVars : [
 		'contentPanel'
 	],
@@ -21,24 +21,4 @@ SPDefaultRESTPage >> contentPanel: anObject [
 SPDefaultRESTPage >> renderContentOn: html [
 
 	html tbsContainer: [ html render: self contentPanel ]
-]
-
-{ #category : #rendering }
-SPDefaultRESTPage >> updateRoot: anHtmlRoot [
-	super updateRoot: anHtmlRoot.
-	
-	anHtmlRoot beHtml5.
-	anHtmlRoot title: 'Spider'.
-
-	anHtmlRoot javascript
-		url: (JQDeploymentLibrary urlOf: #jQueryJs).
-		
-	anHtmlRoot javascript
-		url: (TBSDeploymentLibrary urlOf: #jsbootstrapminJs).
-		
-	anHtmlRoot stylesheet
-		url: (TBSDeploymentLibrary urlOf: #cssbootstrapminCss).
-		
-		
-	
 ]

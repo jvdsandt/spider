@@ -8,3 +8,9 @@ Class {
 SPAddedPackage >> accept: aVisitor [
 	aVisitor visitDiffAddedPackage: self
 ]
+
+{ #category : #accessing }
+SPAddedPackage >> classDiffs [
+
+	^ self newObject classes collect: [ :each | SPAddedClass added: each ]
+]
