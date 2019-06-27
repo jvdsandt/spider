@@ -7,10 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SPGitCommitLGitBuilderP3Test >> createLGitRepo [
 
-	^ (LGitRepository on: self class baseDirectory asFileReference / 'P3.git')
-			open;
-			yourself
-			
+	^ self createLGitRepo: 'https://github.com/svenvc/P3.git'
 ]
 
 { #category : #'as yet unclassified' }
@@ -27,7 +24,7 @@ SPGitCommitLGitBuilderP3Test >> testBuilder [
 		
 	commit := builder build.
 	
-	self assert: commit packageNames sorted equals: #( 'BaselineOfP3' 'P3' 'P3-Glorp' 'P3-Tests' ).
+	self assert: commit packageNames sorted equals: #( 'BaselineOfP3' 'P3' 'P3-Glorp' ).
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,9 +60,6 @@ SPGitCommitLGitBuilderP3Test >> testDiff [
 	diff filesDo: [ :delta :second :third |
 		list add: delta newFile path -> delta oldFile path.
 		0 ].
-	
-	list inspect
-	
 
 ]
 
@@ -79,7 +73,6 @@ SPGitCommitLGitBuilderP3Test >> testFileTreeSnapshot [
 		resolve;
 		codeReader.
 	snapshot := reader getPackageSnapshot: 'P3'.
-	snapshot inspect 
 
 ]
 
@@ -103,7 +96,7 @@ SPGitCommitLGitBuilderP3Test >> testFormatResolver [
 		resolve;
 		yourself.
 		
-	self assert: resolver sourceDirectory equals: '/'.
+	self assert: resolver sourceDirectory equals: ''.
 	self assert: resolver format equals: #filetree.
 	self assert: resolver packagesPresent.
 
@@ -134,6 +127,5 @@ SPGitCommitLGitBuilderP3Test >> testTonelSnapshot [
 		resolve;
 		codeReader.
 	snapshot := reader getPackageSnapshot: 'P3'.
-	snapshot inspect 
 
 ]

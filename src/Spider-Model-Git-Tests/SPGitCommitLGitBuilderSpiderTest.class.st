@@ -7,10 +7,7 @@ Class {
 { #category : #accessing }
 SPGitCommitLGitBuilderSpiderTest >> createLGitRepo [
 
-	^ (LGitRepository on: self class baseDirectory asFileReference / 'Spider-GitTest')
-			open;
-			yourself
-			
+	^ self createLGitRepo: 'https://github.com/jvdsandt/spider-gittest.git'
 ]
 
 { #category : #accessing }
