@@ -209,7 +209,7 @@ SPMonticelloPackageRDBRepositoryTest >> testPackageV1andV2 [
 { #category : #tests }
 SPMonticelloPackageRDBRepositoryTest >> testPackageV1andV2WithRepo [
 
-	| repo mcRepoUrl mcP1 mcP2 |
+	| repo mcRepoUrl mcP1 mcP2 mcRepo |
 
 	repo := self mcPackageRepo.
 	mcRepoUrl := 'https://myrepo.com/project'.
@@ -226,6 +226,11 @@ SPMonticelloPackageRDBRepositoryTest >> testPackageV1andV2WithRepo [
 	self assert: (repo getMCPackageForRepo: mcRepoUrl andFile: 'v2.mcz' ifAbsent: [ nil ]) notNil.
 	self assert: (repo getMCPackageForRepo: mcRepoUrl andFile: 'v3.mcz' ifAbsent: [ nil ]) isNil.
 
+	mcRepo := repo getMCRepoByUrl: mcRepoUrl ifAbsent: [ nil ].
+	self assert: mcRepo notNil.
+	
+	self assert: (repo hasFile: 'v1.mcz' fromRepo: mcRepoUrl).
+	self deny: (repo hasFile: 'v3.mcz' fromRepo: mcRepoUrl).
 ]
 
 { #category : #tests }
@@ -278,6 +283,24 @@ SPMonticelloPackageRDBRepositoryTest >> testPackageV3 [
 	
 	mcPackage := repo newBuilder buildFromMCVersion: mcVersion.
 	self assertPackageV3: mcPackage package.
+]
+
+{ #category : #tests }
+SPMonticelloPackageRDBRepositoryTest >> testPackageV3Queries [
+
+	| repo mcPackage mcPackageRead |
+
+	repo := self mcPackageRepo.
+	mcPackage := repo newBuilder buildFromMCVersion: self getTestPackages testPackageV3.
+	self assertPackageV3: mcPackage package.
+	
+	mcPackageRead := repo getMCPackageByName: mcPackage name andMcId: mcPackage mcId ifAbsent: [ nil ].
+	self assert: mcPackageRead name equals: #'SmalltalkGraph-Tests-Package'.
+	self assert: mcPackageRead package equals: mcPackage package.
+	self assert: mcPackageRead ancestors equals: mcPackage ancestors.
+	
+
+	
 ]
 
 { #category : #tests }

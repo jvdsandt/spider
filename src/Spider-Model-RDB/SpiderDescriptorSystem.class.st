@@ -112,7 +112,7 @@ SpiderDescriptorSystem >> classModelForSPGlorpMonticelloPackage: aClassModel [
 	aClassModel newAttributeNamed: #datetime type: DateAndTime.
 	aClassModel newAttributeNamed: #message type: String.
 	aClassModel newAttributeNamed: #package type: SPPackage.
-	aClassModel newAttributeNamed: #ancestors collectionOf: SPPackage.
+	aClassModel newAttributeNamed: #ancestors collection: Array of: SPPackage.
 	aClassModel newAttributeNamed: #rootId type: Integer.
 
 ]

@@ -77,7 +77,7 @@ SPClassRDBRepositoryTest >> testStoreBooleanClass [
 	self assert: spiderClass classType equals: spiderClass2 classType.
 	self assert: spiderClass superclassName equals: spiderClass2 superclassName.
 	self assert: spiderClass classHash equals: spiderClass2 classHash.
-	self assert: spiderClass instanceMethodRefs equals: spiderClass2 instanceMethodRefs.
+	self assert: spiderClass instanceMethodRefs sorted equals: spiderClass2 instanceMethodRefs sorted.
 
 ]
 

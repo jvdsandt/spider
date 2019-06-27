@@ -36,6 +36,15 @@ SPGlorpMonticelloPackage >> <= other [
 	^ datetime <= other datetime
 ]
 
+{ #category : #comparing }
+SPGlorpMonticelloPackage >> = other [
+
+	self == other ifTrue: [ ^ true ].
+	self species = other species ifFalse: [ ^ false ].
+	
+	^ name = other name and: [ self mcId = other mcId ]
+]
+
 { #category : #accessing }
 SPGlorpMonticelloPackage >> ancestors [
 	^ ancestors
@@ -94,6 +103,12 @@ SPGlorpMonticelloPackage >> descendants [
 SPGlorpMonticelloPackage >> fullName [
 
 	^self name, '-', self author, '.', self version asString
+]
+
+{ #category : #comparing }
+SPGlorpMonticelloPackage >> hash [
+
+	^ self mcId hash
 ]
 
 { #category : #initialization }

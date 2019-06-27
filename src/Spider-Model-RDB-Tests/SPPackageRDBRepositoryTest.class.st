@@ -52,7 +52,9 @@ SPPackageRDBRepositoryTest >> testSimplePackage [
 	self assert: p2 comment equals: 'Just testing ...'.
 	self assert: p2 classNames equals: #( Boolean ).
 	
-	p2 := repo getPackageByHash: package packageHash ifAbsent: [ self fail: 'Package not found' ]
+	p2 := repo getPackageByHash: package packageHash ifAbsent: [ self fail: 'Package not found' ].
+	
+	self assert: repo getAllPackageNames asArray equals: #( 'MyBooleanPackage' )
 ]
 
 { #category : #tests }
