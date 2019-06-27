@@ -1,11 +1,11 @@
 Class {
-	#name : #SPGlorpClassToVariableRefTest,
+	#name : #SPClassToVariableRefTest,
 	#superclass : #TestCase,
 	#category : #'Spider-Model-Core-Tests'
 }
 
 { #category : #tests }
-SPGlorpClassToVariableRefTest >> testExpressionHashes [
+SPClassToVariableRefTest >> testExpressionHashes [
 
 	| varRef str |
 
@@ -17,7 +17,7 @@ SPGlorpClassToVariableRefTest >> testExpressionHashes [
 ]
 
 { #category : #tests }
-SPGlorpClassToVariableRefTest >> testHashes [
+SPClassToVariableRefTest >> testHashes [
 
 	| str |
 
