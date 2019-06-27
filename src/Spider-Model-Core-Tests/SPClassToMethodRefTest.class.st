@@ -1,11 +1,11 @@
 Class {
-	#name : #SPGlorpClassToMethodRefTest,
+	#name : #SPClassToMethodRefTest,
 	#superclass : #TestCase,
 	#category : #'Spider-Model-Core-Tests'
 }
 
 { #category : #tests }
-SPGlorpClassToMethodRefTest >> testHashes [
+SPClassToMethodRefTest >> testHashes [
 
 	| method ref str |
 	
