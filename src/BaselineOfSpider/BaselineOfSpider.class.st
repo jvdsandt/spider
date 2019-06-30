@@ -20,7 +20,7 @@ BaselineOfSpider >> baselineOf: spec [
 					loads: 'glorp' ].
 			spec baseline: 'Seaside3' with: [ 
 				spec 
-					repository: 'github://SeasideSt/Seaside:v3.3.3/repository';
+					repository: 'github://SeasideSt/Seaside:v3.3.4/repository';
 					loads: #( 'Core' 'JSON' 'Javascript' 'JQuery' 'REST' 'Zinc' 'Seaside-REST-Examples' ) ].
 			spec baseline: 'Bootstrap' with: [ 
 				spec 
