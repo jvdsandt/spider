@@ -27,6 +27,7 @@ SPLibGitCommitBuilder >> build [
 		self buildPackages.
 		status := #imported.
 	] on: Error do: [ :ex | 
+		self reportImportError: ex.
 		status := #importerror.
 		packages := #().
 	].
@@ -95,7 +96,7 @@ SPLibGitCommitBuilder >> buildPackagesFromDiff: aParent [
 
 	| oldCommit diff tempPackages |
 	
-	oldCommit := commit parents detect: [ :each | each id asByteArray = aParent sha ].
+	oldCommit := LGitCommit of: commit repository fromHexString: aParent shaString.
 	
 	diff := (SPGitLibGitDiff forFormat: format)
 		initWithOld: oldCommit oldSourceDir: aParent sourceDir new: commit newSourceDir: sourceDir;
@@ -175,4 +176,24 @@ SPLibGitCommitBuilder >> initialize [
 SPLibGitCommitBuilder >> packages [
 
 	^ packages
+]
+
+{ #category : #internal }
+SPLibGitCommitBuilder >> reportImportError: anError [
+
+	| stack |
+	
+	stack := String streamContents: [ :str | 
+		| stContext |
+		stContext := anError signalerContext.
+		[ stContext isNil ] whileFalse: [
+			[ str print: stContext; lf ] ifError: [ str nextPutAll: 'PRINTING ERROR'; lf].
+			stContext := stContext sender ] ].
+	
+	self logError: (String streamContents: [ :str |
+		str nextPutAll: 'Import of commit ';
+			nextPutAll: commit id hexString;
+			nextPutAll: ' failed'; lf;
+			nextPutAll: stack ])		
+
 ]

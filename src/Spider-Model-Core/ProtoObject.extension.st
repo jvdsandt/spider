@@ -1,6 +1,12 @@
 Extension { #name : #ProtoObject }
 
 { #category : #'*Spider-Model-Core' }
+ProtoObject >> logError: anObject [
+
+	SPLogger default logError: self class name message: anObject
+]
+
+{ #category : #'*Spider-Model-Core' }
 ProtoObject >> logInfo: anObject [
 
 	SPLogger default logInfo: self class name message: anObject
