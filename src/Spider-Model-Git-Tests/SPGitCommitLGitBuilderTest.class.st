@@ -33,7 +33,7 @@ SPGitCommitLGitBuilderTest >> createLGitRepo: aRepoUrl [
 
 	| repoName directoryRef repo |
 	
-	repoName := aRepoUrl asZnUrl lastPathSegment.
+	repoName := (aRepoUrl asZnUrl segments last: 2) joinUsing: '/'.
 	(repoName endsWith: '.git')
 		ifTrue: [ repoName := repoName allButLast: 4 ].
 	directoryRef := self class baseDirectory asFileReference / repoName.
