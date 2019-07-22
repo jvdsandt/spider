@@ -67,6 +67,8 @@ SPLibGitCommitBuilder >> buildPackageFromSnapshot: mcSnapshot name: aName [
 	packageBuilder name: aName.
 	packageBuilder snapshot: mcSnapshot.
 	
+	self logInfo: ('Building package ', aName, ' from commit ', (self commit id hexString first: 7)).
+	
 	^ packageBuilder build
 ]
 

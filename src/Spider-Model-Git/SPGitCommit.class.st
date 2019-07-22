@@ -27,6 +27,15 @@ SPGitCommit class >> sha: shaHash authorSignature: anAuthorSig message: aMessage
 			format: aFormat
 ]
 
+{ #category : #comparing }
+SPGitCommit >> = other [
+
+	self == other ifTrue: [ ^ true ].
+	self species = other species ifFalse: [ ^ false ].
+	
+	^ sha = other sha and: [ authorSignature = other authorSignature ]
+]
+
 { #category : #accessing }
 SPGitCommit >> authorEmail [
 	^ self authorSignature email
@@ -87,6 +96,12 @@ SPGitCommit >> format [
 SPGitCommit >> hasPackages [
 
 	^ packages notEmpty
+]
+
+{ #category : #comparing }
+SPGitCommit >> hash [
+
+	^ sha hash
 ]
 
 { #category : #initialization }

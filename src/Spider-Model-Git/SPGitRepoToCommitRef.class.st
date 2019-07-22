@@ -21,6 +21,15 @@ SPGitRepoToCommitRef class >> typeTag [
 	^ 'T'
 ]
 
+{ #category : #comparing }
+SPGitRepoToCommitRef >> = other [
+
+	self == other ifTrue: [ ^ true ].
+	self species = other species ifFalse: [ ^ false ].
+	
+	^ name = other name and: [ type = other type and: [ commit = other commit ] ]
+]
+
 { #category : #accessing }
 SPGitRepoToCommitRef >> commit [
 	^ commit
@@ -30,6 +39,12 @@ SPGitRepoToCommitRef >> commit [
 SPGitRepoToCommitRef >> datetime [
 
 	^ self commit datetime
+]
+
+{ #category : #comparing }
+SPGitRepoToCommitRef >> hash [
+
+	^ name hash bitXor: commit hash
 ]
 
 { #category : #testing }

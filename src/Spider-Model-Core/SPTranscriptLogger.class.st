@@ -7,7 +7,7 @@ Class {
 { #category : #logging }
 SPTranscriptLogger >> logLevel: aLevel source: aSource message: anObject [
 
-	Transcript show: (String streamContents: [ :s |
+	Transcript crShow: (String streamContents: [ :s |
 		s
 			nextPutAll: Time now print24;
 			nextPutAll: ' ['; nextPutAll: aLevel; nextPutAll: '] ';

@@ -29,6 +29,12 @@ SPGitRepo class >> url: anUrl [
 ]
 
 { #category : #accessing }
+SPGitRepo >> branchNamed: aName [
+
+	^ self commitRefs detect: [ :each | each isBranch and: [ each name = aName ] ]
+]
+
+{ #category : #accessing }
 SPGitRepo >> commitRefs [
 	^ commitRefs
 ]

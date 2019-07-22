@@ -16,6 +16,18 @@ SPGitSignature class >> name: aName email: anEmail datetime: aDatetime offset: t
 	^ self new initWithName: aName email: anEmail datetime: aDatetime offset: tzOffsetInMinutes
 ]
 
+{ #category : #comparing }
+SPGitSignature >> = other [
+
+	self == other ifTrue: [ ^ true ].
+	self species = other species ifFalse: [ ^ false ].
+	
+	^ datetime = other datetime and: [ 
+			name = other name and: [ 
+				email = other email and: [ 
+					tzOffset = other tzOffset ] ] ]
+]
+
 { #category : #accessing }
 SPGitSignature >> datetime [
 	^ datetime
@@ -24,6 +36,12 @@ SPGitSignature >> datetime [
 { #category : #accessing }
 SPGitSignature >> email [
 	^ email
+]
+
+{ #category : #comparing }
+SPGitSignature >> hash [
+
+	^ datetime hash
 ]
 
 { #category : #initialization }

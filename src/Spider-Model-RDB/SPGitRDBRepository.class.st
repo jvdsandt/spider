@@ -14,6 +14,42 @@ SPGitRDBRepository >> createGitRepoFrom: anArray [
 	self todo
 ]
 
+{ #category : #storing }
+SPGitRDBRepository >> deleteCommit: aCommit from: aRepo [
+
+	| allRefs children |
+	
+	allRefs := self getRefsToCommit: aCommit.
+	allRefs do: [ :eachRef |
+		(aRepo commitRefs includes: eachRef)
+			ifTrue: [ self deleteRepoRefs: (Array with: eachRef) from: aRepo ] ].
+		
+	children := self selectChildrenOf: aCommit id.
+	children do: [ :eachChildCommit |
+		self deleteCommit: eachChildCommit from: aRepo ].
+	
+	self deleteGitCommitParentRefQuery execute: aCommit id.
+	self deleteGitCommitQuery execute: aCommit id
+]
+
+{ #category : #'accessing - queries' }
+SPGitRDBRepository >> deleteGitCommitParentRefQuery [
+
+	| sql |
+	
+	sql := 'DELETE FROM git_commit_parent_refs WHERE commit_id = $1'.
+	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
+{ #category : #'accessing - queries' }
+SPGitRDBRepository >> deleteGitCommitQuery [
+
+	| sql |
+	
+	sql := 'DELETE FROM git_commits WHERE id = $1'.
+	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
 { #category : #'accessing - queries' }
 SPGitRDBRepository >> deleteGitRepoRefQuery [
 
@@ -80,6 +116,17 @@ SPGitRDBRepository >> getGitRepoByUrl: anUrl ifAbsent: aBlock [
 	^ gitRepo isNil
 			ifTrue: [ aBlock value ]
 			ifFalse: [ gitRepo ]
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> getRefsToCommit: aCommit [
+
+	| q |
+	
+	q := Query read: SPGitRepoToCommitRef where: [ :e | e commit = aCommit ].
+	q alsoFetch: [ :e | e  ].
+
+	^ self glorpSession execute: q
 ]
 
 { #category : #queries }
