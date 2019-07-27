@@ -47,6 +47,11 @@ SPGitRepoToCommitRef >> hash [
 	^ name hash bitXor: commit hash
 ]
 
+{ #category : #accessing }
+SPGitRepoToCommitRef >> historyList: maxSize [
+	^ self commit historyList: maxSize
+]
+
 { #category : #testing }
 SPGitRepoToCommitRef >> isBranch [
 

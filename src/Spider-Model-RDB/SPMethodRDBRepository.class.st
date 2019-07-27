@@ -20,11 +20,17 @@ SPMethodRDBRepository >> escapeAndLowerLikeParameter: aString [
 { #category : #queries }
 SPMethodRDBRepository >> getMethodById: anId [
 
+	^ self getMethodById: anId ifAbsent:  [ self error: 'Method not found' ]
+]
+
+{ #category : #queries }
+SPMethodRDBRepository >> getMethodById: anId ifAbsent: aBlock [
+
 	| method |
 	
 	method := self glorpSession readOneOf: SPMethod where: [ :each | each id = anId ].
 	method isNil
-		ifTrue: [ self error: 'Method not found' ].
+		ifTrue: [ ^ aBlock value ].
 	^ method
 ]
 

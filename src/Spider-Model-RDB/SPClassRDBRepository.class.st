@@ -31,11 +31,17 @@ SPClassRDBRepository >> getClassByHash: aBytes ifAbsent: aBlock [
 { #category : #queries }
 SPClassRDBRepository >> getClassById: anId [
 
+	^ self getClassById: anId ifAbsent:  [ self error: 'SpiderClass not found' ]
+]
+
+{ #category : #queries }
+SPClassRDBRepository >> getClassById: anId ifAbsent: aBlock [
+
 	| spiderClass |
 	
 	spiderClass := self glorpSession readOneOf: SPGlorpClass where: [ :each | each id = anId ].
 	spiderClass isNil
-		ifTrue: [ self error: 'SpiderClass not found' ].
+		ifTrue: [ ^ aBlock value ].
 	^ spiderClass
 ]
 

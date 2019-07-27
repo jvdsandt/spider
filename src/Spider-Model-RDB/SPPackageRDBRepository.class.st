@@ -54,6 +54,15 @@ SPPackageRDBRepository >> getPackageById: anId [
 	^ self glorpSession readOneOf: SPPackage where: [ :e | e id = anId ]
 ]
 
+{ #category : #queries }
+SPPackageRDBRepository >> getPackageById: anId ifAbsent: aBlock [
+
+	| p |
+	
+	p := self getPackageById: anId.
+	^ p ifNil: aBlock ifNotNil: [ p ]
+]
+
 { #category : #accessing }
 SPPackageRDBRepository >> glorpSession [
 

@@ -383,7 +383,7 @@ SPGlorpClass >> instanceVarRefNamed: aSymbol [
 { #category : #testing }
 SPGlorpClass >> isSpiderClass [
 
-	^ type = self class classType or: [ type = self class traitType ]
+	^ type = self class classType
 ]
 
 { #category : #testing }
@@ -464,6 +464,18 @@ SPGlorpClass >> traitCompositionString [
 { #category : #accessing }
 SPGlorpClass >> type [
 	^ type
+]
+
+{ #category : #accessing }
+SPGlorpClass >> typeName [
+	
+	self isSpiderClassExtension 
+		ifTrue: [ ^ #extension ].
+	self isSpiderTrait 
+		ifTrue: [ ^ #trait ].
+	self isSpiderClass 
+		ifTrue: [ ^ #class ].
+	^ nil
 ]
 
 { #category : #internal }

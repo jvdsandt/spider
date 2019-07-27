@@ -40,6 +40,7 @@ SPGitCommitDetailsView >> renderChildrenOn: html [
 SPGitCommitDetailsView >> renderContentOn: html [
 
 	self renderTitle: 'Git commit details' on: html. 
+	self renderRefsOn: html.
 
 	self renderLabel: 'sha' value: self gitCommit shaString on: html.
 	self renderLabel: 'Author' value: self gitCommit authorName on: html.
@@ -95,6 +96,28 @@ SPGitCommitDetailsView >> renderParentsOn: html [
 					url: (self router pathForGitCommit: each);
 					with: each shaShortString ]
 			separatedBy: [ html space ] ]
+]
+
+{ #category : #rendering }
+SPGitCommitDetailsView >> renderRefsOn: html [
+
+	| refs |
+	
+	refs := self gitRepo selectRepoRefsOfCommit: self gitCommit id.
+	refs isEmpty
+		ifTrue: [ ^ self ].
+		
+	(refs select: [ :each | each isBranch ]) do: [ :each |
+		html span
+			class: 'label label-primary';
+			with: each name.
+		html space ].
+		
+	(refs select: [ :each | each isTag ]) do: [ :each |
+		html span 
+			class: 'label label-success';
+			with: each name.
+		html space ]
 ]
 
 { #category : #updating }

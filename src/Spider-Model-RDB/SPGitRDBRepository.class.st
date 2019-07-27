@@ -73,6 +73,17 @@ SPGitRDBRepository >> deleteRepoRefs: aRefColl from: aRepo [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> getCommitById: anId ifAbsent: aBlock [
+
+	| gitCommit |
+	
+	gitCommit := self glorpSession readOneOf: SPGitCommit where: [ :e | e id = anId ].
+	^ gitCommit isNil
+			ifTrue: [ aBlock value ]
+			ifFalse: [ gitCommit ]
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> getCommitBySha: aBytes ifAbsent: aBlock [
 
 	| gitCommit |
@@ -233,6 +244,15 @@ SPGitRDBRepository >> selectRepoRefsOf: aRepoId [
 	| q |
 	
 	q := Query read: SPGitRepoToCommitRef where: [ :e | e repo id = aRepoId ].
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> selectRepoRefsOfCommit: aCommitId [
+
+	| q |
+	
+	q := Query read: SPGitRepoToCommitRef where: [ :e | e commit id = aCommitId ].
 	^ self glorpSession execute: q
 ]
 

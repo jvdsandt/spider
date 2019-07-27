@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'mainPanel'
 	],
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-Browser'
 }
 
 { #category : #'tools registry' }

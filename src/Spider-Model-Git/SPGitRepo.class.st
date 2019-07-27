@@ -31,7 +31,15 @@ SPGitRepo class >> url: anUrl [
 { #category : #accessing }
 SPGitRepo >> branchNamed: aName [
 
-	^ self commitRefs detect: [ :each | each isBranch and: [ each name = aName ] ]
+	^ self branchNamed: aName ifAbsent: [ NotFound signalFor: aName ]
+]
+
+{ #category : #accessing }
+SPGitRepo >> branchNamed: aName ifAbsent: aBlock [
+
+	^ self commitRefs 
+			detect: [ :each | each isBranch and: [ each name = aName ] ]
+			ifNone: aBlock
 ]
 
 { #category : #accessing }
@@ -66,6 +74,17 @@ SPGitRepo >> initFromUrl: anUrl [
 SPGitRepo >> lastDatetime [
 
 	^ self mostRecentCommit ifNotNil: [ :c | c datetime ]
+]
+
+{ #category : #accessing }
+SPGitRepo >> mostRecentBranches: maxCount [
+
+	| sortedRefs |
+	
+	sortedRefs := (self commitRefs select: [ :each | each isBranch ]) sorted: [ :c1 :c2 | c1 datetime <= c2 datetime ].
+	^ sortedRefs size > maxCount 
+			ifTrue: [ sortedRefs copyFrom: 1 to: maxCount ]
+			ifFalse: [ sortedRefs ]
 ]
 
 { #category : #accessing }

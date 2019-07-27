@@ -28,6 +28,12 @@ SPGitCommit class >> sha: shaHash authorSignature: anAuthorSig message: aMessage
 ]
 
 { #category : #comparing }
+SPGitCommit >> <= other [
+
+	^ self datetime <= other datetime
+]
+
+{ #category : #comparing }
 SPGitCommit >> = other [
 
 	self == other ifTrue: [ ^ true ].
@@ -102,6 +108,25 @@ SPGitCommit >> hasPackages [
 SPGitCommit >> hash [
 
 	^ sha hash
+]
+
+{ #category : #accessing }
+SPGitCommit >> historyList: maxSize [
+
+	| commits |
+
+	(maxSize <= 1 or: [ self parents isEmpty ])
+		ifTrue: [ ^ Array with: self ].
+		
+	self parents size = 1
+		ifTrue: [ ^ (Array with: self), (self parents first historyList: maxSize - 1) ].
+		
+	commits := Set new.
+	self parents do: [ :each | commits addAll: (each historyList: maxSize - 1) ].
+	commits := (Array with: self), commits sorted.
+	commits size > maxSize
+		ifTrue: [ commits := commits copyFrom: 1 to: maxSize ].
+	^ commits
 ]
 
 { #category : #initialization }

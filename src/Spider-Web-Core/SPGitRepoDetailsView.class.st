@@ -17,7 +17,7 @@ SPGitRepoDetailsView >> renderBrowserOn: html [
 
 	| commit |
 	
-	commit := self gitRepo mostRecentCommit.
+	commit := gitRepo mostRecentCommit.
 	(commit isNil or: [ commit packages isEmpty ])
 		ifTrue: [ ^ self ].
 		
@@ -31,11 +31,11 @@ SPGitRepoDetailsView >> renderContentOn: html [
 		level: 3;
 		with: [ 
 			html 
-				text: self gitRepo domain;
+				text: gitRepo domain;
 				text: ' / ';
-				text: self gitRepo owner;
+				text: gitRepo owner;
 				text: ' / ';
-				text: self gitRepo name ].
+				text: gitRepo name ].
 
 	self renderBrowserOn: html
 ]
