@@ -21,11 +21,13 @@ BaselineOfSpider >> baselineOf: spec [
 			spec baseline: 'Seaside3' with: [ 
 				spec 
 					repository: 'github://SeasideSt/Seaside:v3.3.4/repository';
-					loads: #( 'Core' 'JSON' 'Javascript' 'JQuery' 'REST' 'Zinc' 'Seaside-REST-Examples' ) ].
+					loads: #( 'Core' 'JSON' 'Javascript' 'JQuery' 'REST' 'Zinc' 'Seaside-REST-Examples' );
+					onConflictUseLoaded ].
 			spec baseline: 'Bootstrap' with: [ 
 				spec 
 					repository: 'github://astares/Seaside-Bootstrap:master/src';
-					loads: #( 'Core' ) ].
+					loads: #( 'Core' );
+					onConflictUseLoaded ].
 
 			spec package: 'Spider-Model-Core'.
 			spec package: 'Spider-Model-Core-Tests' with: [ spec requires: #('Spider-Model-Core') ].
