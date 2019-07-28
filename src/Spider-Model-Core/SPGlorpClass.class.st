@@ -382,8 +382,9 @@ SPGlorpClass >> instanceVarRefNamed: aSymbol [
 
 { #category : #testing }
 SPGlorpClass >> isSpiderClass [
-
-	^ type = self class classType
+	"A Trait is also a class"
+	
+	^ type = self class classType or: [ type = self class traitType ]
 ]
 
 { #category : #testing }

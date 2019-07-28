@@ -10,11 +10,12 @@ SPClassJson >> renderClass: aClass on: aRenderer [
 	aRenderer object: [ 
 		self renderClassSummary: aClass on: aRenderer.
 		aRenderer 
-			key: 'comment' value: aClass comment;
-			key: 'instanceMethods' value: [ self renderMethodRefs: aClass instanceMethodRefs on: aRenderer ]; 
-			key: 'classMethods' value: [ self renderMethodRefs: aClass classMethodRefs on: aRenderer ].
+			key: 'comment' value: aClass comment.
 		aClass isSpiderClassExtension
-			ifFalse: [ self renderVariablesOf: aClass on: aRenderer ] ]
+			ifFalse: [ self renderVariablesOf: aClass on: aRenderer ].
+		aRenderer
+			key: 'instanceMethods' value: [ self renderMethodRefs: aClass instanceMethodRefs on: aRenderer ]; 
+			key: 'classMethods' value: [ self renderMethodRefs: aClass classMethodRefs on: aRenderer ] ]
 ]
 
 { #category : #rendering }
@@ -45,6 +46,8 @@ SPClassJson >> renderVariablesOf: aClass on: json [
 
 	json key: 'instanceVariables' value: aClass instanceVarNames.
 	json key: 'classVariables' value: aClass classVarNames.
-	json key: 'classInstanceVariables' value: aClass classInstanceVarNames.
-	json key: 'poolDictionaries' value: aClass poolDictionaryNames
+	aClass isSpiderTrait 
+		ifFalse: [ 
+			json key: 'classInstanceVariables' value: aClass classInstanceVarNames.
+			json key: 'poolDictionaries' value: aClass poolDictionaryNames ]
 ]
