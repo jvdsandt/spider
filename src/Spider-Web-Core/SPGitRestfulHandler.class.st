@@ -6,10 +6,17 @@ Class {
 
 { #category : #'tools registry' }
 SPGitRestfulHandler class >> register [
-	WAAdmin register: self at: 'git'
+
+	| handler |
+
+	handler := WAAdmin register: self at: 'git'.
+	
+	handler configuration addParent: WAExceptionFilterConfiguration instance.
+	handler preferenceAt: #exceptionHandler put: SPLoggingErrorHandler.
+	handler addFilter: WAExceptionFilter new.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'get-requests' }
 SPGitRestfulHandler >> getCommit: aCommitId [
 	<get>
 	<path: '/commit/{aCommitId}'>
