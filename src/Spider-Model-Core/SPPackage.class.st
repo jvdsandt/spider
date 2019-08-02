@@ -202,3 +202,22 @@ SPPackage >> printOn: aStream [
 	aStream nextPutAll: ((packageHash last: 4) hex first: 7).
 	aStream nextPut: $)
 ]
+
+{ #category : #copying }
+SPPackage >> withClass: aSPClass in: aCategory [
+	"Answer a copy of the receiver with a new or updated class/category."
+
+	| newClassRef newClassRefs replaced |
+	
+	replaced := false.
+	newClassRef := SPPackageToClassRef spiderClass: aSPClass category: aCategory.
+	newClassRefs := classRefs 
+		collect: [ :each |
+			each name = newClassRef name
+				ifTrue: [ replaced := true. newClassRef ]
+				ifFalse: [ each ] ].
+	replaced
+		ifFalse: [ newClassRefs := newClassRefs copyWith: newClassRef ].
+
+	^ self class new initWithName: name classRefs: newClassRefs comment: comment
+]

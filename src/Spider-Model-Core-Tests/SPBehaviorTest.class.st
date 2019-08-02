@@ -158,3 +158,44 @@ SPBehaviorTest >> testSimpleTrait [
 No comment
 ' withUnixLineEndings
 ]
+
+{ #category : #tests }
+SPBehaviorTest >> testWithMethod [
+
+	| m1 m1c spc spcc |
+	
+	m1 := self createMethodFromSource: 'hello  ^ #HelloWorld'.
+	
+	spc := SPGlorpClass className: #Hello 
+		classType: #normal 
+		superclassName: #Object 
+		variableRefs: #()
+		methodRefs: (Array with: (SPClassToMethodRef instanceMethod: m1 category: 'accessing')) 
+		comment: 'No comment'.
+	self assert: spc instanceSelectors equals: #( hello ).
+	self assert: spc classSelectors equals: #( ).
+	
+	"change existing method"
+	m1c := self createMethodFromSource: 'hello  ^ #OtherSymbol'.
+	spcc := spc withInstanceMethod: m1c in: 'accessing'.
+	self assert: spcc instanceSelectors equals: #( hello ).
+	self assert: (spcc instanceMethodRefNamed: #hello) method equals: m1c.
+	self assert: (spc instanceMethodRefNamed: #hello) method equals: m1.
+
+	"add method"
+	m1c := self createMethodFromSource: 'other  ^ #OtherSymbol'.
+	spcc := spc withInstanceMethod: m1c in: 'accessing'.
+	self assert: spcc instanceSelectors equals: #( hello other ).
+	self assert: (spcc instanceMethodRefNamed: #other) method equals: m1c.
+
+	"change category"
+	spcc := spc withInstanceMethod: m1 in: 'other'.
+	self assert: spcc instanceSelectors equals: #( hello ).
+	self assert: (spcc instanceMethodRefNamed: #hello) category equals: 'other'.
+	self assert: (spc instanceMethodRefNamed: #hello) category equals: 'accessing'.
+
+	"no-op"
+	spcc := spc withInstanceMethod: m1 in: 'accessing'.
+	self assert: spcc  equals: spc.
+
+]

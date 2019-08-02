@@ -491,3 +491,43 @@ SPGlorpClass >> updateComment: newComment [
 SPGlorpClass >> variableRefs [
 	^ variableRefs
 ]
+
+{ #category : #copying }
+SPGlorpClass >> withClassMethod: aSPMethod in: aCategory [
+	"Answer a copy of the receiver with a new or updated class method."
+
+	^ self withMethodRef: (SPClassToMethodRef classMethod: aSPMethod category: aCategory)
+]
+
+{ #category : #copying }
+SPGlorpClass >> withInstanceMethod: aSPMethod in: aCategory [
+	"Answer a copy of the receiver with a new or updated instance method."
+
+	^ self withMethodRef: (SPClassToMethodRef instanceMethod: aSPMethod category: aCategory)
+]
+
+{ #category : #copying }
+SPGlorpClass >> withMethodRef: newMethodRef [
+	"Answer a copy of the receiver with a new or updated method or category."
+
+	| newMethodRefs replaced |
+	
+	replaced := false.
+	newMethodRefs := methodRefs 
+		collect: [ :each |
+			(each type = newMethodRef type and: [ each selector = newMethodRef selector ])
+				ifTrue: [ replaced := true. newMethodRef ]
+				ifFalse: [ each ] ].
+	replaced
+		ifFalse: [ newMethodRefs := newMethodRefs copyWith: newMethodRef ].
+
+	^ self class new initType: type 
+			name: name 
+			classType: classType 
+			superclassName: superclassName 
+			variableRefs: variableRefs 
+			methodRefs: newMethodRefs  
+			traitComposition: traitCompositionString  
+			classTraitComposition: classTraitCompositionString  
+			comment: comment
+]
