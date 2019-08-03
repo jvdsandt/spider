@@ -22,4 +22,12 @@ SPLoggingErrorHandler >> handleDefault: anException [
 
 { #category : #'as yet unclassified' }
 SPLoggingErrorHandler >> logException: anException [
+
+	| dir fname |
+	
+	dir := FileSystem workingDirectory / 'errors'.
+	dir ensureCreateDirectory.
+	fname := ((DateAndTime now asString first: 23) replaceAll: $: with: $-), '.log'.
+	(dir / fname) writeStreamDo: [ :stream |
+		anException signalerContext errorReportOn: stream ]
 ]

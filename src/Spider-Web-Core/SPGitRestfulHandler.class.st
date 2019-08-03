@@ -79,7 +79,7 @@ SPGitRestfulHandler >> getRepoAsJson: aDomain owner: anOwner name: aName [
 	<produces: 'application/json'>
 	
 	| repo |
-	
+
 	repo := self gitRepo getRepo: aDomain owner: anOwner name: aName ifAbsent: [ ^ self notFound ].
 	
 	^ self renderJsonWith: [ :json |

@@ -20,7 +20,7 @@ SPiderPostgreSQLContext class >> openOnUrl: anUrl [
 
 	| url connectString login accessor glorpSession |
 
-	PharoDatabaseAccessor DefaultDriver: P3DatabaseDriver.
+	PharoDatabaseAccessor DefaultDriver: SPP3DatabaseDriver.
 
 	url := anUrl asZnUrl.	
 	connectString := url host, ':', (url port ifNil: [ 5432 ]) asString, '_', url path.
