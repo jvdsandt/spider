@@ -6,14 +6,10 @@ Class {
 
 { #category : #'tools registry' }
 SPGitRestfulHandler class >> register [
-
 	| handler |
-
 	handler := WAAdmin register: self at: 'git'.
-	
-	handler configuration addParent: WAExceptionFilterConfiguration instance.
-	handler preferenceAt: #exceptionHandler put: SPLoggingErrorHandler.
-	handler addFilter: WAExceptionFilter new.
+	handler exceptionHandler: SPLoggingErrorHandler.
+
 ]
 
 { #category : #'get-requests' }

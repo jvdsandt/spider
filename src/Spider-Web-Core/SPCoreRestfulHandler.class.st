@@ -6,7 +6,10 @@ Class {
 
 { #category : #'tools registry' }
 SPCoreRestfulHandler class >> register [
-	WAAdmin register: self at: 'core'
+	| handler |
+	handler := WAAdmin register: self at: 'core'.
+	handler exceptionHandler: SPLoggingErrorHandler.
+
 ]
 
 { #category : #'as yet unclassified' }

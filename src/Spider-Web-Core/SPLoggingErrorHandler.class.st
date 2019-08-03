@@ -1,7 +1,7 @@
 Class {
 	#name : #SPLoggingErrorHandler,
 	#superclass : #WAErrorHandler,
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-Core-Seaside'
 }
 
 { #category : #actions }

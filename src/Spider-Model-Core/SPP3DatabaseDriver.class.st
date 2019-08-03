@@ -66,12 +66,14 @@ SPP3DatabaseDriver >> privConnect: aLogin [
 				connection 
 					host: aLogin host;
 					port: aLogin port asInteger;
+					timeout: 60;
 					database: aLogin databaseName;
 					user: aLogin username;
 					password: aLogin password.
+				self logInfo: 'Conecting ...'.
 				connection connect.
-				usedFlag := true.
-				self logInfo: 'Connected' ] ]
+				self logInfo: 'Connected'.
+				usedFlag := true ] ]
 ]
 
 { #category : #internal }
