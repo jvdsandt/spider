@@ -18,14 +18,11 @@ SPPage >> updateRoot: anHtmlRoot [
 	anHtmlRoot title: self pageTitle..
 
 	anHtmlRoot javascript
-		url: (JQDeploymentLibrary urlOf: #jQueryJs).
+		url: 'https://www.cloudctrl.com/files/jquery/3.4.1/jquery.min.js'.
 		
 	anHtmlRoot javascript
-		url: (TBSDeploymentLibrary urlOf: #jsbootstrapminJs).
+		url: 'https://www.cloudctrl.com/files/bootstrap/3.4.1/js/bootstrap.min.js'.
 		
 	anHtmlRoot stylesheet
-		url: (TBSDeploymentLibrary urlOf: #cssbootstrapminCss).
-		
-		
-	
+		url: 'https://www.cloudctrl.com/files/bootstrap/3.4.1/css/bootstrap.min.css'
 ]

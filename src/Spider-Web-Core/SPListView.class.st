@@ -40,9 +40,8 @@ SPListView >> renderTableHeadOn: html [
 { #category : #rendering }
 SPListView >> renderTableOn: html [
 
-	html tbsTable
-		beStriped;
-		beBordered;
+	html table
+		class: 'table table-striped table-bordered';
 		with: [ 
 			html tableHead: [ self renderTableHeadOn: html ].
 			html tableBody: [ self renderTableBodyOn: html ] ]

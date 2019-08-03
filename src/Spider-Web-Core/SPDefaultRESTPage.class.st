@@ -20,5 +20,7 @@ SPDefaultRESTPage >> contentPanel: anObject [
 { #category : #rendering }
 SPDefaultRESTPage >> renderContentOn: html [
 
-	html tbsContainer: [ html render: self contentPanel ]
+	html div
+		class: 'container';
+		with: [ html render: self contentPanel ]
 ]
