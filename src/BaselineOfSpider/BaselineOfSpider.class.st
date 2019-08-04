@@ -38,12 +38,13 @@ BaselineOfSpider >> baselineOf: spec [
 
 			spec package: 'Spider-Import-MC' with: [ spec requires: #( 'Spider-Model-MC' 'Spider-Model-Git' 'Spider-Model-RDB' 'OSSubprocess' ) ].
 
-			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3' ) ].
+			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3' 'Bootstrap' ) ].
+			spec package: 'Spider-Web-Browser' with: [ spec requires: #( 'Spider-Web-Core' ) ].
 			
 			spec group: 'default' with: #('core' 'tests').
 			spec group: 'core' with: #('Spider-Model-Core' 'Spider-Model-MC' 'Spider-Model-Git' ).
 			spec group: 'tests' with: #('Spider-Model-Core-Tests' 'Spider-Model-MC-Tests' 'Spider-Model-Git-Tests' ).
 			
 			spec group: 'importer' with: #( 'default' 'P3' 'Spider-Import-MC' 'Spider-Model-RDB-Tests' ).
-			spec group: 'all' with: #( 'default' 'Spider-Model-RDB-Tests' 'Spider-Import-MC' 'Spider-Web-Core' ) ]
+			spec group: 'all' with: #( 'default' 'Spider-Model-RDB-Tests' 'Spider-Import-MC' 'Spider-Web-Browser' ) ]
 ]
