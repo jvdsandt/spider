@@ -2,7 +2,8 @@ Class {
 	#name : #SPBatchOperation,
 	#superclass : #Object,
 	#instVars : [
-		'context'
+		'context',
+		'queries'
 	],
 	#category : #'Spider-Model-RDB-Batch'
 }
@@ -30,7 +31,25 @@ SPBatchOperation >> glorpSession [
 ]
 
 { #category : #accessing }
+SPBatchOperation >> p3client [
+
+	^ context client
+]
+
+{ #category : #accessing }
+SPBatchOperation >> p3prepare: sqlString [
+
+	^ self queries at: sqlString ifAbsentPut: [ queries createQuery: sqlString ]
+]
+
+{ #category : #accessing }
 SPBatchOperation >> packageRepo [
 
 	^ context packageRepo
+]
+
+{ #category : #accessing }
+SPBatchOperation >> queries [
+
+	^ queries ifNil: [ queries := SPP3Queries new initWithClient: self p3client ]
 ]

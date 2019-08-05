@@ -27,6 +27,7 @@ SPLibGitCommitBuilder >> build [
 		self buildPackages.
 		status := #imported.
 	] on: Error do: [ :ex | 
+self halt.
 		self reportImportError: ex.
 		status := #importerror.
 		packages := #().

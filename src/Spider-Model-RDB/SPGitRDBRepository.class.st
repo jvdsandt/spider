@@ -203,6 +203,15 @@ VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING (id)'.
 ]
 
 { #category : #'accessing - queries' }
+SPGitRDBRepository >> insertGitRepoCommitQuery [
+
+	| sql |
+	
+	sql := 'INSERT INTO git_repo_commits (repo_id, commit_id, txid) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING'.
+	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
+{ #category : #'accessing - queries' }
 SPGitRDBRepository >> insertGitRepoQuery [
 
 	| sql |
@@ -305,6 +314,16 @@ SPGitRDBRepository >> storeCommit: aGitCommit [
 	self insertGitCommitParentRefQuery executeBatch: rows.
 	
 	^ gitCommitId
+]
+
+{ #category : #storing }
+SPGitRDBRepository >> storeCommit: aGitCommit for: aRepo [
+
+	| gitCommitId gitRepoId |
+	
+	gitCommitId := aGitCommit id ifNil: [ self storeCommit: aGitCommit ].
+	gitRepoId := aRepo id ifNil: [ (self storeRepo: aRepo) id ].
+	self insertGitRepoCommitQuery execute: (Array with: gitRepoId with: gitCommitId with: self transactionId)
 ]
 
 { #category : #storing }

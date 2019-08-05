@@ -42,6 +42,19 @@ SPGitCommit >> = other [
 	^ sha = other sha and: [ authorSignature = other authorSignature ]
 ]
 
+{ #category : #adding }
+SPGitCommit >> addIdsTo: aSet [
+	"Add the receivers id and id's of its parents to <aSet>. If the receivers id
+	is already present in <aSet> we assume that the parents are also already added
+	to <aSet>."
+	
+	(aSet includes: self id)
+		ifTrue: [ ^ self ].
+		
+	aSet add: self id.
+	self parents do: [ :each | each addIdsTo: aSet ].
+]
+
 { #category : #accessing }
 SPGitCommit >> authorEmail [
 	^ self authorSignature email

@@ -4,10 +4,9 @@ Class {
 	#instVars : [
 		'lastLogin',
 		'usedFlag',
-		'watchProcess',
 		'mutex'
 	],
-	#category : #'Spider-Model-Core-Util'
+	#category : #'Spider-Model-RDB-Util'
 }
 
 { #category : #executing }
@@ -23,8 +22,7 @@ SPP3DatabaseDriver >> basicExecuteSQLString: aString [
 SPP3DatabaseDriver >> connect: aLogin [
 	lastLogin := aLogin.
 	self privConnect: aLogin.
-	watchProcess isNil
-		ifTrue: [ self initWatchProcess ]
+	self initWatchProcess
 ]
 
 { #category : #initialization }
@@ -33,12 +31,12 @@ SPP3DatabaseDriver >> initWatchProcess [
 	| watchBlock |
 	
 	watchBlock := [ 
-		[ true ] whileTrue: [ 
+		[ self isConnected ] whileTrue: [ 
 			(Delay forSeconds: 300) wait.
 			usedFlag
 				ifTrue: [ usedFlag := false ]
 				ifFalse: [ self privDisconnectIfUnused ] ] ].
-	watchProcess := watchBlock forkAt: Processor systemBackgroundPriority named: 'db connection watcher'
+	watchBlock forkAt: Processor systemBackgroundPriority named: 'db connection watcher'
 ]
 
 { #category : #initialization }
@@ -51,8 +49,6 @@ SPP3DatabaseDriver >> initialize [
 
 { #category : #login }
 SPP3DatabaseDriver >> logout [
-	watchProcess notNil
-		ifTrue: [ watchProcess terminate. watchProcess := nil ].
 	self privDisconnect
 ]
 

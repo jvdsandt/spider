@@ -198,10 +198,12 @@ SPGitImporter >> doImport: lgitCommit [
 	context
 		doTransaction: message
 		with: [ 
-			SPLibGitCommitBuilder new
+			| spCommit |
+			spCommit := SPLibGitCommitBuilder new
 				setContext: self context;
 				commit: lgitCommit;
-				build ].		
+				build.
+			self gitRepo storeCommit: spCommit for: self spGitRepo ].		
 	duration := Time millisecondClockValue - startTS.
 	self logInfo: 'Finished in ', duration asString, 'ms.'
 

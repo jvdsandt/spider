@@ -59,6 +59,14 @@ CREATE TABLE IF NOT EXISTS git_repo_refs (
 	PRIMARY KEY (repo_id, type, name)
 );
 CREATE INDEX IF NOT EXISTS git_repo_ref_commit_idx ON git_repo_refs(commit_id);
+
+CREATE TABLE IF NOT EXISTS git_repo_commits (
+	repo_id INT NOT NULL REFERENCES git_repos(id),
+	commit_id INT NOT NULL REFERENCES git_commits(id),
+	txid INTEGER NOT NULL,
+	PRIMARY KEY (repo_id, commit_id)
+);
+CREATE INDEX IF NOT EXISTS git_repo_commits_idx ON git_repo_commits(commit_id);
 '
 ]
 
