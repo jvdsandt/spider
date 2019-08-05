@@ -9,6 +9,7 @@ SPGitRestfulHandler class >> register [
 	| handler |
 	handler := WAAdmin register: self at: 'git'.
 	handler exceptionHandler: SPLoggingErrorHandler.
+	handler addFilter: SPCorsFilter new
 
 ]
 
