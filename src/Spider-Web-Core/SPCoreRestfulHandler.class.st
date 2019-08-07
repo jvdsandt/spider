@@ -1,7 +1,7 @@
 Class {
 	#name : #SPCoreRestfulHandler,
 	#superclass : #SPRestfulHandler,
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-Core-API'
 }
 
 { #category : #'tools registry' }

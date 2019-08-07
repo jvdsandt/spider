@@ -1,7 +1,7 @@
 Class {
 	#name : #SPRestfulHandler,
 	#superclass : #WARestfulHandler,
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-Core-API'
 }
 
 { #category : #accessing }

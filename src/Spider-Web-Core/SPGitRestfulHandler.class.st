@@ -1,7 +1,7 @@
 Class {
 	#name : #SPGitRestfulHandler,
 	#superclass : #SPRestfulHandler,
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-Core-API'
 }
 
 { #category : #'tools registry' }
@@ -16,7 +16,7 @@ SPGitRestfulHandler class >> register [
 { #category : #'get-requests' }
 SPGitRestfulHandler >> getCommit: aCommitId [
 	<get>
-	<path: '/commit/{aCommitId}'>
+	<path: '/html/commit/{aCommitId}'>
 	<produces: 'text/html'>
 	
 	| commit |
@@ -47,17 +47,9 @@ SPGitRestfulHandler >> getCommitAsJson: aCommitId [
 ]
 
 { #category : #'as yet unclassified' }
-SPGitRestfulHandler >> getCommitList [
-	<get>
-	<path: '/commits'>
-	
-
-]
-
-{ #category : #'as yet unclassified' }
 SPGitRestfulHandler >> getRepo: aDomain owner: anOwner name: aName [
 	<get>
-	<path: '/repos/{aDomain}/{anOwner}/{aName}'>
+	<path: '/html/repos/{aDomain}/{anOwner}/{aName}'>
 	<produces: 'text/html'>
 	
 	| repo |
@@ -119,7 +111,7 @@ SPGitRestfulHandler >> getRepoCommitsAsJson: aDomain owner: anOwner name: aName 
 { #category : #'as yet unclassified' }
 SPGitRestfulHandler >> getRepoList [
 	<get>
-	<path: '/repos'>
+	<path: '/html/repos'>
 	<produces: 'text/html'>
 	
 	| repos |
