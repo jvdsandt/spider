@@ -81,7 +81,7 @@ SPGitRepo >> mostRecentBranches: maxCount [
 
 	| sortedRefs |
 	
-	sortedRefs := (self commitRefs select: [ :each | each isBranch ]) sorted: [ :c1 :c2 | c1 datetime <= c2 datetime ].
+	sortedRefs := (self commitRefs select: [ :each | each isBranch ]) sorted: [ :c1 :c2 | c1 datetime > c2 datetime ].
 	^ sortedRefs size > maxCount 
 			ifTrue: [ sortedRefs copyFrom: 1 to: maxCount ]
 			ifFalse: [ sortedRefs ]
@@ -96,6 +96,17 @@ SPGitRepo >> mostRecentCommit [
 	^ sortedRefs isEmpty
 		ifTrue: [ nil ]
 		ifFalse: [ sortedRefs last commit ]
+]
+
+{ #category : #accessing }
+SPGitRepo >> mostRecentTags: maxCount [
+
+	| sortedRefs |
+	
+	sortedRefs := (self commitRefs select: [ :each | each isTag ]) sorted: [ :c1 :c2 | c1 datetime > c2 datetime ].
+	^ sortedRefs size > maxCount 
+			ifTrue: [ sortedRefs copyFrom: 1 to: maxCount ]
+			ifFalse: [ sortedRefs ]
 ]
 
 { #category : #accessing }

@@ -44,5 +44,18 @@ SPGitRepoJson >> renderRepo: anItem on: aRenderer [
 		aRenderer key: 'owner' value: anItem owner.
 		aRenderer key: 'domain' value: anItem domain.
 		aRenderer key: 'url' value: anItem url.
-		self renderBranchesOf: anItem on: aRenderer ]
+		self renderBranchesOf: anItem on: aRenderer.
+		self renderTagsOf: anItem on: aRenderer ]
+]
+
+{ #category : #rendering }
+SPGitRepoJson >> renderTagsOf: aGitRepo on: aRenderer [
+
+	aRenderer key: 'tags' value: [ 
+		aRenderer array: [ 
+			(aGitRepo mostRecentTags: 25) do: [ :each |
+				aRenderer object: [ 
+					aRenderer key: 'name' value: each name.
+					aRenderer key: 'sha' value: each shaString.
+					aRenderer key: 'datetime' value: each datetime ] ] ] ]
 ]
