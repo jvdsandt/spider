@@ -17,15 +17,7 @@ SPGitRepoJson >> renderBranchesOf: aGitRepo on: aRenderer [
 ]
 
 { #category : #rendering }
-SPGitRepoJson >> renderList: aList on: aRenderer [
-
-	aRenderer array: [ 
-		aList do: [ :each |
-			self renderListItem: each on: aRenderer ] ]
-]
-
-{ #category : #rendering }
-SPGitRepoJson >> renderListItem: anItem on: aRenderer [
+SPGitRepoJson >> renderItem: anItem on: aRenderer [
 
 	aRenderer object: [ 
 		aRenderer key: 'id' value: anItem id.
@@ -33,6 +25,14 @@ SPGitRepoJson >> renderListItem: anItem on: aRenderer [
 		aRenderer key: 'owner' value: anItem owner.
 		aRenderer key: 'domain' value: anItem domain.
 		aRenderer key: 'url' value: anItem url ]
+]
+
+{ #category : #rendering }
+SPGitRepoJson >> renderList: aList on: aRenderer [
+
+	aRenderer array: [ 
+		aList do: [ :each |
+			self renderItem: each on: aRenderer ] ]
 ]
 
 { #category : #rendering }

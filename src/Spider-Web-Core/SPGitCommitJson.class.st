@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #rendering }
-SPGitCommitJson >> renderCommit: anItem on: aRenderer [
+SPGitCommitJson >> renderCommit: anItem from: aRepo on: aRenderer [
 
 	aRenderer object: [ 
 		self renderCommitSummary: anItem on: aRenderer.
@@ -14,8 +14,17 @@ SPGitCommitJson >> renderCommit: anItem on: aRenderer [
 				anItem parents do: [ :each |
 					aRenderer object: [ 
 						self renderCommitSummary: each on: aRenderer ] ] ] ].
-		aRenderer key: 'packages' value: [ self renderPackages: anItem packages on: aRenderer ]
-		 ]
+		aRenderer key: 'packages' value: [ self renderPackages: anItem packages on: aRenderer ].
+		aRepo notNil
+			ifTrue: [ 
+				aRenderer key: 'repo' value: [ 
+					SPGitRepoJson new renderItem: aRepo on: aRenderer ] ] ]
+]
+
+{ #category : #rendering }
+SPGitCommitJson >> renderCommit: anItem on: aRenderer [
+
+	self renderCommit: anItem from: nil on: aRenderer
 ]
 
 { #category : #rendering }

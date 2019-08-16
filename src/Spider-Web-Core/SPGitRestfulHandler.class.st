@@ -89,7 +89,7 @@ SPGitRestfulHandler >> getRepoCommitAsJson: aDomain owner: anOwner name: aName i
 	
 	^ self renderJsonWith: [ :json |
 					SPGitCommitJson new
-						renderCommit: commit on: json ]
+						renderCommit: commit from: repo on: json ]
 ]
 
 { #category : #'as yet unclassified' }
