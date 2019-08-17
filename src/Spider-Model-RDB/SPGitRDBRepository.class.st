@@ -268,11 +268,18 @@ SPGitRDBRepository >> selectRepoRefsOfCommit: aCommitId [
 { #category : #queries }
 SPGitRDBRepository >> selectReposByUrl [
 
+	^ self selectReposByUrl: 0 limit: 100
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> selectReposByUrl: anOffset limit: aLimit [
+
 	| q |
 	
 	q := Query read: SPGitRepo.
 	q orderBy: [ :e | e url ].
-	q limit: 100.
+	q offset: anOffset.
+	q limit: aLimit.
 	
 	^ self glorpSession execute: q
 ]

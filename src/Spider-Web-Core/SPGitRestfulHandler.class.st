@@ -77,6 +77,22 @@ SPGitRestfulHandler >> getRepoAsJson: aDomain owner: anOwner name: aName [
 ]
 
 { #category : #'as yet unclassified' }
+SPGitRestfulHandler >> getRepoBranchAsJson: aDomain owner: anOwner name: aName branch: aBranch [
+	<get>
+	<path: '/repos/{aDomain}/{anOwner}/{aName}/branch/{aBranch}'>
+	<produces: 'application/json'>
+	
+	| repo branchRef |
+	
+	repo := self gitRepo getRepo: aDomain owner: anOwner name: aName ifAbsent: [ ^ self notFound ].
+	branchRef := repo branchNamed: aBranch ifAbsent: [ ^ self notFound ].
+	
+	^ self renderJsonWith: [ :json |
+					SPGitCommitJson new
+						renderBranchRef: branchRef from: repo on: json ]
+]
+
+{ #category : #'as yet unclassified' }
 SPGitRestfulHandler >> getRepoCommitAsJson: aDomain owner: anOwner name: aName id: aCommitId [
 	<get>
 	<path: '/repos/{aDomain}/{anOwner}/{aName}/commit/{aCommitId}'>
@@ -129,11 +145,30 @@ SPGitRestfulHandler >> getRepoListAsJson [
 	<path: '/repos'>
 	<produces: 'application/json'>
 	
-	| repos |
+	| offset limit repos |
 	
-	repos := self gitRepo selectReposByUrl.
+	offset := self offsetParameter.
+	limit := self limitParameter.
+	
+	repos := self gitRepo selectReposByUrl: offset limit: limit + 1.
 	
 	^ self renderJsonWith: [ :json |
 					SPGitRepoJson new
-						renderList: repos on: json ]
+						renderList: repos more: (repos size > limit) on: json ]
+]
+
+{ #category : #'as yet unclassified' }
+SPGitRestfulHandler >> getRepoTagAsJson: aDomain owner: anOwner name: aName tag: aTag [
+	<get>
+	<path: '/repos/{aDomain}/{anOwner}/{aName}/tag/{aTag}'>
+	<produces: 'application/json'>
+	
+	| repo branchRef |
+	
+	repo := self gitRepo getRepo: aDomain owner: anOwner name: aName ifAbsent: [ ^ self notFound ].
+	branchRef := repo tagNamed: aTag ifAbsent: [ ^ self notFound ].
+	
+	^ self renderJsonWith: [ :json |
+					SPGitCommitJson new
+						renderTagRef: branchRef from: repo on: json ]
 ]

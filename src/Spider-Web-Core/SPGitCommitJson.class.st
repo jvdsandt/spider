@@ -5,6 +5,15 @@ Class {
 }
 
 { #category : #rendering }
+SPGitCommitJson >> renderBranchRef: aCommitRef from: aRepo on: aRenderer [
+
+	aRenderer object: [ 
+		aRenderer key: 'name' value: aCommitRef name.
+		aRenderer key: 'commit' value: [
+			self renderCommit: aCommitRef commit from: aRepo on: aRenderer ] ].
+]
+
+{ #category : #rendering }
 SPGitCommitJson >> renderCommit: anItem from: aRepo on: aRenderer [
 
 	aRenderer object: [ 
@@ -72,4 +81,13 @@ SPGitCommitJson >> renderPackages: aList on: aRenderer [
 		aList do: [ :each | 
 			aRenderer object: [
 				self renderPackageSummary: each on: aRenderer ] ] ]
+]
+
+{ #category : #rendering }
+SPGitCommitJson >> renderTagRef: aCommitRef from: aRepo on: aRenderer [
+
+	aRenderer object: [ 
+		aRenderer key: 'name' value: aCommitRef name.
+		aRenderer key: 'commit' value: [
+			self renderCommit: aCommitRef commit from: aRepo on: aRenderer ] ].
 ]

@@ -28,6 +28,17 @@ SPGitRepoJson >> renderItem: anItem on: aRenderer [
 ]
 
 { #category : #rendering }
+SPGitRepoJson >> renderList: aList more: hasMore on: aRenderer [
+
+	aRenderer object: [ 
+		aRenderer key: 'list' value: [ 
+			aRenderer array: [ 
+				aList do: [ :each |
+					self renderItem: each on: aRenderer ] ].
+		aRenderer key: 'hasMore' value: hasMore ] ]
+]
+
+{ #category : #rendering }
 SPGitRepoJson >> renderList: aList on: aRenderer [
 
 	aRenderer array: [ 

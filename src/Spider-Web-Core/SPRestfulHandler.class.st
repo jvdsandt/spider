@@ -17,6 +17,12 @@ SPRestfulHandler >> context [
 ]
 
 { #category : #accessing }
+SPRestfulHandler >> defaultLimit [
+
+	^ 100
+]
+
+{ #category : #accessing }
 SPRestfulHandler >> gitRepo [
 
 	^ self context gitRepo
@@ -37,6 +43,21 @@ SPRestfulHandler >> isValidId: aString [
 	^ aString notNil and: [ 
 			aString size < 19 and: [ 
 				aString allSatisfy: [ :ch | ch isDigit ] ] ]
+]
+
+{ #category : #accessing }
+SPRestfulHandler >> limitParameter [
+
+	| value |
+	
+	value := self requestContext request at: 'value' ifAbsent: [ ^ self defaultLimit ].
+	^ (value asInteger max: 1) min: self maxLimit
+]
+
+{ #category : #accessing }
+SPRestfulHandler >> maxLimit [
+
+	^ 250
 ]
 
 { #category : #accessing }
@@ -66,6 +87,15 @@ SPRestfulHandler >> notFoundJson [
 			nextPutAll: (self renderJsonWith: [ :json |
 				json object: [ 
 					json key: 'error' value: 'notFound' ] ]) ]
+]
+
+{ #category : #accessing }
+SPRestfulHandler >> offsetParameter [
+
+	| offset |
+	
+	offset := self requestContext request at: 'offset' ifAbsent: [ ^ nil ].
+	^ offset asInteger max: 0
 ]
 
 { #category : #accessing }

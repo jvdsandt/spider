@@ -127,6 +127,20 @@ SPGitRepo >> owner [
 ]
 
 { #category : #accessing }
+SPGitRepo >> tagNamed: aName [
+
+	^ self tagNamed: aName ifAbsent: [ NotFound signalFor: aName ]
+]
+
+{ #category : #accessing }
+SPGitRepo >> tagNamed: aName ifAbsent: aBlock [
+
+	^ self commitRefs 
+			detect: [ :each | each isTag and: [ each name = aName ] ]
+			ifNone: aBlock
+]
+
+{ #category : #accessing }
 SPGitRepo >> url [
 
 	^ url
