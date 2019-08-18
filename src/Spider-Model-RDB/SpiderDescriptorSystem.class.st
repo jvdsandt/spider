@@ -263,7 +263,7 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 	(aDescriptor newMapping: DirectMapping) 
 		from: #id to: (table fieldNamed: 'ID').
 	(aDescriptor newMapping: DirectMapping) 
-		from: #sha to: (table fieldNamed: 'SHA').
+		from: #shaString to: (table fieldNamed: 'SHA').
 	(aDescriptor newMapping: EmbeddedValueOneToOneMapping)
 		attributeName: #authorSignature.
 	(aDescriptor newMapping: DirectMapping) 
@@ -850,7 +850,7 @@ SpiderDescriptorSystem >> tableForGIT_COMMITS: aTable [
 
 	(aTable createFieldNamed: 'ID' type: (platform serial)) bePrimaryKey.
 	aTable createFieldNamed: 'TXID' type: platform integer.
-	aTable createFieldNamed: 'SHA' type: platform blob.
+	aTable createFieldNamed: 'SHA' type: platform varchar.
 	aTable createFieldNamed: 'AUTHOR_DATETIME' type: platform timestamptz.
 	aTable createFieldNamed: 'AUTHOR_TZOFFSET' type: platform integer.
 	aTable createFieldNamed: 'AUTHOR_NAME' type: platform varchar.

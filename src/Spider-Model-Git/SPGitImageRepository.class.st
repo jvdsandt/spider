@@ -14,13 +14,13 @@ SPGitImageRepository >> commits [
 ]
 
 { #category : #accessing }
-SPGitImageRepository >> getCommitBySha: aBytes ifAbsent: aBlock [
+SPGitImageRepository >> getCommitByShaString: aString ifAbsent: aBlock [
 
-	^ self commits at: aBytes ifAbsent: aBlock
+	^ self commits at: aString ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 SPGitImageRepository >> storeCommit: aCommit [
 
-	^ self commits at: aCommit sha put: aCommit
+	^ self commits at: aCommit shaString put: aCommit
 ]

@@ -11,7 +11,7 @@ SPGitCommitTest >> testEquals [
 	
 	sig := SPGitSignature name: 'Pete' email: 'pete@home.nl' datetime: DateAndTime now offset: Duration zero.
 	
-	c1 := SPGitCommit sha: #[ 1 2 3 ] 
+	c1 := SPGitCommit sha: #[ 1 2 3 4 ] 
 		authorSignature: sig 
 		message: 'test msg' 
 		parents: #() 
@@ -20,7 +20,7 @@ SPGitCommitTest >> testEquals [
 		sourceDir: 'src' 
 		format: #tonel.
 
-	c2 := SPGitCommit sha: #[ 1 2 3 ] 
+	c2 := SPGitCommit sha: #[ 1 2 3 4 ] 
 		authorSignature: sig 
 		message: 'test msg' 
 		parents: #() 
@@ -72,6 +72,7 @@ SPGitCommitTest >> testSha [
 	
 	self assert: c1 shaString equals: '0102030405060708090065666768696a6b6c6d6e'.
 	self assert: c1 shaShortString equals: '0102030'.
+	self assert: c1 sha equals: #[ 1 2 3 4 5 6 7 8 9 0 101 102 103 104 105 106 107 108 109 110 ].
 ]
 
 { #category : #tests }

@@ -84,33 +84,33 @@ SPGitRDBRepository >> getCommitById: anId ifAbsent: aBlock [
 ]
 
 { #category : #queries }
-SPGitRDBRepository >> getCommitBySha: aBytes ifAbsent: aBlock [
-
-	| gitCommit |
-	
-	gitCommit := self glorpSession readOneOf: SPGitCommit where: [ :e | e sha = aBytes ].
-	^ gitCommit isNil
-			ifTrue: [ aBlock value ]
-			ifFalse: [ gitCommit ]
-]
-
-{ #category : #queries }
 SPGitRDBRepository >> getCommitByShaString: aString ifAbsent: aBlock [
 
 	| gitCommit |
 
 	aString size = 40
-		ifTrue: [ ^ self getCommitBySha: (ByteArray readHexFrom: aString) ifAbsent: aBlock ].
+		ifTrue: [ 
+			gitCommit := self glorpSession readOneOf: SPGitCommit where: [ :e | e shaString = aString ] ]
+		ifFalse: [ 
+			| list |
+			list := self glorpSession read: SPGitCommit 
+				where: [ :e | e shaString like: (aString, '%') ] 
+				limit: 2.
+			list size > 1
+				ifTrue: [ self error: 'SHA string fragment not unique' ].
+			gitCommit := list isEmpty ifTrue: [ nil ] ifFalse: [ list first ] ].
 		
-	^ aBlock value
+	^ gitCommit 
+			ifNotNil: [ gitCommit ]
+			ifNil: aBlock
 ]
 
 { #category : #queries }
-SPGitRDBRepository >> getGitCommitIdBySha: aBytes [
+SPGitRDBRepository >> getGitCommitIdByShaString: aString [
 
 	| q |
 	
-	q := (Query readOneOf: SPGitCommit where: [ :e | e sha = aBytes ])
+	q := (Query readOneOf: SPGitCommit where: [ :e | e shaString = aString ])
 		retrieve: [ :e | e id ];
 		yourself.
 	^ self glorpSession execute: q
@@ -168,9 +168,9 @@ SPGitRDBRepository >> glorpSession [
 ]
 
 { #category : #queries }
-SPGitRDBRepository >> includesCommitWithSha: aBytes [
+SPGitRDBRepository >> includesCommitWithShaString: aString [
 
-	^ (self getGitCommitIdBySha: aBytes) notNil
+	^ (self getGitCommitIdByShaString: aString) notNil
 ]
 
 { #category : #'accessing - queries' }
@@ -289,14 +289,14 @@ SPGitRDBRepository >> storeCommit: aGitCommit [
 
 	| gitCommit gitCommitId rows |
 	
-	gitCommit := self getCommitBySha: aGitCommit sha ifAbsent: [ nil ].
+	gitCommit := self getCommitByShaString: aGitCommit shaString ifAbsent: [ nil ].
 	gitCommit notNil
 		ifTrue: [ ^ gitCommit id ].
 		
 	gitCommitId := self insertGitCommitQuery getOne: (
 		OrderedCollection new
 			add: self transactionId;
-			add: aGitCommit sha;
+			add: aGitCommit shaString;
 			add: aGitCommit datetime;
 			add: aGitCommit authorSignature tzOffset;
 			add: aGitCommit authorSignature name;
@@ -355,7 +355,7 @@ SPGitRDBRepository >> storeRepoRef: aRepo type: aTypeChar named: aName to: aComm
 	| repoId commitId |
 	
 	repoId := aRepo id ifNil: [ (self storeRepo: aRepo) id ].
-	commitId := aCommit id ifNil: [ self getGitCommitIdBySha: aCommit sha ].
+	commitId := aCommit id ifNil: [ self getGitCommitIdByShaString: aCommit shaString ].
 	
 	self insertGitRepoRefQuery execute: (Array
 		with: repoId

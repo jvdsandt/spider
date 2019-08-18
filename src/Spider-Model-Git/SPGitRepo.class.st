@@ -28,6 +28,15 @@ SPGitRepo class >> url: anUrl [
 	^ self new initFromUrl: anUrl
 ]
 
+{ #category : #comparing }
+SPGitRepo >> = other [
+
+	self == other ifTrue: [ ^ true ].
+	self species = other species ifFalse: [ ^ false ].
+	
+	^ url = other url
+]
+
 { #category : #accessing }
 SPGitRepo >> branchNamed: aName [
 
@@ -56,6 +65,12 @@ SPGitRepo >> domain [
 	hostName asLowercase = 'github.com'
 		ifTrue: [ ^ 'GitHub' ].
 	^ hostName
+]
+
+{ #category : #comparing }
+SPGitRepo >> hash [
+
+	^ url hash
 ]
 
 { #category : #accessing }

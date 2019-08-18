@@ -14,14 +14,16 @@ SPGitPostgresRepository class >> dbSchema [
 CREATE TABLE IF NOT EXISTS git_repos (
 	id SERIAL PRIMARY KEY,
 	txid INTEGER NOT NULL,
-	url VARCHAR NOT NULL
+	url VARCHAR NOT NULL,
+	forked_from INTEGER REFERENCES git_repos(id)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS git_repo_url_idx ON git_repos(lower(url));
+CREATE UNIQUE INDEX IF NOT EXISTS git_repo_forked_from_idx ON git_repos(forked_from);
 
 CREATE TABLE IF NOT EXISTS git_commits (
 	id SERIAL PRIMARY KEY,
 	txid INTEGER NOT NULL,
-	sha BYTEA NOT NULL,
+	sha VARCHAR(40) NOT NULL,
 	author_datetime TIMESTAMP WITH TIME ZONE NOT NULL,
 	author_tzoffset INTEGER NOT NULL,
 	author_name VARCHAR NOT NULL,
@@ -31,7 +33,7 @@ CREATE TABLE IF NOT EXISTS git_commits (
 	source_dir VARCHAR,
 	format VARCHAR
 );
-CREATE INDEX IF NOT EXISTS git_commit_hash_idx ON git_commits(sha);
+CREATE INDEX IF NOT EXISTS git_commit_sha_idx ON git_commits(sha);
 CREATE INDEX IF NOT EXISTS git_commit_author_name_idx ON git_commits(lower(author_name));
 CREATE INDEX IF NOT EXISTS git_commit_author_email_idx ON git_commits(lower(author_email));
 

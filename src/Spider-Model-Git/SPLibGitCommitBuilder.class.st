@@ -18,7 +18,7 @@ SPLibGitCommitBuilder >> build [
 	| spCommit author status |
 	
 	"Already present?"
-	spCommit := self gitRepo getCommitBySha: commit id asByteArray ifAbsent: [ nil ].
+	spCommit := self gitRepo getCommitByShaString: commit id hexString ifAbsent: [ nil ].
 	spCommit notNil
 		ifTrue: [ ^ spCommit ].
 
@@ -142,7 +142,7 @@ SPLibGitCommitBuilder >> buildParents [
 	parentCommits := commit parents.
 	
 	parents := parentCommits collect: [ :each |
-		self gitRepo getCommitBySha: each id asByteArray ifAbsent: [ 
+		self gitRepo getCommitByShaString: each id hexString ifAbsent: [ 
 			self class new
 				setContext: context;
 				commit: each;

@@ -311,7 +311,7 @@ SPGitImporter >> initSpiderGitRepo [
 { #category : #testing }
 SPGitImporter >> isAlreadyImported: lgitCommit [
 
-	^ self gitRepo includesCommitWithSha: lgitCommit id asByteArray
+	^ self gitRepo includesCommitWithShaString: lgitCommit id hexString
 ]
 
 { #category : #accessing }
@@ -346,7 +346,7 @@ SPGitImporter >> updateBranches: aBranches [
 		with: [ 
 			aBranches keysAndValuesDo: [ :eachName :eachCommit |
 				| spCommit |
-				spCommit := self gitRepo getCommitBySha: eachCommit id asByteArray ifAbsent: [ nil ].
+				spCommit := self gitRepo getCommitByShaString: eachCommit id hexString ifAbsent: [ nil ].
 				spCommit notNil
 					ifTrue: [ 
 						self gitRepo storeRepoRef: self spGitRepo type: SPGitRepoToCommitRef typeBranch named: eachName to: spCommit ] ] ]
@@ -366,7 +366,7 @@ SPGitImporter >> updateTags: aTags [
 		with: [ 
 			aTags keysAndValuesDo: [ :eachName :eachCommit |
 				| spCommit |
-				spCommit := self gitRepo getCommitBySha: eachCommit id asByteArray ifAbsent: [ nil ].
+				spCommit := self gitRepo getCommitByShaString: eachCommit id hexString ifAbsent: [ nil ].
 				spCommit notNil
 					ifTrue: [ 
 						self gitRepo storeRepoRef: self spGitRepo type: SPGitRepoToCommitRef typeTag named: eachName to: spCommit ] ] ].

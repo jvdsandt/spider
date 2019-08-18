@@ -66,7 +66,7 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit1TwoTimes [
 		commit: commit;
 		build.
 	
-	self assert: spCommit1 == spCommit2
+	self assert: spCommit1 equals: spCommit2
 	
 	
 

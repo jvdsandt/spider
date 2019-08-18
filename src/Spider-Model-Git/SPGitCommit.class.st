@@ -2,7 +2,7 @@ Class {
 	#name : #SPGitCommit,
 	#superclass : #SPGlorpNode,
 	#instVars : [
-		'sha',
+		'shaString',
 		'authorSignature',
 		'message',
 		'parents',
@@ -15,9 +15,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-SPGitCommit class >> sha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages status: statusSymbol sourceDir: aDir format: aFormat [
+SPGitCommit class >> sha: hashBytes authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages status: statusSymbol sourceDir: aDir format: aFormat [
 
-	^ self new initWithSha: shaHash 
+	^ self new initWithSha: hashBytes 
 			authorSignature: anAuthorSig 
 			message: aMessage 
 			parents: aParents 
@@ -39,7 +39,7 @@ SPGitCommit >> = other [
 	self == other ifTrue: [ ^ true ].
 	self species = other species ifFalse: [ ^ false ].
 	
-	^ sha = other sha and: [ authorSignature = other authorSignature ]
+	^ shaString = other shaString and: [ authorSignature = other authorSignature ]
 ]
 
 { #category : #adding }
@@ -120,7 +120,7 @@ SPGitCommit >> hasPackages [
 { #category : #comparing }
 SPGitCommit >> hash [
 
-	^ sha hash
+	^ shaString hash
 ]
 
 { #category : #accessing }
@@ -143,9 +143,9 @@ SPGitCommit >> historyList: maxSize [
 ]
 
 { #category : #initialization }
-SPGitCommit >> initWithSha: shaHash authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages status: statusSymbol sourceDir: aDir format: aFormat [
+SPGitCommit >> initWithSha: hashBytes authorSignature: anAuthorSig message: aMessage parents: aParents packages: aPackages status: statusSymbol sourceDir: aDir format: aFormat [
 
-	sha := shaHash.
+	shaString := hashBytes hex.
 	authorSignature := anAuthorSig.
 	message := aMessage.
 	parents := aParents asArray.
@@ -213,17 +213,17 @@ SPGitCommit >> printOn: aStream [
 
 { #category : #accessing }
 SPGitCommit >> sha [
-	^ sha
+	^ ByteArray readHexFrom: self shaString
 ]
 
 { #category : #accessing }
 SPGitCommit >> shaShortString [
-	^ ((self sha first: 4) hex first: 7)
+	^ self shaString first: 7
 ]
 
 { #category : #accessing }
 SPGitCommit >> shaString [
-	^ self sha hex
+	^ shaString
 ]
 
 { #category : #accessing }
