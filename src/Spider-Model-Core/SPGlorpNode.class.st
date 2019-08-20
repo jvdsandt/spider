@@ -8,6 +8,12 @@ Class {
 	#category : #'Spider-Model-Core-Domain'
 }
 
+{ #category : #testing }
+SPGlorpNode class >> isAbstract [
+
+	^ self == SPGlorpNode
+]
+
 { #category : #comparing }
 SPGlorpNode >> = otherNode [
 

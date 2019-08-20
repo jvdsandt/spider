@@ -37,7 +37,7 @@ SPGitCommitLGitBuilderTest >> createLGitRepo: aRepoUrl [
 	directoryRef := self class baseDirectory asFileReference / repoName.
 	directoryRef exists 
 		ifTrue: [ 
-			"Assume a vlid clone is already present"
+			"Assume a valid clone is already present"
 			repo := (LGitRepository on: self class baseDirectory asFileReference / repoName)
 				open;
 				yourself ]
