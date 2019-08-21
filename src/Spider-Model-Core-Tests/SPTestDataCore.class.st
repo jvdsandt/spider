@@ -44,7 +44,7 @@ SPTestDataCore >> createClassAV2 [
 SPTestDataCore >> createClassBV1 [
 
 	^ self classBuilder 
-		name: #ClassA;
+		name: #ClassB;
 		addInstanceMethod: self createM2V1 category: 'accessing';
 		addInstanceMethod: self createM4V1 category: 'calculating';
 		build
@@ -76,7 +76,7 @@ SPTestDataCore >> createM1V2 [
 
 	^ self methodBuilder
 		setSource: 'method1
-	^ ''secondImplementation''' + 1234;
+	^ ''secondImplementation'' + 1234';
 		build
 ]
 
@@ -125,7 +125,7 @@ SPTestDataCore >> createPackageAV2 [
 
 	^ self packageBuilder 
 		name: 'PackageA';
-		addClass: self createClassAV1 category: nil;
+		addClass: self createClassAV2 category: nil;
 		addClass: self createClassBV1 category: nil;
 		addClassExtension: self createClassExtensionNumberV1;
 		build

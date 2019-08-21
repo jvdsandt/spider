@@ -10,16 +10,20 @@ SPiderRingBackendTest >> testClass [
 	| env spClass rgClass |
 	
 	env := RGEnvironment new.
-	env backend: (SPiderRingBackend for: env context: self context).
+	"env backend: (SPiderRingBackend for: env context: self context)."
 	
 	spClass := SPClassBuilder new
+		superclassName: #Object;
 		name: #EmptyClass;
-		addInstanceMethodSource: 'm1 ^123' category: 'resources';
-		addClassMethodSource: 'm2 ^123' category: 'resources';
+		addInstanceVarSlot: (#instVarA asSlot);
+		addClassInstanceVarSlot: (#devVarA asSlot);
+		addClassVar: #MyClassVar;
+		addPoolVar: #PoolA;
+		addPoolVar: #PoolB;
 		build.
 
-	rgClass := spClass asRingMinimalDefinitionIn: env.
-	rgClass definition inspect
+	rgClass := env definitionFor: spClass.
+	rgClass "definition" metaclass definition inspect
 ]
 
 { #category : #tests }
