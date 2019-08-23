@@ -22,6 +22,18 @@ SPGitRepo class >> searchUrlFor: aDomain owner: anOwner name: aName [
 			nextPutAll: '.git' ]
 ]
 
+{ #category : #utilities }
+SPGitRepo class >> searchUrlForDomain: aString [
+
+	^ 'https://', aString, '.com/'
+]
+
+{ #category : #utilities }
+SPGitRepo class >> searchUrlForDomain: aString owner: ownerString [
+
+	^ 'https://', aString, '.com/', ownerString, '/'
+]
+
 { #category : #'instance creation' }
 SPGitRepo class >> url: anUrl [
 

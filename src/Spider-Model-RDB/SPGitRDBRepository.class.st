@@ -284,6 +284,34 @@ SPGitRDBRepository >> selectReposByUrl: anOffset limit: aLimit [
 	^ self glorpSession execute: q
 ]
 
+{ #category : #queries }
+SPGitRDBRepository >> selectReposByUrlWithDomain: aDomain offset: anOffset limit: aLimit [
+
+	| prefix q |
+	
+	prefix := (SPGitRepo searchUrlForDomain: aDomain), '%'.
+	q := Query read: SPGitRepo where: [ :e | e url asLowercase like: prefix asLowercase ].
+	q orderBy: [ :e | e url ].
+	q offset: anOffset.
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> selectReposByUrlWithDomain: aDomain owner: anOwner offset: anOffset limit: aLimit [
+
+	| prefix q |
+	
+	prefix := (SPGitRepo searchUrlForDomain: aDomain owner: anOwner), '%'.
+	q := Query read: SPGitRepo where: [ :e | e url asLowercase like: prefix asLowercase ].
+	q orderBy: [ :e | e url ].
+	q offset: anOffset.
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
 { #category : #storing }
 SPGitRDBRepository >> storeCommit: aGitCommit [
 
