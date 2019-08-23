@@ -153,6 +153,19 @@ SPGitRDBRepository >> getRepo: aDomain owner: anOwner name: aName ifAbsent: aBlo
 			ifFalse: [ repo ]
 ]
 
+{ #category : #queries }
+SPGitRDBRepository >> getRepoCommits: aRepo limit: aLimit [
+
+	| repoIds query |
+	
+	repoIds := Array with: aRepo id.
+	query := Query read: SPGitCommit where: [ :e | e repos anySatisfy: [ :r | r in: repoIds ] ].
+	query orderBy: [ :e | e authorSignature datetime desc ].
+	query limit: aLimit.
+	
+	^self glorpSession execute: query
+]
+
 { #category : #accessing }
 SPGitRDBRepository >> gitCommitIdOf: aGitCommit [
 

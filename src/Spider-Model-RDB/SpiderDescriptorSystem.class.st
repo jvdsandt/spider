@@ -296,6 +296,14 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 			from: (table fieldNamed: 'ID')
 			to: ((self tableNamed: 'GIT_COMMIT_PARENT_REFS') fieldNamed: 'COMMIT_ID')).
 
+	(aDescriptor newMapping: ManyToManyMapping)
+		attributeName: #repos;
+		beForPseudoVariable;
+		referenceClass: SPGitRepo;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'GIT_REPO_COMMITS') fieldNamed: 'COMMIT_ID')).
+
 ]
 
 { #category : #descriptors }
@@ -326,6 +334,15 @@ SpiderDescriptorSystem >> descriptorForSPGitRepo: aDescriptor [
 			to: ((self tableNamed: 'GIT_REPO_REFS') fieldNamed: 'REPO_ID')).
 	mapping query alsoFetch: [ :each | each commit ].
 	mapping query orderBy: [ :each | each commit authorSignature datetime ].
+	
+	(aDescriptor newMapping: ManyToManyMapping)
+		attributeName: #commits;
+		beForPseudoVariable;
+		referenceClass: SPGitCommit;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'GIT_REPO_COMMITS') fieldNamed: 'REPO_ID')).
+
 ]
 
 { #category : #descriptors }
@@ -902,13 +919,28 @@ SpiderDescriptorSystem >> tableForGIT_REPOS: aTable [
 ]
 
 { #category : #tables }
+SpiderDescriptorSystem >> tableForGIT_REPO_COMMITS: aTable [
+
+	| repoIdField commitIdField |
+
+	repoIdField  := (aTable createFieldNamed: 'REPO_ID' type: (platform integer)) bePrimaryKey.
+	commitIdField := (aTable createFieldNamed: 'COMMIT_ID' type: platform integer) bePrimaryKey.
+	aTable createFieldNamed: 'TXID' type: platform integer.
+	
+	aTable addForeignKeyFrom: repoIdField to: ((self tableNamed: 'GIT_REPOS') fieldNamed: 'ID').
+	aTable addForeignKeyFrom: commitIdField to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID').
+
+
+]
+
+{ #category : #tables }
 SpiderDescriptorSystem >> tableForGIT_REPO_REFS: aTable [
 
 	(aTable createFieldNamed: 'REPO_ID' type: (platform integer)) bePrimaryKey.
 	(aTable createFieldNamed: 'TYPE' type: (platform varchar: 1)) bePrimaryKey.
 	(aTable createFieldNamed: 'NAME' type: (platform varchar)) bePrimaryKey.
 	aTable createFieldNamed: 'TXID' type: platform integer.
-	aTable createFieldNamed: 'COMMIT_ID' type: platform varchar.
+	aTable createFieldNamed: 'COMMIT_ID' type: platform integer.
 
 ]
 
