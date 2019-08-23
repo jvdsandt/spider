@@ -140,21 +140,66 @@ SPGitRestfulHandler >> getRepoList [
 ]
 
 { #category : #'as yet unclassified' }
+SPGitRestfulHandler >> getRepoList: aDomain [
+	<get>
+	<path: '/repos/{aDomain}'>
+	<produces: 'application/json'>
+	
+	| offset limit repos hasMore |
+	
+	offset := self offsetParameter.
+	limit := self limitParameter.
+	
+	repos := self gitRepo selectReposByUrlWithDomain: aDomain offset: offset limit: limit.
+	hasMore := repos size > limit.
+	hasMore ifTrue: [ 
+		repos := repos allButLast ].
+	
+	^ self renderJsonWith: [ :json |
+					SPGitRepoJson new
+						renderList: repos more: hasMore on: json ]
+]
+
+{ #category : #'as yet unclassified' }
+SPGitRestfulHandler >> getRepoList: aDomain owner: anOwner [
+	<get>
+	<path: '/repos/{aDomain}/{anOwner}'>
+	<produces: 'application/json'>
+	
+	| offset limit repos hasMore |
+	
+	offset := self offsetParameter.
+	limit := self limitParameter.
+	
+	repos := self gitRepo selectReposByUrlWithDomain: aDomain owner: anOwner offset: offset limit: limit.
+	hasMore := repos size > limit.
+	hasMore ifTrue: [ 
+		repos := repos allButLast ].
+	
+	^ self renderJsonWith: [ :json |
+					SPGitRepoJson new
+						renderList: repos more: hasMore on: json ]
+]
+
+{ #category : #'as yet unclassified' }
 SPGitRestfulHandler >> getRepoListAsJson [
 	<get>
 	<path: '/repos'>
 	<produces: 'application/json'>
 	
-	| offset limit repos |
+	| offset limit repos hasMore |
 	
 	offset := self offsetParameter.
 	limit := self limitParameter.
 	
 	repos := self gitRepo selectReposByUrl: offset limit: limit + 1.
+	hasMore := repos size > limit.
+	hasMore ifTrue: [ 
+		repos := repos allButLast ].
 	
 	^ self renderJsonWith: [ :json |
 					SPGitRepoJson new
-						renderList: repos more: (repos size > limit) on: json ]
+						renderList: repos more: hasMore on: json ]
 ]
 
 { #category : #'as yet unclassified' }

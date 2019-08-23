@@ -16,6 +16,13 @@ SPRestfulHandler >> context [
 	^ self webContext context
 ]
 
+{ #category : #private }
+SPRestfulHandler >> createRoutes [
+	"Creates a collection of routes for the receiver. Override this method in subclasses to explicitely create the routes instead of using the default implementation that builds the routes using annotated methods (pragmas)."
+
+	^ SPRouteBuilder createRoutesFrom: self class to: SPRestfulHandler
+]
+
 { #category : #accessing }
 SPRestfulHandler >> defaultLimit [
 
@@ -50,7 +57,7 @@ SPRestfulHandler >> limitParameter [
 
 	| value |
 	
-	value := self requestContext request at: 'value' ifAbsent: [ ^ self defaultLimit ].
+	value := self requestContext request at: 'limit' ifAbsent: [ ^ self defaultLimit ].
 	^ (value asInteger max: 1) min: self maxLimit
 ]
 
