@@ -8,3 +8,15 @@ Class {
 SPRemovedClass >> accept: aVisitor [
 	aVisitor visitDiffRemovedClass: self
 ]
+
+{ #category : #accessing }
+SPRemovedClass >> oldCategory [
+
+	^ self oldObject category
+]
+
+{ #category : #accessing }
+SPRemovedClass >> oldSpiderClass [
+
+	^ self oldObject spiderClass
+]

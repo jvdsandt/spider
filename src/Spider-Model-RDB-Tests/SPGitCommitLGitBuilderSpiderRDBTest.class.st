@@ -59,3 +59,19 @@ SPGitCommitLGitBuilderSpiderRDBTest >> testBuildCommit1WithRepo [
 	
 	self gitRepo storeCommit: spCommit for: repo.
 ]
+
+{ #category : #tests }
+SPGitCommitLGitBuilderSpiderRDBTest >> testBuildCommit2 [
+
+	| commit parentCommit |
+
+	super testBuildCommit2.
+	
+	commit := self gitRepo getCommitByShaString: '3035b8e' ifAbsent: [ nil ].
+	self assert: commit notNil.
+	self assert: commit parents size equals: 1.
+	
+	parentCommit := commit parents first.
+	self assert: parentCommit children size equals: 1.
+	self assert: parentCommit children first equals: commit
+]

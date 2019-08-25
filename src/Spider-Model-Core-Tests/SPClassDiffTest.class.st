@@ -121,8 +121,8 @@ SPClassDiffTest >> testUpdatedMethod [
 	diff := diffs first.
 	self assert: diff class equals: SPUpdatedMethod.
 	self assert: diff selector equals: #m2.
-	self assert: diff oldObject method equals: (self createMethodFromSource: 'm2 ^#one').
-	self assert: diff newObject method equals: (self createMethodFromSource: 'm2 ^#two').
+	self assert: diff oldMethod equals: (self createMethodFromSource: 'm2 ^#one').
+	self assert: diff newMethod equals: (self createMethodFromSource: 'm2 ^#two').
 
 ]
 
@@ -148,8 +148,8 @@ SPClassDiffTest >> testUpdatedMethodCategory [
 	diff := diffs first.
 	self assert: diff class equals: SPUpdatedMethod.
 	self assert: diff selector equals: #m2.
-	self assert: diff oldObject category equals: 'resources'.
-	self assert: diff newObject category equals: 'accessing'.
-	self assert: diff oldObject method equals: diff newObject method.
+	self assert: diff oldCategory equals: 'resources'.
+	self assert: diff newCategory equals: 'accessing'.
+	self assert: diff oldMethod equals: diff newMethod.
 
 ]

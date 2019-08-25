@@ -295,6 +295,13 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: ((self tableNamed: 'GIT_COMMIT_PARENT_REFS') fieldNamed: 'COMMIT_ID')).
+	(aDescriptor newMapping: ManyToManyMapping)
+		attributeName: #children;
+		beForPseudoVariable;
+		referenceClass: SPGitCommit;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: ((self tableNamed: 'GIT_COMMIT_PARENT_REFS') fieldNamed: 'PARENT_ID')).
 
 	(aDescriptor newMapping: ManyToManyMapping)
 		attributeName: #repos;

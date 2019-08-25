@@ -23,6 +23,11 @@ SPGitCommitJson >> renderCommit: anItem from: aRepo on: aRenderer [
 				anItem parents do: [ :each |
 					aRenderer object: [ 
 						self renderCommitSummary: each on: aRenderer ] ] ] ].
+		aRenderer key: 'children' value: [ 
+			aRenderer array: [ 
+				anItem children do: [ :each |
+					aRenderer object: [ 
+						self renderCommitSummary: each on: aRenderer ] ] ] ].
 		aRenderer key: 'packages' value: [ self renderPackages: anItem packages on: aRenderer ].
 		aRepo notNil
 			ifTrue: [ 
@@ -69,9 +74,8 @@ SPGitCommitJson >> renderItem: anItem on: aRenderer [
 { #category : #rendering }
 SPGitCommitJson >> renderPackageSummary: aPackage on: aRenderer [
 
-	aRenderer
-		key: 'id' value: aPackage id;
-		key: 'name' value: aPackage name
+	SPPackageJson new
+		renderPackageSummary: aPackage on: aRenderer 
 ]
 
 { #category : #rendering }

@@ -9,7 +9,9 @@ SPCoreRestfulHandler class >> register [
 	| handler |
 	handler := WAAdmin register: self at: 'core'.
 	handler exceptionHandler: SPLoggingErrorHandler.
-	handler addFilter: SPCorsFilter new
+	handler 
+		addFilter: SPContextFilter new;
+		addFilter: SPCorsFilter new
 
 ]
 

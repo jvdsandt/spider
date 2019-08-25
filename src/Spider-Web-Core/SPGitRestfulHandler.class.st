@@ -9,8 +9,28 @@ SPGitRestfulHandler class >> register [
 	| handler |
 	handler := WAAdmin register: self at: 'git'.
 	handler exceptionHandler: SPLoggingErrorHandler.
-	handler addFilter: SPCorsFilter new
+	handler 
+		addFilter: SPContextFilter new;
+		addFilter: SPCorsFilter new
 
+]
+
+{ #category : #'as yet unclassified' }
+SPGitRestfulHandler >> findCommit: id [
+
+	| commit |
+	
+	(self isValidId: id)
+		ifTrue: [ commit := self gitRepo getCommitById: id asNumber ifAbsent: [ nil ] ].
+	commit isNil
+		ifTrue: [ commit := self gitRepo getCommitByShaString: id ifAbsent: [ self notFound ] ].
+	^ commit
+]
+
+{ #category : #'as yet unclassified' }
+SPGitRestfulHandler >> findCommit: id in: repo [
+
+	^ self findCommit: id
 ]
 
 { #category : #'get-requests' }
@@ -44,6 +64,59 @@ SPGitRestfulHandler >> getCommitAsJson: aCommitId [
 	^ self renderJsonWith: [ :json |
 					SPGitCommitJson new
 						renderCommit: commit on: json ]
+]
+
+{ #category : #'as yet unclassified' }
+SPGitRestfulHandler >> getDiffAsJson: aCommitId [
+	<get>
+	<path: '/diff/{aCommitId}'>
+	<produces: 'application/json'>
+	
+	| newCommit oldCommit |
+	
+	newCommit := self findCommit: aCommitId.
+	newCommit parents isEmpty
+		ifTrue: [ self notFound ].
+	oldCommit := newCommit parents first.
+	
+	^ self renderJsonWith: [ :json |
+					SPGitCommitJson new
+						renderCommit: newCommit on: json ]
+]
+
+{ #category : #'as yet unclassified' }
+SPGitRestfulHandler >> getDiffAsJson: newCommitId and: oldCommitId [
+	<get>
+	<path: '/diff/{newCommitId}/{oldCommitId}'>
+	<produces: 'application/json'>
+	
+	| newCommit oldCommit |
+	
+	newCommit := self findCommit: newCommitId.
+	oldCommit := self findCommit: oldCommitId.
+				
+	^ self renderJsonWith: [ :json |
+					SPGitCommitJson new
+						renderCommit: newCommit on: json ]
+]
+
+{ #category : #'as yet unclassified' }
+SPGitRestfulHandler >> getDiffAsJson: aDomain owner: anOwner name: aName id: aCommitId [
+	<get>
+	<path: '/diff/{aDomain}/{anOwner}/{aName}/commit/{aCommitId}'>
+	<produces: 'application/json'>
+	
+	| repo newCommit oldCommit |
+	
+	repo := self gitRepo getRepo: aDomain owner: anOwner name: aName ifAbsent: [ ^ self notFound ].
+	newCommit := self findCommit: aCommitId in: repo.
+	newCommit parents isEmpty
+		ifTrue: [ self notFound ].
+	oldCommit := newCommit parents first.
+	
+	^ self renderJsonWith: [ :json |
+			SPDiffJson new
+				renderCommitDiffBetween: newCommit and: oldCommit on: json ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -101,7 +174,7 @@ SPGitRestfulHandler >> getRepoCommitAsJson: aDomain owner: anOwner name: aName i
 	| repo commit |
 	
 	repo := self gitRepo getRepo: aDomain owner: anOwner name: aName ifAbsent: [ ^ self notFound ].
-	commit := self gitRepo getCommitByShaString: aCommitId ifAbsent: [ ^ self notFound ].
+	commit := self findCommit: aCommitId in: repo. 
 	
 	^ self renderJsonWith: [ :json |
 					SPGitCommitJson new

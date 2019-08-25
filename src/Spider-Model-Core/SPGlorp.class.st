@@ -11,7 +11,13 @@ SPGlorp class >> isAbstract [
 ]
 
 { #category : #accessing }
+SPGlorp >> currentContext [
+
+	^ SPCurrentContext value
+]
+
+{ #category : #accessing }
 SPGlorp >> glorpSession [
 
-	^ SPWebContext default glorpSession
+	^ self currentContext glorpSession
 ]

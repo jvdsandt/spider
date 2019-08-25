@@ -29,3 +29,11 @@ SPPackageJson >> renderPackage: aPackage on: aRenderer [
 			
 		 ]
 ]
+
+{ #category : #rendering }
+SPPackageJson >> renderPackageSummary: aPackage on: aRenderer [
+
+	aRenderer
+		key: 'id' value: aPackage id;
+		key: 'name' value: aPackage name
+]

@@ -19,6 +19,18 @@ SPClassJson >> renderClass: aClass on: aRenderer [
 ]
 
 { #category : #rendering }
+SPClassJson >> renderClassSummary: aClass in: aCategory on: json [
+
+	json
+		key: 'id' value: aClass id;
+		key: 'name' value: aClass name;
+		key: 'type' value: aClass typeName.
+	aClass isSpiderClass 
+		ifTrue: [ json key: 'superclass' value: aClass superclassName ].
+	json key: 'category' value: aCategory
+]
+
+{ #category : #rendering }
 SPClassJson >> renderClassSummary: aClass on: json [
 
 	json

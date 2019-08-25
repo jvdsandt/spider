@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #visiting }
+SPDiffVisitor >> visit: anObject [
+
+	anObject accept: self
+]
+
+{ #category : #visiting }
+SPDiffVisitor >> visitAll: aCollection [
+
+	aCollection do: [ :each | each accept: self ]
+]
+
+{ #category : #visiting }
 SPDiffVisitor >> visitDiff: anObject [
 
 

@@ -15,6 +15,30 @@ SPUpdatedMethod >> name [
 ]
 
 { #category : #accessing }
+SPUpdatedMethod >> newCategory [
+
+	^ self newObject category
+]
+
+{ #category : #accessing }
+SPUpdatedMethod >> newMethod [
+
+	^ self newObject method
+]
+
+{ #category : #accessing }
+SPUpdatedMethod >> oldCategory [
+
+	^ self oldObject category
+]
+
+{ #category : #accessing }
+SPUpdatedMethod >> oldMethod [
+
+	^ self oldObject method
+]
+
+{ #category : #accessing }
 SPUpdatedMethod >> selector [
 
 	^ self newObject selector

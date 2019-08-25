@@ -15,6 +15,18 @@ SPRemovedMethod >> name [
 ]
 
 { #category : #accessing }
+SPRemovedMethod >> oldCategory [
+
+	^ self oldObject category
+]
+
+{ #category : #accessing }
+SPRemovedMethod >> oldMethod [
+
+	^ self oldObject method
+]
+
+{ #category : #accessing }
 SPRemovedMethod >> selector [
 
 	^ self oldObject selector

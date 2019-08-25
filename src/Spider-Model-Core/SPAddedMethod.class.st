@@ -15,6 +15,18 @@ SPAddedMethod >> name [
 ]
 
 { #category : #accessing }
+SPAddedMethod >> newCategory [
+
+	^ self newObject category
+]
+
+{ #category : #accessing }
+SPAddedMethod >> newMethod [
+
+	^ self newObject method
+]
+
+{ #category : #accessing }
 SPAddedMethod >> selector [
 
 	^ self newObject selector

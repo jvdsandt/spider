@@ -55,6 +55,13 @@ SPiderTestCase >> packageRepo [
 	^ self context packageRepo
 ]
 
+{ #category : #private }
+SPiderTestCase >> performTest [
+	SPCurrentContext 
+		value: self context
+		during: [ super performTest ]
+]
+
 { #category : #running }
 SPiderTestCase >> tearDown [ 
 

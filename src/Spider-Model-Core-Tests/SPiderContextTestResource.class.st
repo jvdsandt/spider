@@ -113,7 +113,9 @@ SPiderContextTestResource >> resetForMCPackages [
 SPiderContextTestResource >> resetForMethods [
 
 	(self context isKindOf: SPiderPostgreSQLContext)
-		ifTrue: [ self clearPostgresTables: self context client ].
+		ifTrue: [ 
+			self clearPostgresTables: self context client.
+			self context glorpSession initializeCache ].
 
 	self context sessionRepo checkSchema.
 	self context methodRepo checkSchema.

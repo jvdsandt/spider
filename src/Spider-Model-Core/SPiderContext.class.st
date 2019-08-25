@@ -7,7 +7,7 @@ Class {
 		'currentTransaction',
 		'repos'
 	],
-	#category : #'Spider-Model-Core'
+	#category : #'Spider-Model-Core-Context'
 }
 
 { #category : #actions }

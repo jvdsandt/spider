@@ -70,6 +70,18 @@ SPGitCommit >> authorSignature [
 	^ authorSignature
 ]
 
+{ #category : #accessing }
+SPGitCommit >> children [
+
+	"^ self glorpSession read: self class where: [ :e | e parents includes: self ]"
+	
+	| q |
+	
+	q := Query read: self class where: [ :e | e id = self id ].
+	q retrieve: [ :e | e children ].
+	^ self glorpSession execute: q
+]
+
 { #category : #comparing }
 SPGitCommit >> comparePackagesWith: olderCommit [
 

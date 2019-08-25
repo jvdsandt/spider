@@ -8,3 +8,15 @@ Class {
 SPAddedClass >> accept: aVisitor [
 	aVisitor visitDiffAddedClass: self
 ]
+
+{ #category : #'instance creation' }
+SPAddedClass >> newCategory [
+
+	^ self newObject category
+]
+
+{ #category : #'instance creation' }
+SPAddedClass >> newSpiderClass [ 
+
+	^ self newObject spiderClass
+]
