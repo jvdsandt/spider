@@ -31,8 +31,8 @@ SPGlorpClass >> ensureRingDefinitionIn: anRGEnvironment [
 "		(self superclassName isNil or: [ self superclassName = #nil ])
 			ifTrue: [ def superclass: def ]
 			ifFalse: [ def superclass: (anRGEnvironment ensureClassNamed: self superclassName ) ].
-"		def category: self category.
-		def layout: (self ring2LayoutType parent: def).
+		def category: 'XYZ-Tests'.
+"		def layout: (self ring2LayoutType parent: def).
 "		metaclassDef layout: (RGFixedLayout parent: metaclassDef). 
 		def comment: (
 			(RGComment parent: def) 

@@ -23,7 +23,7 @@ SPiderRingBackendTest >> testClass [
 		build.
 
 	rgClass := env definitionFor: spClass.
-	rgClass "definition" metaclass definition inspect
+	rgClass definition inspect
 ]
 
 { #category : #tests }

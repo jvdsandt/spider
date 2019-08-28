@@ -13,6 +13,20 @@ SPClassBuilderTest >> createMethodFromSource: aString [
 ]
 
 { #category : #tests }
+SPClassBuilderTest >> testArrayClass [
+
+	| class |
+	
+	class := SPClassBuilder new
+		setClass: Array;
+		build.
+		
+	self assert: #Array equals: class name.
+	self assert: #variable equals: class classType.
+
+]
+
+{ #category : #tests }
 SPClassBuilderTest >> testBooleanClass [
 
 	| class class2 |
@@ -262,5 +276,19 @@ SPClassBuilderTest >> testTraitsMeta [
 	
 	
 
+
+]
+
+{ #category : #tests }
+SPClassBuilderTest >> testWeakArrayClass [
+
+	| class |
+	
+	class := SPClassBuilder new
+		setClass: WeakArray;
+		build.
+		
+	self assert: #WeakArray equals: class name.
+	self assert: #weak equals: class classType.
 
 ]

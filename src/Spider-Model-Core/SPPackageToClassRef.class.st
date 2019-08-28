@@ -40,6 +40,14 @@ SPPackageToClassRef >> category [
 	^ category
 ]
 
+{ #category : #accessing }
+SPPackageToClassRef >> fullCategoryIn: aPackage [
+
+	^ self category isNil
+			ifTrue: [ aPackage name ]
+			ifFalse: [ aPackage name, '-', self category ]
+]
+
 { #category : #comparing }
 SPPackageToClassRef >> hash [
 
@@ -67,6 +75,11 @@ SPPackageToClassRef >> isSpiderClass [
 { #category : #testing }
 SPPackageToClassRef >> isSpiderClassExtension [
 	^ self spiderClass isSpiderClassExtension
+]
+
+{ #category : #testing }
+SPPackageToClassRef >> isSpiderTrait [
+	^ self spiderClass isSpiderTrait
 ]
 
 { #category : #accessing }
