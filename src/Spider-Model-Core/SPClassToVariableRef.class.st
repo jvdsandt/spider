@@ -9,6 +9,12 @@ Class {
 	#category : #'Spider-Model-Core-Domain'
 }
 
+{ #category : #'instance creation' }
+SPClassToVariableRef class >> classInstanceVar: aVarSymbol [
+
+	^ self type: self classInstanceVarType variable: aVarSymbol
+]
+
 { #category : #constants }
 SPClassToVariableRef class >> classInstanceVarType [
 
@@ -25,12 +31,6 @@ SPClassToVariableRef class >> classVar: aVarSymbol [
 SPClassToVariableRef class >> classVarType [
 
 	^ 61
-]
-
-{ #category : #'instance creation' }
-SPClassToVariableRef class >> classsInstanceVar: aVarSymbol [
-
-	^ self type: self classInstanceVarType variable: aVarSymbol
 ]
 
 { #category : #'instance creation' }
@@ -101,6 +101,12 @@ SPClassToVariableRef >> expression [
 SPClassToVariableRef >> expressionOrNil [
 	^ expression
 
+]
+
+{ #category : #testing }
+SPClassToVariableRef >> hasExpression [
+
+	^ expression notNil
 ]
 
 { #category : #comparing }

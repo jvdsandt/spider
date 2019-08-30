@@ -24,14 +24,14 @@ SPRing2Class >> ensureRingDefinitionIn: anRGEnvironment [
 			(RGComment parent: def) 
 				content: self comment;
 				yourself).
-		self spiderClass instanceVarNames do: [ :each |
-			def layout addSlot: (RGInstanceVariableSlot named: each parent: def layout) ].
+		self spiderClass instanceVarRefs do: [ :each |
+			def layout addSlot: (self ring2slotFor: each parent: def) ].
 		self spiderClass classInstanceVarNames do: [ :each |
 			metaclassDef layout addSlot: (RGInstanceVariableSlot named: each parent: metaclassDef layout) ].
 		self spiderClass classVarNames do: [ :each |
 			def addClassVariable: (RGClassVariable named: each parent: def) ].
 		self spiderClass poolDictionaryNames do: [ :each |
-			(RGPoolVariable named: each parent: def) ].
+			def addSharedPool: (RGPoolVariable named: each parent: def) ].
 		def ]
 ]
 
@@ -49,6 +49,26 @@ SPRing2Class >> ring2LayoutType [
 		#normal -> RGFixedLayout.
 		#weak -> RGWeakLayout.
 	}) at: self spiderClass classType
+]
+
+{ #category : #internal }
+SPRing2Class >> ring2slotFor: variableRef parent: def [
+
+	| cleanExpression index |
+
+	variableRef hasExpression 
+		ifFalse: [ ^ RGInstanceVariableSlot named: variableRef variable parent: def layout ].
+
+	cleanExpression := variableRef expression.
+	index := cleanExpression indexOfSubCollection: '=>'.
+	cleanExpression := index > 0
+		ifTrue: [ (cleanExpression copyFrom: index+2 to: cleanExpression size) trimBoth ]
+		ifFalse: [ cleanExpression ].
+
+	^(RGUnknownSlot named: variableRef variable parent: def layout)
+			expression: cleanExpression;
+			yourself
+
 ]
 
 { #category : #accessing }

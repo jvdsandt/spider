@@ -14,7 +14,8 @@ SPRing2Trait >> ensureRingDefinitionIn: anRGEnvironment [
 		def classTrait: classTraitDef.
 		classTraitDef baseTrait: def.
 		def traitComposition: (self traitCompositionFrom: self spiderClass traitCompositionString parent: def).
-"		classTraitDef traitComposition: (self traitCompositionFrom: self classTraitComposition parent: classTraitDef)".		
+		classTraitDef traitComposition: (
+			self traitCompositionFrom: self spiderClass classTraitCompositionString parent: classTraitDef).	
 		def category: self category.
 		def comment: (
 			(RGComment parent: def) 

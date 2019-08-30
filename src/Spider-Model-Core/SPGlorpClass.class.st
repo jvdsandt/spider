@@ -143,6 +143,28 @@ SPGlorpClass >> classCategories [
 ]
 
 { #category : #accessing }
+SPGlorpClass >> classDefinition [ 
+	
+	^ self classDefinitionIn: self dummyPackage
+
+]
+
+{ #category : #accessing }
+SPGlorpClass >> classDefinitionIn: aPackage [
+	"Answer the defining code for the metaclass"
+
+	(aPackage classRefs anySatisfy: [ :each | each spiderClass = self ])
+		ifFalse: [ ^ nil ].
+		
+	self isSpiderClassExtension 
+		ifTrue: [ ^ '' ].
+		
+	^ (aPackage ring2ClassNamed: self name) classDefinition
+		
+
+]
+
+{ #category : #accessing }
 SPGlorpClass >> classHash [
 	^ classHash
 ]
@@ -288,6 +310,38 @@ SPGlorpClass >> createInstanceMethodDiffsWith: olderClass [
 	^ diffs
 ]
 
+{ #category : #accessing }
+SPGlorpClass >> definition [ 
+	
+	^ self definitionIn: self dummyPackage
+
+]
+
+{ #category : #accessing }
+SPGlorpClass >> definitionIn: aPackage [
+	"Answer the defining code for this class"
+
+	(aPackage classRefs anySatisfy: [ :each | each spiderClass = self ])
+		ifFalse: [ ^ nil ].
+		
+	self isSpiderClassExtension 
+		ifTrue: [ ^ '' ].
+		
+	^ (aPackage ring2ClassNamed: self name) definition
+		
+
+]
+
+{ #category : #internal }
+SPGlorpClass >> dummyPackage [
+	"Answer a dummy package that only contains the receiver."
+
+	^ SPPackage name: 'DummyPackage'
+		classRefs: (Array with: (SPPackageToClassRef spiderClass: self))
+		comment: nil
+
+]
+
 { #category : #comparing }
 SPGlorpClass >> hash [ 
 
@@ -378,6 +432,12 @@ SPGlorpClass >> instanceVarNames [
 SPGlorpClass >> instanceVarRefNamed: aSymbol [
 
 	^ variableRefs detect: [ :each | each isInstanceVar and: [ each variable = aSymbol ] ]
+]
+
+{ #category : #accessing }
+SPGlorpClass >> instanceVarRefs [
+
+	^ variableRefs select: [ :each | each isInstanceVar ]
 ]
 
 { #category : #testing }

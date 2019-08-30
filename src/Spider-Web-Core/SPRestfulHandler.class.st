@@ -52,7 +52,7 @@ SPRestfulHandler >> isValidId: aString [
 				aString allSatisfy: [ :ch | ch isDigit ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing parameters' }
 SPRestfulHandler >> limitParameter [
 
 	| value |
@@ -96,7 +96,7 @@ SPRestfulHandler >> notFoundJson [
 					json key: 'error' value: 'notFound' ] ]) ]
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing parameters' }
 SPRestfulHandler >> offsetParameter [
 
 	| offset |

@@ -52,6 +52,12 @@ SPRing2Behavior >> definition [
 	^ self asRGDefinition definition
 ]
 
+{ #category : #internal }
+SPRing2Behavior >> ensureRingDefinitionIn: anEnvironment [
+
+	self subclassResponsibility
+]
+
 { #category : #comparing }
 SPRing2Behavior >> hash [
 
