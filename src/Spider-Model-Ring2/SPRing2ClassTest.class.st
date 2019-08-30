@@ -36,10 +36,10 @@ SPRing2ClassTest >> testSmalltalkClass: aClass [
 	ringClass := package ring2ClassNamed: aClass name. 
 	
 	expected := aClass definitionForNautilus.
-	self assert: expected equals: ringClass definition.
+	self assert: expected withSeparatorsCompacted equals: ringClass definition withSeparatorsCompacted.
 	
 	expected := aClass class definitionForNautilus.
-	self assert: expected equals: ringClass classDefinition
+	self assert: expected withSeparatorsCompacted equals: ringClass classDefinition withSeparatorsCompacted
 ]
 
 { #category : #tests }
@@ -54,4 +54,10 @@ SPRing2ClassTest >> testSmalltalkClasses [
 SPRing2ClassTest >> testSmalltalkTrait [
 
 	self testSmalltalkClass: SPTestTrait
+]
+
+{ #category : #tests }
+SPRing2ClassTest >> testSmalltalkTraitUser [
+
+	self testSmalltalkClass: SPTestTraitUser
 ]

@@ -4,7 +4,7 @@ Class {
 	#category : #'Spider-Model-Ring2'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #internal }
 SPRing2Trait >> ensureRingDefinitionIn: anRGEnvironment [
 
 	^ anRGEnvironment backend definitionFor: self ifAbsentRegister: [
@@ -22,19 +22,4 @@ SPRing2Trait >> ensureRingDefinitionIn: anRGEnvironment [
 				yourself).
 		def]. 
 	
-]
-
-{ #category : #'as yet unclassified' }
-SPRing2Trait >> traitCompositionFrom: aStringOrNil parent: aBehavior [
-	
-	| composition transformations |
-	
-	composition := RGTraitComposition parent: aBehavior.
-
-	aStringOrNil ifNil: [ ^ composition ].
-
-	transformations := RGTraitCompositionVisitor new parse: aStringOrNil for: composition.
-	transformations do: [ :each |
-		composition addTransformation: each ].
-	^ composition
 ]

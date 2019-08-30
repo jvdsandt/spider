@@ -35,6 +35,12 @@ SPRing2Behavior >> classDefinition [
 ]
 
 { #category : #accessing }
+SPRing2Behavior >> classTraitCompositionString [
+
+	^ self spiderClass classTraitCompositionString 
+]
+
+{ #category : #accessing }
 SPRing2Behavior >> comment [
 
 	^ self spiderClass comment
@@ -68,4 +74,25 @@ SPRing2Behavior >> name [
 { #category : #accessing }
 SPRing2Behavior >> spiderClass [
 	^ spiderClass
+]
+
+{ #category : #internal }
+SPRing2Behavior >> traitCompositionFrom: aStringOrNil parent: aBehavior [
+	
+	| composition transformations |
+	
+	composition := RGTraitComposition parent: aBehavior.
+
+	aStringOrNil ifNil: [ ^ composition ].
+
+	transformations := RGTraitCompositionVisitor new parse: aStringOrNil for: composition.
+	transformations do: [ :each |
+		composition addTransformation: each ].
+	^ composition
+]
+
+{ #category : #accessing }
+SPRing2Behavior >> traitCompositionString [
+
+	^ self spiderClass traitCompositionString 
 ]

@@ -4,7 +4,7 @@ Class {
 	#category : #'Spider-Model-Ring2'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #internal }
 SPRing2Class >> ensureRingDefinitionIn: anRGEnvironment [
 
 	^ anRGEnvironment backend definitionFor: self ifAbsentRegister: [
@@ -12,9 +12,9 @@ SPRing2Class >> ensureRingDefinitionIn: anRGEnvironment [
 		def := anRGEnvironment ensureClassNamed: self name asSymbol.
 		metaclassDef := anRGEnvironment ensureClassNamed: (self name, ' class') asSymbol.
 		def metaclass: metaclassDef.
-"		def traitComposition: (self traitCompositionFrom: self traitComposition parent: def).			
-		metaclassDef traitComposition: (self traitCompositionFrom: self classTraitComposition parent: metaclassDef).			
-"		(self superclassName isNil or: [ self superclassName = #nil ])
+		def traitComposition: (self traitCompositionFrom: self traitCompositionString parent: def).			
+		metaclassDef traitComposition: (self traitCompositionFrom: self classTraitCompositionString parent: metaclassDef).			
+		(self superclassName isNil or: [ self superclassName = #nil ])
 			ifTrue: [ def superclass: def ]
 			ifFalse: [ def superclass: (anRGEnvironment ensureClassNamed: self superclassName ) ].
 		def category: self category.
@@ -35,7 +35,7 @@ SPRing2Class >> ensureRingDefinitionIn: anRGEnvironment [
 		def ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #internal }
 SPRing2Class >> ring2LayoutType [
 
 	^ (Dictionary newFrom: {	
