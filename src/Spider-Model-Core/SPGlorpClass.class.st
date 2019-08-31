@@ -145,21 +145,18 @@ SPGlorpClass >> classCategories [
 { #category : #accessing }
 SPGlorpClass >> classDefinition [ 
 	
-	^ self classDefinitionIn: self dummyPackage
+	^ self classDefinitionIn: nil
 
 ]
 
 { #category : #accessing }
-SPGlorpClass >> classDefinitionIn: aPackage [
+SPGlorpClass >> classDefinitionIn: aCategory [
 	"Answer the defining code for the metaclass"
 
-	(aPackage classRefs anySatisfy: [ :each | each spiderClass = self ])
-		ifFalse: [ ^ nil ].
-		
 	self isSpiderClassExtension 
 		ifTrue: [ ^ '' ].
 		
-	^ (aPackage ring2ClassNamed: self name) classDefinition
+	^ (self ring2ClassIn: (aCategory ifNil: [ '' ])) classDefinition
 		
 
 ]
@@ -313,33 +310,18 @@ SPGlorpClass >> createInstanceMethodDiffsWith: olderClass [
 { #category : #accessing }
 SPGlorpClass >> definition [ 
 	
-	^ self definitionIn: self dummyPackage
+	^ self definitionIn: nil
 
 ]
 
 { #category : #accessing }
-SPGlorpClass >> definitionIn: aPackage [
+SPGlorpClass >> definitionIn: aCategory [
 	"Answer the defining code for this class"
 
-	(aPackage classRefs anySatisfy: [ :each | each spiderClass = self ])
-		ifFalse: [ ^ nil ].
-		
 	self isSpiderClassExtension 
 		ifTrue: [ ^ '' ].
 		
-	^ (aPackage ring2ClassNamed: self name) definition
-		
-
-]
-
-{ #category : #internal }
-SPGlorpClass >> dummyPackage [
-	"Answer a dummy package that only contains the receiver."
-
-	^ SPPackage name: 'DummyPackage'
-		classRefs: (Array with: (SPPackageToClassRef spiderClass: self))
-		comment: nil
-
+	^ (self ring2ClassIn: (aCategory ifNil: [ '' ])) definition	
 ]
 
 { #category : #comparing }

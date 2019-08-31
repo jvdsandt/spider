@@ -197,8 +197,6 @@ SpiderDescriptorSystem >> classModelForSPPackageToClassRef: aClassModel [
 
 	aClassModel newAttributeNamed: #spiderClass type: SPGlorpClass.	
 	aClassModel newAttributeNamed: #category type: Symbol.
-	aClassModel newAttributeNamed: #spiderClassName type: Symbol.
-
 ]
 
 { #category : #descriptors }
@@ -825,6 +823,13 @@ SpiderDescriptorSystem >> descriptorForSPPackageToClassRef: aDescriptor [
 			from: (table fieldNamed: 'PACKAGE_ID')
 			to: ((self tableNamed: 'PACKAGES') fieldNamed: 'ID')).
 
+	(aDescriptor newMapping: DirectMapping) 
+		beForPseudoVariable;
+		from: #packageId to: (table fieldNamed: 'PACKAGE_ID').
+
+	(aDescriptor newMapping: DirectMapping) 
+		beForPseudoVariable;
+		from: #spiderClassId to: (table fieldNamed: 'CLASS_ID').
 
 ]
 

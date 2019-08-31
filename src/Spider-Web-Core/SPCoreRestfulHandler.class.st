@@ -21,12 +21,16 @@ SPCoreRestfulHandler >> getClassAsJson: anId [
 	<path: '/classes/{anId}'>
 	<produces: 'application/json'>
 	
-	| spiderClass |
+	| spiderClass packageId category |
 	
 	spiderClass := self classRepo getClassById: anId ifAbsent: [ ^ self notFound ].
+	packageId := self requestContext request at: 'packageId' ifAbsent: [ nil ].
+	category := packageId isNil
+		ifTrue: [ nil ]
+		ifFalse: [ self packageRepo getClassCategoryFor: spiderClass id in: packageId ].
 	
 	^ self renderJsonWith: [ :json |
-				SPClassJson new renderClass: spiderClass on: json ]
+				SPClassJson new renderClass: spiderClass in: category on: json ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -5,17 +5,27 @@ Class {
 }
 
 { #category : #rendering }
-SPClassJson >> renderClass: aClass on: aRenderer [
+SPClassJson >> renderClass: aClass in: aCategory on: aRenderer [
 
 	aRenderer object: [ 
 		self renderClassSummary: aClass on: aRenderer.
 		aRenderer 
 			key: 'comment' value: aClass comment.
 		aClass isSpiderClassExtension
-			ifFalse: [ self renderVariablesOf: aClass on: aRenderer ].
+			ifFalse: [ 
+				aRenderer
+					key: 'definition' value: (aClass definitionIn: aCategory);
+					key: 'classDefinition' value: (aClass classDefinitionIn: aCategory).
+				self renderVariablesOf: aClass on: aRenderer ].
 		aRenderer
 			key: 'instanceMethods' value: [ self renderMethodRefs: aClass instanceMethodRefs on: aRenderer ]; 
 			key: 'classMethods' value: [ self renderMethodRefs: aClass classMethodRefs on: aRenderer ] ]
+]
+
+{ #category : #rendering }
+SPClassJson >> renderClass: aClass on: aRenderer [
+
+	self renderClass: aClass in: nil on: aRenderer 
 ]
 
 { #category : #rendering }

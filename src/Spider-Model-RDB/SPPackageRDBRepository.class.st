@@ -38,6 +38,24 @@ SPPackageRDBRepository >> getAllPackageNames [
 ]
 
 { #category : #queries }
+SPPackageRDBRepository >> getClassCategoryFor: aSpiderClassId in: aPackageId [
+
+	| q row |
+	
+	q := Query readOneOf: SPPackageToClassRef 
+		where: [ :e | e packageId = aPackageId AND: [ e spiderClassId = aSpiderClassId ] ].
+	q retrieve: [ :e | e package name ].
+	q retrieve: [ :e | e category ].
+	
+	row := self glorpSession execute: q.
+	row isNil
+		ifTrue: [ ^ nil ].
+	^ row last isNil
+			ifTrue: [ row first ]
+			ifFalse: [ row first, '-', row last ]
+]
+
+{ #category : #queries }
 SPPackageRDBRepository >> getPackageByHash: aBytes ifAbsent: aBlock [
 
 	| package |
