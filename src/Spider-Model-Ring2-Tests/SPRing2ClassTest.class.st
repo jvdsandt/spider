@@ -17,10 +17,10 @@ SPRing2ClassTest >> testClassWithSlotVars [
 		methodRefs: #()
 		comment: nil.
 		
-	self assert: spiderClass definition equals: 'Object subclass: #MyClass
+	self assert: (spiderClass definitionIn: 'P1') equals: 'Object subclass: #MyClass
 	slots: { #myVar => ToManyRelationSlot inverse: #actors inClass: #SlotExampleMovie }
 	classVariables: {  }
-	package: ''DummyPackage'''
+	package: ''P1'''
 ]
 
 { #category : #tests }
@@ -39,11 +39,11 @@ SPRing2ClassTest >> testClassWithVars [
 		methodRefs: #()
 		comment: nil.
 		
-	self assert: spiderClass definition equals: 'Object subclass: #MyClass
+	self assert: (spiderClass definitionIn: 'P-XYZ') equals: 'Object subclass: #MyClass
 	instanceVariableNames: ''myVar''
 	classVariableNames: ''MyClassVar''
 	poolDictionaries: ''MyPool''
-	package: ''DummyPackage'''.
+	package: ''P-XYZ'''.
 
 	self assert: spiderClass classDefinition equals: 'MyClass class
 	instanceVariableNames: ''myCInstVar'''
