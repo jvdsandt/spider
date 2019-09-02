@@ -50,8 +50,20 @@ SPClassBuilder >> addInstanceVarSlot: aSlot [
 { #category : #adding }
 SPClassBuilder >> addMCVar: aVarName type: aVarType [
 
+	| varName expression |
+	
+	(self isSlotExpression: aVarName)
+		ifTrue: [ 
+			varName := self variableNameFromSlotExpression: aVarName.
+			expression := aVarName ]
+		ifFalse: [ 
+			varName := aVarName first = $# 
+				ifTrue: [ aVarName allButFirst ] 
+				ifFalse: [ aVarName ].
+			expression := nil ].
+		
 	variableRefs add: (
-		SPClassToVariableRef type: aVarType variable: aVarName)
+		SPClassToVariableRef type: aVarType variable: varName expression: expression)
 ]
 
 { #category : #adding }
@@ -116,6 +128,12 @@ SPClassBuilder >> initialize [
 	superclassName := #Object.
 	classType := #normal.
 	classIsTrait := false
+]
+
+{ #category : #testing }
+SPClassBuilder >> isSlotExpression: aString [
+
+	^ (aString indexOfSubCollection: '=>') > 0
 ]
 
 { #category : #initialization }
@@ -213,4 +231,12 @@ SPClassBuilder >> superclassName [
 { #category : #accessing }
 SPClassBuilder >> superclassName: anObject [
 	superclassName := anObject
+]
+
+{ #category : #internal }
+SPClassBuilder >> variableNameFromSlotExpression: aString [
+	"Slot format: #varName => SlotXYZ"
+	
+	^ (aString readStream next; upToAll: '=>') trimBoth: [ :ch | ch isSeparator or: [ ch = $' ] ]
+	
 ]

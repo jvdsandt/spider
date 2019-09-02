@@ -48,6 +48,28 @@ P3Error >> info: anObject [
 ]
 
 { #category : #running }
+SPClassBuilderTonelTest >> sampleClassWithSlots [
+
+	| contents |
+	
+	contents := '"
+A SlotExampleMovie is an example class to demonstrate the workings of relation slots.
+"
+Class {
+	#name : #SlotExampleMovie,
+	#superclass : #Object,
+	#instVars : [
+		''#name'',
+		''#director => ToOneRelationSlot inverse: #directedMovies inClass: #SlotExamplePerson'',
+		''#actors => ToManyRelationSlot inverse: #actedInMovies inClass: #SlotExamplePerson''
+	],
+	#category : #''Slot-Tests-Examples - Associations''
+}'.
+
+	^ self string: contents asFileRefNamed: 'SlotExampleMovie.class.st'
+]
+
+{ #category : #running }
 SPClassBuilderTonelTest >> sampleExtension [
 
 	| contents |
@@ -102,6 +124,10 @@ SPClassBuilderTonelTest >> testSampleClass [
 	self assert: class instanceVarNames equals: #( info ).
 	self assert: class classVarNames equals: #().
 	self assert: class classSelectors equals: #().	
+	
+	self assert: (class instanceVarRefNamed: #info) expressionOrNil equals: nil.
+	self assert: (class instanceVarRefNamed: #info) expression equals: '#info'.
+
 ]
 
 { #category : #tests }
@@ -121,6 +147,28 @@ SPClassBuilderTonelTest >> testSampleClassEquals [
 	self assert: class1 hash equals: class2 hash.
 	self assert: class1 equals: class2.
 
+]
+
+{ #category : #tests }
+SPClassBuilderTonelTest >> testSampleClassWithSlots [
+
+	| class |
+	
+	class := SPClassBuilder new
+		setTonelFileReference: self sampleClassWithSlots;
+		build.
+
+	self assert: class name equals: #SlotExampleMovie. 
+	self assert: class superclassName equals: #Object. 
+	self assert: class isSpiderClass.
+	self assert: class instanceVarNames equals: #( name director actors ).
+	self assert: class classVarNames equals: #().
+
+	self assert: (class instanceVarRefNamed: #name) expressionOrNil equals: nil.
+	self assert: (class instanceVarRefNamed: #director) expression 
+		equals: '#director => ToOneRelationSlot inverse: #directedMovies inClass: #SlotExamplePerson'.
+	self assert: (class instanceVarRefNamed: #actors) expression 
+		equals: '#actors => ToManyRelationSlot inverse: #actedInMovies inClass: #SlotExamplePerson'.
 ]
 
 { #category : #tests }

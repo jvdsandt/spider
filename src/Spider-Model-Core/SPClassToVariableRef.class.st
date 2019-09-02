@@ -94,7 +94,7 @@ SPClassToVariableRef >> = other [
 
 { #category : #accessing }
 SPClassToVariableRef >> expression [
-	^ expression ifNil: [ self variable printString ]
+	^ expression ifNil: [ self variable asSymbol printString ]
 ]
 
 { #category : #accessing }
