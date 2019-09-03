@@ -18,7 +18,6 @@ SPClassBuilder >> addClassInstanceVarSlot: aSlot [
 	| expression |
 
 	expression := aSlot definitionString.
-	(expression indexOfSubCollection: 'FMOne') > 0 ifTrue: [ self halt ].
 
 	variableRefs add: (
 		SPClassToVariableRef type: SPClassToVariableRef classInstanceVarType 

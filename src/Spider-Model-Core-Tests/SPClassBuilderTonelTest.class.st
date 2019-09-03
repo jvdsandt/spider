@@ -70,6 +70,23 @@ Class {
 ]
 
 { #category : #running }
+SPClassBuilderTonelTest >> sampleClassWithTraits [
+
+	| contents |
+	
+	contents := 'Class {
+	#name : #FamixJavaClass,
+	#superclass : #FamixJavaType,
+	#traits : ''FamixTClass + FamixTLCOMMetrics + FamixTWithExceptions'',
+	#classTraits : ''FamixTClass classTrait + FamixTLCOMMetrics classTrait + FamixTWithExceptions classTrait'',
+	#category : #''Famix-Java-Entities-Entities''
+}
+'.
+
+	^ self string: contents asFileRefNamed: 'FamixJavaClass.class.st'
+]
+
+{ #category : #running }
 SPClassBuilderTonelTest >> sampleExtension [
 
 	| contents |
@@ -96,6 +113,27 @@ ByteArray >> printAsP3TextOn: aStream [
 '.
 
 	^ self string: contents asFileRefNamed: 'ByteArray.extension.st'
+]
+
+{ #category : #running }
+SPClassBuilderTonelTest >> sampleTraitWithSlots [
+
+	| contents |
+	
+	contents := '"
+FAMIXAssociation is an abstract superclass for relationships between Famix named entities. 
+"
+Trait {
+	#name : #FamixTAssociation,
+	#instVars : [
+		''#next => FMOne type: #FamixTAssociation opposite: #previous'',
+		''#previous => FMOne type: #FamixTAssociation opposite: #next''
+	],
+	#category : #''Famix-Traits-Association''
+}
+'.
+
+	^ self string: contents asFileRefNamed: 'FamixTAssociation.trait.st'
 ]
 
 { #category : #running }
@@ -172,6 +210,26 @@ SPClassBuilderTonelTest >> testSampleClassWithSlots [
 ]
 
 { #category : #tests }
+SPClassBuilderTonelTest >> testSampleClassWithTraits [
+
+	| class |
+	
+	class := SPClassBuilder new
+		setTonelFileReference: self sampleClassWithTraits;
+		build.
+
+	self assert: class name equals: #FamixJavaClass. 
+	self assert: class superclassName equals: #FamixJavaType. 
+	self assert: class isSpiderClass.
+	
+	self assert: class traitCompositionString 
+		equals: 'FamixTClass + FamixTLCOMMetrics + FamixTWithExceptions'.
+	self assert: class classTraitCompositionString 
+		equals: 'FamixTClass classTrait + FamixTLCOMMetrics classTrait + FamixTWithExceptions classTrait'.
+
+]
+
+{ #category : #tests }
 SPClassBuilderTonelTest >> testSampleExtension [
 
 	| classExt |
@@ -203,4 +261,24 @@ SPClassBuilderTonelTest >> testSampleExtensionEquals [
 	self assert: classExt1 hash equals: classExt2 hash.
 	self assert: classExt1 equals: classExt2.
 
+]
+
+{ #category : #tests }
+SPClassBuilderTonelTest >> testSampleTraitWithSlots [
+
+	| trait |
+	
+	trait := SPClassBuilder new
+		setTonelFileReference: self sampleTraitWithSlots;
+		build.
+
+	self assert: trait name equals: #FamixTAssociation. 
+	self assert: trait isSpiderTrait.
+	self assert: trait instanceVarNames equals: #( next previous ).
+	self assert: trait traitCompositionString isNil.
+
+	self assert: (trait instanceVarRefNamed: #next) expression 
+		equals: '#next => FMOne type: #FamixTAssociation opposite: #previous'.
+	self assert: (trait instanceVarRefNamed: #previous) expression 
+		equals: '#previous => FMOne type: #FamixTAssociation opposite: #next'.
 ]

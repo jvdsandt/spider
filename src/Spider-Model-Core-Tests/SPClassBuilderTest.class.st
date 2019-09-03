@@ -206,6 +206,7 @@ SPClassBuilderTest >> testSlotExampleMovieClass [
 	
 	self assert: class instanceVarNames sorted equals: #( actors director name year ).
 	
+	self assert: (class instanceVarRefNamed: #year) variable equals: #year.
 	self assert: (class instanceVarRefNamed: #year) expression equals: '#year'.
 	self assert: (class instanceVarRefNamed: #year) expressionOrNil equals: nil.
 	self assert: (class instanceVarRefNamed: #director) expression equals: '#director => ToOneRelationSlot inverse: #directedMovies inClass: #SlotExamplePerson'.
