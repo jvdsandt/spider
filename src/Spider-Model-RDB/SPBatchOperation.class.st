@@ -25,6 +25,12 @@ SPBatchOperation >> context: anObject [
 ]
 
 { #category : #accessing }
+SPBatchOperation >> gitRepo [
+
+	^ context gitRepo
+]
+
+{ #category : #accessing }
 SPBatchOperation >> glorpSession [
 
 	^ context glorpSession

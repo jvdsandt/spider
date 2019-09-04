@@ -247,3 +247,16 @@ SPGitCommit >> sourceDir [
 SPGitCommit >> status [
 	^ status
 ]
+
+{ #category : #accessing }
+SPGitCommit >> withAllParentsAfter: aDateTime [
+
+	| coll |
+
+	self datetime <= aDateTime 
+		ifTrue: [ ^#() ].
+		
+	coll := Set with: self.
+	self parents do: [ :each | coll addAll: (each withAllParentsAfter: aDateTime) ].
+	^ coll
+]
