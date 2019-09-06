@@ -29,10 +29,11 @@ SPDeleteCommitsWithImportErrors >> deleteCommit: aCommit [
 
 { #category : #examples }
 SPDeleteCommitsWithImportErrors >> exampleDeleteIcebergErrors [
+	"self new context: SPWebContext default context; exampleDeleteIcebergErrors"
 
 	| repo dt |
 	
-	repo := self gitRepo getGitRepoByUrl: '"https://github.com/pharo-vcs/iceberg.git"'
+	repo := self gitRepo getGitRepoByUrl: 'https://github.com/pharo-vcs/iceberg.git'
 		ifAbsent: [ self error: 'Repo not found' ].
 		
 	dt := DateAndTime fromUnixTime: 0.
@@ -54,7 +55,14 @@ SPDeleteCommitsWithImportErrors >> exampleDeleteMooseErrors [
 ]
 
 { #category : #'as yet unclassified' }
-SPDeleteCommitsWithImportErrors >> executeForRepo: aRepoToCommitRef after: aDateTime [
+SPDeleteCommitsWithImportErrors >> executeForRepo: aRepo after: aDateTime [
+
+	aRepo commitRefs do: [ :each |
+		self executeForRepoRef: each after: aDateTime ]
+]
+
+{ #category : #'as yet unclassified' }
+SPDeleteCommitsWithImportErrors >> executeForRepoRef: aRepoToCommitRef after: aDateTime [
 
 	| commits errorCommits |
 	

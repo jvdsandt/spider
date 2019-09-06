@@ -70,9 +70,9 @@ SPClassToVariableRef class >> type: anInteger variable: aVarSymbol [
 ]
 
 { #category : #'instance creation' }
-SPClassToVariableRef class >> type: anInteger variable: aVarSymbol expression: aString [
+SPClassToVariableRef class >> type: anInteger variable: aVarName expression: aString [
 
-	^ self new initType: anInteger variable: aVarSymbol expression: aString
+	^ self new initType: anInteger variable: aVarName asSymbol expression: aString
 ]
 
 { #category : #comparing }

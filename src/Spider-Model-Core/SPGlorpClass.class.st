@@ -521,14 +521,6 @@ SPGlorpClass >> typeName [
 	^ nil
 ]
 
-{ #category : #internal }
-SPGlorpClass >> updateComment: newComment [
-
-	comment := newComment.
-	self initClassHash
-	
-]
-
 { #category : #accessing }
 SPGlorpClass >> variableRefs [
 	^ variableRefs
