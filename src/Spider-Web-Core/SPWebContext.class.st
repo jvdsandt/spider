@@ -89,6 +89,14 @@ SPWebContext >> context: anObject [
 	context := anObject
 ]
 
+{ #category : #enumerating }
+SPWebContext >> do: aBlock [
+
+	SPCurrentContext 
+		value: self context
+		during: aBlock
+]
+
 { #category : #accessing }
 SPWebContext >> glorpSession [
 	^ context glorpSession

@@ -11,7 +11,7 @@ Class {
 { #category : #accessing }
 SPBatchOperation >> classRepo [
 
-	^ context classRepo
+	^ self context classRepo
 ]
 
 { #category : #accessing }
@@ -27,19 +27,27 @@ SPBatchOperation >> context: anObject [
 { #category : #accessing }
 SPBatchOperation >> gitRepo [
 
-	^ context gitRepo
+	^ self context gitRepo
 ]
 
 { #category : #accessing }
 SPBatchOperation >> glorpSession [
 
-	^ context glorpSession
+	^ self context glorpSession
+]
+
+{ #category : #initialization }
+SPBatchOperation >> initialize [
+
+	super initialize.
+	
+	context := SPCurrentContext value
 ]
 
 { #category : #accessing }
 SPBatchOperation >> p3client [
 
-	^ context client
+	^ self context client
 ]
 
 { #category : #accessing }
@@ -51,7 +59,7 @@ SPBatchOperation >> p3prepare: sqlString [
 { #category : #accessing }
 SPBatchOperation >> packageRepo [
 
-	^ context packageRepo
+	^ self context packageRepo
 ]
 
 { #category : #accessing }

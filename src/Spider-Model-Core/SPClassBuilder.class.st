@@ -209,6 +209,7 @@ SPClassBuilder >> setTonelFileReference: aFileRef [
 
 	| mcDefs classDefs methodDefs |
 	
+	MCDefinition cleanUp.
 	mcDefs := aFileRef readStreamDo: [ :s | TonelParser parseStream: s ].
 	
 	classDefs := mcDefs select: [ :each | each isClassDefinition ].

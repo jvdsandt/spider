@@ -43,16 +43,16 @@ SPGitCommit >> = other [
 ]
 
 { #category : #adding }
-SPGitCommit >> addIdsTo: aSet [
-	"Add the receivers id and id's of its parents to <aSet>. If the receivers id
+SPGitCommit >> addAllTo: aSet after: aDateTime [
+	"Add the receivers and all of its parents to <aSet>. If the receivers 
 	is already present in <aSet> we assume that the parents are also already added
 	to <aSet>."
 	
-	(aSet includes: self id)
+	(self datetime <= aDateTime or: [ aSet includes: self ])
 		ifTrue: [ ^ self ].
 		
-	aSet add: self id.
-	self parents do: [ :each | each addIdsTo: aSet ].
+	aSet add: self.
+	self parents do: [ :each | each addAllTo: aSet after: aDateTime ].
 ]
 
 { #category : #accessing }
@@ -253,10 +253,7 @@ SPGitCommit >> withAllParentsAfter: aDateTime [
 
 	| coll |
 
-	self datetime <= aDateTime 
-		ifTrue: [ ^#() ].
-		
-	coll := Set with: self.
-	self parents do: [ :each | coll addAll: (each withAllParentsAfter: aDateTime) ].
+	coll := Set new.
+	self addAllTo: coll after: aDateTime.
 	^ coll
 ]

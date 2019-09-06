@@ -24,14 +24,15 @@ SPUpdateGitRepoCommitRefs >> executeForRepo: aRepo [
 { #category : #executing }
 SPUpdateGitRepoCommitRefs >> executeForRepo: aRepo txid: txid [
 
-	| statement result existingIds newIds idsToDelete idsToInsert |
+	| statement result existingIds newCommits newIds idsToDelete idsToInsert |
 	
 	statement := self p3client format: 'SELECT commit_id FROM git_repo_commits WHERE repo_id = $1'.
 	result := statement query: (Array with: aRepo id).
 	existingIds := result data collect: [ :eachRow | eachRow first ].
 	
-	newIds := Set new.
-	aRepo commitRefs do: [ :each | each commit addIdsTo: newIds ].
+	newCommits := Set new.
+	aRepo commitRefs do: [ :each | each commit addAllTo: newCommits after: (DateAndTime fromUnixTime: 0) ].
+	newIds := newCommits collect: [ :each | each id ].
 	
 	idsToDelete := existingIds copyWithoutAll: newIds.
 	idsToInsert := newIds copyWithoutAll: existingIds.

@@ -122,7 +122,7 @@ SPLibGitCommitBuilder >> buildPackagesFromDiffs: aParents [
 
 	| parentForDiff |
 	
-	parentForDiff := parents first.
+	parentForDiff := aParents first.
 	[ parentForDiff notNil and: [ parentForDiff isImportError ] ]
 		whileTrue: [ 
 			parentForDiff := parentForDiff parents isEmpty
