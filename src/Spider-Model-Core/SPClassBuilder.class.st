@@ -19,7 +19,7 @@ SPClassBuilder >> addClassInstanceVarSlot: aSlot [
 
 	expression := aSlot definitionString.
 
-	variableRefs add: (
+	self addVariableRef: (
 		SPClassToVariableRef type: SPClassToVariableRef classInstanceVarType 
 			variable: aSlot name
 			expression: (aSlot name printString = expression ifTrue: [ nil ] ifFalse: [ expression ]))
@@ -29,7 +29,7 @@ SPClassBuilder >> addClassInstanceVarSlot: aSlot [
 { #category : #adding }
 SPClassBuilder >> addClassVar: aVarName [
 
-	variableRefs add: (SPClassToVariableRef classVar: aVarName)
+	self addVariableRef: (SPClassToVariableRef classVar: aVarName)
 ]
 
 { #category : #adding }
@@ -39,7 +39,7 @@ SPClassBuilder >> addInstanceVarSlot: aSlot [
 
 	expression := aSlot definitionString.
 
-	variableRefs add: (
+	self addVariableRef: (
 		SPClassToVariableRef type: SPClassToVariableRef instanceVarType 
 			variable: aSlot name
 			expression: (aSlot name printString = expression ifTrue: [ nil ] ifFalse: [ expression ]))
@@ -61,14 +61,25 @@ SPClassBuilder >> addMCVar: aVarName type: aVarType [
 				ifFalse: [ aVarName ].
 			expression := nil ].
 		
-	variableRefs add: (
+	self addVariableRef: (
 		SPClassToVariableRef type: aVarType variable: varName expression: expression)
 ]
 
 { #category : #adding }
 SPClassBuilder >> addPoolVar: aVarName [
 
-	variableRefs add: (SPClassToVariableRef poolVar: aVarName)
+	self addVariableRef: (SPClassToVariableRef poolVar: aVarName)
+]
+
+{ #category : #adding }
+SPClassBuilder >> addVariableRef: aVarRef [
+
+	(variableRefs anySatisfy: [ :each | each variable = aVarRef variable and: [ each type = aVarRef type ] ])
+		ifTrue: [ 
+			self logWarn: 'Duplicate variable: ', aVarRef variable.
+			^ self ].
+		
+	^ variableRefs add: aVarRef
 ]
 
 { #category : #building }

@@ -13,6 +13,12 @@ SPCodeReader class >> on: aFileReference [
 	^ self new on: aFileReference
 ]
 
+{ #category : #'instance creation' }
+SPCodeReader class >> onLGitCommit: lgitCommit format: aFormatSymbol sourceDir: aSourceDir [
+
+	
+]
+
 { #category : #'API-packages' }
 SPCodeReader >> getPackageSnapshot: aPackageName [
 

@@ -24,6 +24,46 @@ SPBatchOperation >> context: anObject [
 	context := anObject
 ]
 
+{ #category : #actions }
+SPBatchOperation >> deleteCommit: aCommit [
+	"Delete <aCommit> and all commits that are based on it (all its children recursively)"
+
+	self context 
+		doTransaction: self class name, ' - Deleting commit ', aCommit shaString
+		with: [ self deleteCommit: aCommit txid: self context currentTransactionId ]
+]
+
+{ #category : #actions }
+SPBatchOperation >> deleteCommit: aCommit txid: txid [
+	"Delete <aCommit> and all commits that are based on it (all its children recursively)"
+
+	| statement result |
+	
+	statement := self p3client format: 'SELECT count(*) FROM git_commits WHERE id = $1'.
+	result := statement query: (Array with: aCommit id).
+	result firstRecord first = 0
+		ifTrue: [ ^ self ].	
+
+	aCommit children do: [ :each |
+		self deleteCommit: each txid: txid ].
+	
+	statement := self p3client format: 'DELETE FROM git_repo_refs WHERE commit_id = $1'.
+	statement execute: (Array with: aCommit id).
+	
+	statement := self p3client format: 'DELETE FROM git_repo_commits WHERE commit_id = $1'.
+	statement execute: (Array with: aCommit id).
+
+	statement := self p3client format: 'DELETE FROM git_commit_pack_refs WHERE commit_id = $1'.
+	statement execute: (Array with: aCommit id).
+
+	statement := self p3client format: 'DELETE FROM git_commit_parent_refs WHERE commit_id = $1'.
+	statement execute: (Array with: aCommit id).
+
+	statement := self p3client format: 'DELETE FROM git_commits WHERE id = $1'.
+	statement execute: (Array with: aCommit id).
+	
+]
+
 { #category : #accessing }
 SPBatchOperation >> gitRepo [
 

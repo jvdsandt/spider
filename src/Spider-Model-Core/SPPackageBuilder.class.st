@@ -18,9 +18,16 @@ SPPackageBuilder >> addClass: aSpiderClass category: aCategory [
 	(self isNameUnique: aSpiderClass name)
 		ifFalse: [ self error: 'Classname not unique in package' ].
 	
-	subCategory := (aCategory notNil and: [ aCategory beginsWith: self name, '-' ])
-		ifTrue: [ aCategory allButFirst: self name size + 1 ]
+	subCategory := aCategory notNil 
+		ifTrue: [ 
+			aCategory = self name
+				ifTrue: [ nil ]
+				ifFalse: [ 
+					(aCategory beginsWith: self name, '-')
+						ifTrue: [ aCategory allButFirst: self name size + 1 ]
+						ifFalse: [ aCategory ] ] ]
 		ifFalse: [ aCategory ].
+	
 	subCategory notNil
 		ifTrue: [ 
 			subCategory := subCategory trimBoth.

@@ -41,6 +41,11 @@ SPImporter >> context [
 	^ context
 ]
 
+{ #category : #accessing }
+SPImporter >> gitRepo [
+	^ self context gitRepo
+]
+
 { #category : #initialization }
 SPImporter >> initWithContext: aSPiderContext [
 

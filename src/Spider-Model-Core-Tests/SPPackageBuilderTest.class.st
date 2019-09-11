@@ -39,6 +39,12 @@ SPPackageBuilderTest >> testCategoryCleanup [
 		build.
 	self assert: (p classRefNamed: #C1) category equals: 'P-Stuff'.
 
+	p := SPPackageBuilder new
+		name: 'P';
+		addClass: (self createSampleClass: #C1) category: 'P';
+		build.
+	self assert: (p classRefNamed: #C1) category equals: nil.
+
 ]
 
 { #category : #tests }

@@ -10,7 +10,7 @@ SPFileTreeLibGitDiff >> isPackagePath: aPath [
 	| dirName |
 
 	dirName := aPath readStream upTo: $/.
-	^ (dirName indexOfSubCollection: '.package/') > 0
+	^ dirName endsWith: '.package'
 ]
 
 { #category : #'as yet unclassified' }

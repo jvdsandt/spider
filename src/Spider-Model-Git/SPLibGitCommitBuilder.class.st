@@ -89,7 +89,12 @@ SPLibGitCommitBuilder >> buildPackages [
 	diffParents := parents select: [ :each | each format = format and: [ each hasPackages ] ].
 	diffParents isEmpty
 		ifTrue: [ self buildAllPackages ]
-		ifFalse: [ self buildPackagesFromDiffs: diffParents ]
+		ifFalse: [ self buildPackagesFromDiffs: diffParents ].
+		
+	codeReader packageNames sorted asArray = (self packages collect: #name) sorted asArray
+		ifFalse: [ self halt ]
+		
+		
 
 ]
 
