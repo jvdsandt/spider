@@ -68,17 +68,3 @@ SPFixSlotVariableRefs >> rehashPackageIds: aList [
 		doTransaction: (self class name, ' - rehashing packages') asString
 		with: [ self rehashPackageIds: aList txid: self context currentTransactionId ]
 ]
-
-{ #category : #execution }
-SPFixSlotVariableRefs >> rehashPackageIds: aList txid: txid [
-
-	aList do: [ :eachId |
-		| package oldHash |
-		package := self packageRepo getPackageById: eachId.
-		oldHash := package packageHash.
-		package initPackageHash.
-		package packageHash = oldHash 
-			ifFalse: [ self packageRepo updateHash: package ] ].
-		
-	self logInfo: aList size printString, ' package hashes updated'
-]

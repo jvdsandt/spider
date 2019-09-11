@@ -107,3 +107,17 @@ SPBatchOperation >> queries [
 
 	^ queries ifNil: [ queries := SPP3Queries new initWithClient: self p3client ]
 ]
+
+{ #category : #execution }
+SPBatchOperation >> rehashPackageIds: aList txid: txid [
+
+	aList do: [ :eachId |
+		| package oldHash |
+		package := self packageRepo getPackageById: eachId.
+		oldHash := package packageHash.
+		package initPackageHash.
+		package packageHash = oldHash 
+			ifFalse: [ self packageRepo updateHash: package ] ].
+		
+	self logInfo: aList size printString, ' package hashes updated'
+]
