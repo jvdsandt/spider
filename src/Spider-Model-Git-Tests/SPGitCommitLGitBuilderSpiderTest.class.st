@@ -13,7 +13,7 @@ SPGitCommitLGitBuilderSpiderTest >> createLGitRepo [
 { #category : #accessing }
 SPGitCommitLGitBuilderSpiderTest >> testBuildCommit1 [
 
-	| commit resolver builder spCommit spPackage |
+	| commit resolver builder spCommit spPackage diffs |
 
 	commit := self lgitRepo revparse: '82a2d28'.
 	resolver := (SPGitFormatResolver onGitCommit: commit)
@@ -44,8 +44,11 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit1 [
 	self assert: spPackage name equals: 'Spider-GitDemo1'.
 	self assert: spPackage classRefs isEmpty.
 	
-	
-	
+	diffs := spCommit diffs.
+	self assert: diffs size equals: 1.
+	self assert: diffs first class equals: SPAddedPackage.
+	self assert: diffs first name equals: 'Spider-GitDemo1'.
+		
 
 
 ]
@@ -76,7 +79,7 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit1TwoTimes [
 { #category : #accessing }
 SPGitCommitLGitBuilderSpiderTest >> testBuildCommit2 [
 
-	| commit resolver builder spCommit spPackage |
+	| commit resolver builder spCommit spPackage diffs packageDiff |
 
 	commit := self lgitRepo revparse: '3035b8e'.
 	resolver := (SPGitFormatResolver onGitCommit: commit)
@@ -107,6 +110,14 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit2 [
 	spPackage := spCommit packages first.
 	self assert: spPackage classNames equals: #( SpiderGitDemoClass ).
 	
+	diffs := spCommit diffs.
+	self assert: diffs size equals: 1.
+	packageDiff := diffs first.
+	self assert: packageDiff class equals: SPUpdatedPackage.
+	self assert: packageDiff name equals: 'Spider-GitDemo1'.
+	self assert: packageDiff classDiffs size equals: 1.
+	self assert: packageDiff classDiffs first class equals: SPAddedClass.
+	self assert: packageDiff classDiffs first name equals: #SpiderGitDemoClass.
 	
 	
 
@@ -181,7 +192,8 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit6 [
 	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
 	self assert: spCommit sourceDir equals: 'src'.
 
-	self assert: spCommit parents first packages equals: spCommit packages
+	self assert: spCommit parents first packages equals: spCommit packages.
+	self assert: spCommit diffs isEmpty.
 ]
 
 { #category : #accessing }
@@ -217,5 +229,27 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit8 [
 	
 	self assert: spCommit message trimRight equals: 'Removed second package'.
 	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+
+]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommitMerge20190910 [
+
+	| spCommit |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: 'fee361b');
+		build.
+	
+	self assert: spCommit message equals: 'Merge pull request #1 from jvdsandt/feature-123
+
+Feature 123' withUnixLineEndings.
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+	self assert: spCommit parents size equals: 2.
+	self assert: (spCommit parents collect: [ :e | e shaShortString ]) asArray equals: #( '4946380' 'e5344df' ).
+	
+	"self assert: spCommit diffs isEmpty"
+	
 
 ]
