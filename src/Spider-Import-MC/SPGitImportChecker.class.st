@@ -10,14 +10,14 @@ Class {
 	#category : #'Spider-Import-MC'
 }
 
-{ #category : #examples }
+{ #category : #actions }
 SPGitImportChecker class >> checkAll [
 
 	SPWebContext default do: [ 
 		self checkAllIn: SPCurrentContext value ]
 ]
 
-{ #category : #examples }
+{ #category : #actions }
 SPGitImportChecker class >> checkAllIn: aContext [
 
 	| repos |
@@ -33,6 +33,17 @@ SPGitImportChecker class >> checkAllIn: aContext [
 				(self newWithContext: aContext repoUrl: each url)
 					checkAll;
 					release ] ]
+]
+
+{ #category : #actions }
+SPGitImportChecker class >> deleteInvalidCommits: aRepoUrl [
+	
+	SPWebContext default do: [ 
+		| instance |
+		instance := self newWithContext: SPCurrentContext value repoUrl: aRepoUrl.
+		instance checkAll.
+		instance deleteInvalidCommits.
+		instance release ]
 ]
 
 { #category : #examples }

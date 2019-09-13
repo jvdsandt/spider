@@ -163,7 +163,8 @@ SPGitFormatResolver >> resolveSourceDirectory [
 	projectJson isNil
 		ifTrue: [ ^ self ].
 		
-	sourceDirectory := projectJson at: 'srcDirectory' ifAbsent: [ nil ].
+	sourceDirectory := projectJson at: 'srcDirectory' 
+		ifAbsent: [ ^ self ].
 	sourceDirectory := (fileReference / sourceDirectory) exists
 		ifTrue: [ self cleanDirectoryName: sourceDirectory ]
 		ifFalse: [ nil ]
