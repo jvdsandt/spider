@@ -143,11 +143,13 @@ SPGitRDBRepository >> getRefsToCommit: aCommit [
 { #category : #queries }
 SPGitRDBRepository >> getRepo: aDomain owner: anOwner name: aName ifAbsent: aBlock [
 
-	| searchUrl repo |
+	| searchUrl query repo |
 	
 	searchUrl := SPGitRepo searchUrlFor: aDomain owner: anOwner name: aName.
-	repo := self glorpSession readOneOf: SPGitRepo 
+	query := Query readOneOf: SPGitRepo 
 			where: [ :e | e url asLowercase like: searchUrl asLowercase ].
+	query shouldRefresh: true.
+	repo := self glorpSession execute: query.
 	^ repo isNil
 			ifTrue: [ aBlock value ]
 			ifFalse: [ repo ]

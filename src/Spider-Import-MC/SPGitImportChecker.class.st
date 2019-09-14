@@ -11,6 +11,16 @@ Class {
 }
 
 { #category : #actions }
+SPGitImportChecker class >> check: aRepoUrl [
+	
+	SPWebContext default do: [ 
+		| instance |
+		instance := self newWithContext: SPCurrentContext value repoUrl: aRepoUrl.
+		instance checkAll.
+		instance release ]
+]
+
+{ #category : #actions }
 SPGitImportChecker class >> checkAll [
 
 	SPWebContext default do: [ 

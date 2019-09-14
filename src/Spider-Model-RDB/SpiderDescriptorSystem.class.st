@@ -337,8 +337,10 @@ SpiderDescriptorSystem >> descriptorForSPGitRepo: aDescriptor [
 		join: (Join
 			from: (table fieldNamed: 'ID')
 			to: ((self tableNamed: 'GIT_REPO_REFS') fieldNamed: 'REPO_ID')).
-	mapping query alsoFetch: [ :each | each commit ].
-	mapping query orderBy: [ :each | each commit authorSignature datetime ].
+	mapping query 
+		shouldRefresh: true;
+		alsoFetch: [ :each | each commit ];
+		orderBy: [ :each | each commit authorSignature datetime ].
 	
 	(aDescriptor newMapping: ManyToManyMapping)
 		attributeName: #commits;
