@@ -13,7 +13,7 @@ SPQueries >> allMCAuthorsByName [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloPackage)
+	query := (Query read: SPMonticelloPackage)
 		retrieve: [ :each | each author ];
 		retrieve: [ :each | each datetime min ];
 		retrieve: [ :each | each datetime max ];
@@ -30,7 +30,7 @@ SPQueries >> allMCPackageNamesByCountDesc [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloPackage)
+	query := (Query read: SPMonticelloPackage)
 		retrieve: [ :each | each name ];
 		retrieve: [ :each | each datetime min ];
 		retrieve: [ :each | each datetime max ];
@@ -47,7 +47,7 @@ SPQueries >> allMCPackageNamesByDatetimeMaxDesc [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloPackage)
+	query := (Query read: SPMonticelloPackage)
 		retrieve: [ :each | each name ];
 		retrieve: [ :each | each datetime min ];
 		retrieve: [ :each | each datetime max ];
@@ -64,7 +64,7 @@ SPQueries >> allMCPackageNamesByDatetimeMin [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloPackage)
+	query := (Query read: SPMonticelloPackage)
 		retrieve: [ :each | each name ];
 		retrieve: [ :each | each datetime min ];
 		retrieve: [ :each | each datetime max ];
@@ -81,7 +81,7 @@ SPQueries >> allMCPackageNamesByName [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloPackage)
+	query := (Query read: SPMonticelloPackage)
 		retrieve: [ :each | each name ];
 		retrieve: [ :each | each datetime min ];
 		retrieve: [ :each | each datetime max ];
@@ -98,7 +98,7 @@ SPQueries >> allMCPackagesWithAuthor: anAuthor [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloPackage where: [ :e | e author = anAuthor ])
+	query := (Query read: SPMonticelloPackage where: [ :e | e author = anAuthor ])
 		orderBy: [ :each | each name descending ];
 		orderBy: [ :each | each datetime descending ];
 		yourself.
@@ -111,7 +111,7 @@ SPQueries >> allMCRepositories [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloRepository)
+	query := (Query read: SPMonticelloRepository)
 		orderBy: [ :each | each repoUrl ];
 		yourself.
 	
@@ -123,7 +123,7 @@ SPQueries >> allMCRepositories: maxResults after: aKey [
 
 	| query |
 	
-	query := Query read: SPGlorpMonticelloRepository.
+	query := Query read: SPMonticelloRepository.
 	aKey notNil
 		ifTrue: [ query where: [ :e | e repoUrl > aKey ] ].
 	query orderBy: [ :each | each repoUrl ].
@@ -137,7 +137,7 @@ SPQueries >> allMCRepositoriesWithAuthor: anAuthor [
 
 	| query |
 	
-	query := (Query read: SPGlorpMonticelloRepository where: [ :each | each mcPackageRefs anySatisfy: [ :p | p mcPackage author = anAuthor ] ])
+	query := (Query read: SPMonticelloRepository where: [ :each | each mcPackageRefs anySatisfy: [ :p | p mcPackage author = anAuthor ] ])
 		orderBy: [ :each | each repoUrl ];
 		yourself.
 	

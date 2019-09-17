@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpMonticelloRepoToPackageRef,
+	#name : #SPMonticelloRepoToPackageRef,
 	#superclass : #SPGlorpRef,
 	#instVars : [
 		'filename',
@@ -9,17 +9,17 @@ Class {
 }
 
 { #category : #accessing }
-SPGlorpMonticelloRepoToPackageRef >> datetime [
+SPMonticelloRepoToPackageRef >> datetime [
 
 	^ self mcPackage datetime
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloRepoToPackageRef >> filename [
+SPMonticelloRepoToPackageRef >> filename [
 	^ filename
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloRepoToPackageRef >> mcPackage [
+SPMonticelloRepoToPackageRef >> mcPackage [
 	^ mcPackage
 ]

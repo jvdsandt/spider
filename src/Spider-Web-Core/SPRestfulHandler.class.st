@@ -68,6 +68,12 @@ SPRestfulHandler >> maxLimit [
 ]
 
 { #category : #accessing }
+SPRestfulHandler >> mcPackageRepo [
+
+	^ self context mcPackageRepo
+]
+
+{ #category : #accessing }
 SPRestfulHandler >> methodRepo [
 
 	^ self context methodRepo

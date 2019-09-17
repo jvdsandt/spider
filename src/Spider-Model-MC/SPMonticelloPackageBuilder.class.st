@@ -83,7 +83,7 @@ SPMonticelloPackageBuilder >> buildFromMCVersionInfo: aMCVersionInfo [
 { #category : #internal }
 SPMonticelloPackageBuilder >> createMCPackage [
 	
-	^ SPGlorpMonticelloPackage name: name
+	^ SPMonticelloPackage name: name
 		mcId: mcId 
 		version: version
 		branch: branch

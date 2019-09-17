@@ -17,7 +17,7 @@ SPGlorpDiffBuilder class >> doTest [
 		glorpSession: SPWebContext default glorpSession;
 		yourself.
 	
-	query := Query read: SPGlorpMonticelloPackage where: [ :e | e name = 'Cloudfork-AWS' ].	
+	query := Query read: SPMonticelloPackage where: [ :e | e name = 'Cloudfork-AWS' ].	
 	mcPackages := instance glorpSession execute: query.
 	
 	mcPackages do: [ :each |

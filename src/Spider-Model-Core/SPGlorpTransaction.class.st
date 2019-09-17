@@ -40,7 +40,7 @@ SPGlorpTransaction >> mcPackages [
 
 	| query |
 	
-	query := Query read: SPGlorpMonticelloPackage where: [ :each | each transaction = self ].
+	query := Query read: SPMonticelloPackage where: [ :each | each transaction = self ].
 	
 	^ self glorpSession execute: query
 ]

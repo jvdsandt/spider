@@ -92,45 +92,10 @@ SpiderDescriptorSystem >> classModelForSPGlorpClass: aClassModel [
 { #category : #'class models' }
 SpiderDescriptorSystem >> classModelForSPGlorpMonticelloClassDiff: aClassModel [
 
-	aClassModel newAttributeNamed: #fromPackage type: SPGlorpMonticelloPackage.
-	aClassModel newAttributeNamed: #toPackage type: SPGlorpMonticelloPackage.
+	aClassModel newAttributeNamed: #fromPackage type: SPMonticelloPackage.
+	aClassModel newAttributeNamed: #toPackage type: SPMonticelloPackage.
 	aClassModel newAttributeNamed: #oldClass type: SPGlorpClass.
 	aClassModel newAttributeNamed: #newClass type: SPGlorpClass.
-
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpMonticelloPackage: aClassModel [
-
-	aClassModel newAttributeNamed: #id type: Integer.
-	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
-	aClassModel newAttributeNamed: #name type: Symbol.	
-	aClassModel newAttributeNamed: #mcId type: ByteArray.
-	aClassModel newAttributeNamed: #version type: Integer.	
-	aClassModel newAttributeNamed: #branch type: String.
-	aClassModel newAttributeNamed: #author type: String.
-	aClassModel newAttributeNamed: #datetime type: DateAndTime.
-	aClassModel newAttributeNamed: #message type: String.
-	aClassModel newAttributeNamed: #package type: SPPackage.
-	aClassModel newAttributeNamed: #ancestors collection: Array of: SPPackage.
-	aClassModel newAttributeNamed: #rootId type: Integer.
-
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpMonticelloRepoToPackageRef: aClassModel [
-
-	aClassModel newAttributeNamed: #filename type: String.	
-	aClassModel newAttributeNamed: #mcPackage type: SPGlorpMonticelloPackage.
-]
-
-{ #category : #'class models' }
-SpiderDescriptorSystem >> classModelForSPGlorpMonticelloRepository: aClassModel [
-
-	aClassModel newAttributeNamed: #id type: Integer.
-	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
-	aClassModel newAttributeNamed: #repoUrl type: String.	
-	aClassModel newAttributeNamed: #mcPackageRefs collectionOf: SPGlorpMonticelloPackage.
 
 ]
 
@@ -178,6 +143,41 @@ SpiderDescriptorSystem >> classModelForSPMethodToVariableRef: aClassModel [
 	aClassModel
 		newAttributeNamed: #variable type: Symbol;
 		newAttributeNamed: #flags type: Integer
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPMonticelloPackage: aClassModel [
+
+	aClassModel newAttributeNamed: #id type: Integer.
+	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
+	aClassModel newAttributeNamed: #name type: Symbol.	
+	aClassModel newAttributeNamed: #mcId type: ByteArray.
+	aClassModel newAttributeNamed: #version type: Integer.	
+	aClassModel newAttributeNamed: #branch type: String.
+	aClassModel newAttributeNamed: #author type: String.
+	aClassModel newAttributeNamed: #datetime type: DateAndTime.
+	aClassModel newAttributeNamed: #message type: String.
+	aClassModel newAttributeNamed: #package type: SPPackage.
+	aClassModel newAttributeNamed: #ancestors collection: Array of: SPMonticelloPackage.
+	aClassModel newAttributeNamed: #rootId type: Integer.
+
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPMonticelloRepoToPackageRef: aClassModel [
+
+	aClassModel newAttributeNamed: #filename type: String.	
+	aClassModel newAttributeNamed: #mcPackage type: SPMonticelloPackage.
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPMonticelloRepository: aClassModel [
+
+	aClassModel newAttributeNamed: #id type: Integer.
+	aClassModel newAttributeNamed: #transaction type: SPGlorpTransaction.
+	aClassModel newAttributeNamed: #repoUrl type: String.	
+	aClassModel newAttributeNamed: #mcPackageRefs collectionOf: SPMonticelloPackage.
+
 ]
 
 { #category : #'class models' }
@@ -488,134 +488,6 @@ SpiderDescriptorSystem >> descriptorForSPGlorpMonticelloClassDiff: aDescriptor [
 ]
 
 { #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpMonticelloPackage: aDescriptor [
-
-	| table packageTable ancestorsRefsTable |
-	
-	table := self tableNamed: 'MC_PACKAGES'.
-	packageTable := self tableNamed: 'PACKAGES'.
-	ancestorsRefsTable := self tableNamed: 'MC_PACKAGE_ANCESTORS'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #id to: (table fieldNamed: 'ID').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #name to: (table fieldNamed: 'NAME').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #mcId to: (table fieldNamed: 'MC_ID').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #datetime to: (table fieldNamed: 'DATETIME').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #author to: (table fieldNamed: 'AUTHOR').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #version to: (table fieldNamed: 'VERSION').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #message to: (table fieldNamed: 'MESSAGE').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #branch to: (table fieldNamed: 'BRANCH').
-
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #transaction;
-		join: (Join
-			from: (table fieldNamed: 'TXID')
-			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
-
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #package;
-		join: (Join
-			from: (table fieldNamed: 'PACKAGE_ID')
-			to: (packageTable fieldNamed: 'ID')).
-
-	(aDescriptor newMapping: ManyToManyMapping)
-		attributeName: #ancestors;
-		referenceClass: SPGlorpMonticelloPackage;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: (ancestorsRefsTable fieldNamed: 'MC_PACKAGE_ID')).
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpMonticelloRepoToPackageRef: aDescriptor [
-
-	| table mcPackageTable |
-	
-	table := self tableNamed: 'MC_REPO_PACK_REFS'.
-	mcPackageTable := self tableNamed: 'MC_PACKAGES'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #filename to: (table fieldNamed: 'FILENAME').
-
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #mcPackage;
-		join: (Join
-			from: (table fieldNamed: 'MC_PACKAGE_ID')
-			to: (mcPackageTable fieldNamed: 'ID')).
-			
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #repository;
-		beForPseudoVariable;
-		referenceClass: SPGlorpMonticelloRepository;
-		join: (Join
-			from: (table fieldNamed: 'MC_REPO_ID')
-			to: ((self tableNamed: 'MC_REPOS') fieldNamed: 'ID')).
-
-
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpMonticelloRepository: aDescriptor [
-
-	| table packageRefsTable |
-	
-	table := self tableNamed: 'MC_REPOS'.
-	packageRefsTable := self tableNamed: 'MC_REPO_PACK_REFS'.
-
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #id to: (table fieldNamed: 'ID').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #repoUrl to: (table fieldNamed: 'REPO_URL').
-
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #transaction;
-		join: (Join
-			from: (table fieldNamed: 'TXID')
-			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
-
-	(aDescriptor newMapping: OneToManyMapping)
-		attributeName: #mcPackageRefs;
-		referenceClass: SPGlorpMonticelloRepoToPackageRef;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: (packageRefsTable fieldNamed: 'MC_REPO_ID')).
-
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpSelector: aDescriptor [
-
-	| table |
-	
-	table := self tableNamed: 'SELECTORS'.
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #id to: (table fieldNamed: 'ID').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #selector to: (table fieldNamed: 'SELECTOR').
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #transaction;
-		join: (Join
-			from: (table fieldNamed: 'TXID')
-			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID'))
-
-]
-
-{ #category : #descriptors }
 SpiderDescriptorSystem >> descriptorForSPGlorpSession: aDescriptor [
 
 	| table |
@@ -651,27 +523,6 @@ SpiderDescriptorSystem >> descriptorForSPGlorpTransaction: aDescriptor [
 		join: (Join
 			from: (table fieldNamed: 'SP_SESSION_ID')
 			to: ((self tableNamed: 'SP_SESSIONS') fieldNamed: 'ID')).
-
-]
-
-{ #category : #descriptors }
-SpiderDescriptorSystem >> descriptorForSPGlorpVariable: aDescriptor [
-
-	| table |
-	
-	table := self tableNamed: 'VARIABLES'.
-	aDescriptor table: table.
-	
-	(aDescriptor newMapping: DirectMapping) 
-		from: #id to: (table fieldNamed: 'ID').
-	(aDescriptor newMapping: DirectMapping) 
-		from: #variable to: (table fieldNamed: 'VARIABLE').
-	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #transaction;
-		referenceClass: SPGlorpTransaction;
-		join: (Join
-			from: (table fieldNamed: 'TXID')
-			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID'))
 
 ]
 
@@ -761,6 +612,114 @@ SpiderDescriptorSystem >> descriptorForSPMethodToVariableRef: aDescriptor [
 		from: #variable to: (table fieldNamed: 'VARIABLE').
 	(aDescriptor newMapping: DirectMapping) 
 		from: #flags to: (table fieldNamed: 'FLAGS').
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPMonticelloPackage: aDescriptor [
+
+	| table packageTable ancestorsRefsTable |
+	
+	table := self tableNamed: 'MC_PACKAGES'.
+	packageTable := self tableNamed: 'PACKAGES'.
+	ancestorsRefsTable := self tableNamed: 'MC_PACKAGE_ANCESTORS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #id to: (table fieldNamed: 'ID').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #name to: (table fieldNamed: 'NAME').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #mcId to: (table fieldNamed: 'MC_ID').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #datetime to: (table fieldNamed: 'DATETIME').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #author to: (table fieldNamed: 'AUTHOR').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #version to: (table fieldNamed: 'VERSION').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #message to: (table fieldNamed: 'MESSAGE').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #branch to: (table fieldNamed: 'BRANCH').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #transaction;
+		join: (Join
+			from: (table fieldNamed: 'TXID')
+			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #package;
+		join: (Join
+			from: (table fieldNamed: 'PACKAGE_ID')
+			to: (packageTable fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: ManyToManyMapping)
+		attributeName: #ancestors;
+		referenceClass: SPMonticelloPackage;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: (ancestorsRefsTable fieldNamed: 'MC_PACKAGE_ID')).
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPMonticelloRepoToPackageRef: aDescriptor [
+
+	| table mcPackageTable |
+	
+	table := self tableNamed: 'MC_REPO_PACK_REFS'.
+	mcPackageTable := self tableNamed: 'MC_PACKAGES'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #filename to: (table fieldNamed: 'FILENAME').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #mcPackage;
+		join: (Join
+			from: (table fieldNamed: 'MC_PACKAGE_ID')
+			to: (mcPackageTable fieldNamed: 'ID')).
+			
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #repository;
+		beForPseudoVariable;
+		referenceClass: SPMonticelloRepository;
+		join: (Join
+			from: (table fieldNamed: 'MC_REPO_ID')
+			to: ((self tableNamed: 'MC_REPOS') fieldNamed: 'ID')).
+
+
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPMonticelloRepository: aDescriptor [
+
+	| table packageRefsTable |
+	
+	table := self tableNamed: 'MC_REPOS'.
+	packageRefsTable := self tableNamed: 'MC_REPO_PACK_REFS'.
+
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #id to: (table fieldNamed: 'ID').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #repoUrl to: (table fieldNamed: 'REPO_URL').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #transaction;
+		join: (Join
+			from: (table fieldNamed: 'TXID')
+			to: ((self tableNamed: 'SP_TRANSACTIONS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToManyMapping)
+		attributeName: #mcPackageRefs;
+		referenceClass: SPMonticelloRepoToPackageRef;
+		join: (Join
+			from: (table fieldNamed: 'ID')
+			to: (packageRefsTable fieldNamed: 'MC_REPO_ID')).
+
 ]
 
 { #category : #descriptors }

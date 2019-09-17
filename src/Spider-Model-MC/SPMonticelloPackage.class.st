@@ -1,5 +1,5 @@
 Class {
-	#name : #SPGlorpMonticelloPackage,
+	#name : #SPMonticelloPackage,
 	#superclass : #SPGlorpNode,
 	#instVars : [
 		'name',
@@ -17,7 +17,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-SPGlorpMonticelloPackage class >> name: aName mcId: aMcId version: mcVersion branch: aBranch author: mcAuthor datetime: aTimestamp message: aMessage package: aPackeOrNil ancestors: anAncestorColl [
+SPMonticelloPackage class >> name: aName mcId: aMcId version: mcVersion branch: aBranch author: mcAuthor datetime: aTimestamp message: aMessage package: aPackeOrNil ancestors: anAncestorColl [
 
 	^ self new initWithName: aName 
 			mcId: aMcId 
@@ -31,13 +31,13 @@ SPGlorpMonticelloPackage class >> name: aName mcId: aMcId version: mcVersion bra
 ]
 
 { #category : #comparing }
-SPGlorpMonticelloPackage >> <= other [
+SPMonticelloPackage >> <= other [
 
 	^ datetime <= other datetime
 ]
 
 { #category : #comparing }
-SPGlorpMonticelloPackage >> = other [
+SPMonticelloPackage >> = other [
 
 	self == other ifTrue: [ ^ true ].
 	self species = other species ifFalse: [ ^ false ].
@@ -46,22 +46,22 @@ SPGlorpMonticelloPackage >> = other [
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> ancestors [
+SPMonticelloPackage >> ancestors [
 	^ ancestors
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> author [
+SPMonticelloPackage >> author [
 	^ author
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> branch [
+SPMonticelloPackage >> branch [
 	^ branch
 ]
 
 { #category : #actions }
-SPGlorpMonticelloPackage >> createClassDiffRecords [
+SPMonticelloPackage >> createClassDiffRecords [
 
 	| records |
 
@@ -84,12 +84,12 @@ SPGlorpMonticelloPackage >> createClassDiffRecords [
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> datetime [
+SPMonticelloPackage >> datetime [
 	^ datetime
 ]
 
 { #category : #queries }
-SPGlorpMonticelloPackage >> descendants [
+SPMonticelloPackage >> descendants [
 
 	| query |
 	
@@ -100,19 +100,19 @@ SPGlorpMonticelloPackage >> descendants [
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> fullName [
+SPMonticelloPackage >> fullName [
 
 	^self name, '-', self author, '.', self version asString
 ]
 
 { #category : #comparing }
-SPGlorpMonticelloPackage >> hash [
+SPMonticelloPackage >> hash [
 
 	^ self mcId hash
 ]
 
 { #category : #initialization }
-SPGlorpMonticelloPackage >> initWithName: aName mcId: aMcId version: mcVersion branch: aBranch author: mcAuthor datetime: aTimestamp message: aMessage package: aPackeOrNil ancestors: anAncestorColl [
+SPMonticelloPackage >> initWithName: aName mcId: aMcId version: mcVersion branch: aBranch author: mcAuthor datetime: aTimestamp message: aMessage package: aPackeOrNil ancestors: anAncestorColl [
 
 	name := aName.
 	mcId := aMcId.
@@ -126,32 +126,32 @@ SPGlorpMonticelloPackage >> initWithName: aName mcId: aMcId version: mcVersion b
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> mcId [
+SPMonticelloPackage >> mcId [
 	^ mcId
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> message [
+SPMonticelloPackage >> message [
 	^ message
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> name [
+SPMonticelloPackage >> name [
 	^ name
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> package [
+SPMonticelloPackage >> package [
 	^ package
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> rootId [
+SPMonticelloPackage >> rootId [
 	^ rootId
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> uuid [
+SPMonticelloPackage >> uuid [
 
 	| newUUID |
 	
@@ -161,6 +161,6 @@ SPGlorpMonticelloPackage >> uuid [
 ]
 
 { #category : #accessing }
-SPGlorpMonticelloPackage >> version [
+SPMonticelloPackage >> version [
 	^ version
 ]

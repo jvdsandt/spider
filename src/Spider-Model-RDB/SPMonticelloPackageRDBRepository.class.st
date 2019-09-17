@@ -18,7 +18,7 @@ SPMonticelloPackageRDBRepository >> getMCPackageById: anId [
 
 	| query mcPackage |
 	
-	query := (Query readOneOf: SPGlorpMonticelloPackage where: [ :each | each id = anId ])
+	query := (Query readOneOf: SPMonticelloPackage where: [ :each | each id = anId ])
 		shouldRefresh: true;
 		yourself.
 
@@ -33,7 +33,7 @@ SPMonticelloPackageRDBRepository >> getMCPackageByName: aName andMcId: aBytes if
 
 	| mcPackage |
 	
-	mcPackage := self glorpSession readOneOf: SPGlorpMonticelloPackage 
+	mcPackage := self glorpSession readOneOf: SPMonticelloPackage 
 		where: [ :e | e name = aName AND: [ e mcId = aBytes ] ].
 
 	^ mcPackage isNil
@@ -46,7 +46,7 @@ SPMonticelloPackageRDBRepository >> getMCPackageForRepo: aRepoUrl andFile: aFile
 
 	| mcPackageRef |
 	
-	mcPackageRef := self glorpSession readOneOf: SPGlorpMonticelloRepoToPackageRef where: [ :e |
+	mcPackageRef := self glorpSession readOneOf: SPMonticelloRepoToPackageRef where: [ :e |
 		e repository repoUrl = aRepoUrl AND: [ e filename = aFilename ] ].
 	
 	^ mcPackageRef isNil
@@ -55,11 +55,26 @@ SPMonticelloPackageRDBRepository >> getMCPackageForRepo: aRepoUrl andFile: aFile
 ]
 
 { #category : #queries }
+SPMonticelloPackageRDBRepository >> getMCRepoById: anId ifAbsent: aBlock [
+
+	| query mcRepo |
+	
+	query := (Query readOneOf: SPMonticelloRepository where: [ :each | each id = anId ])
+		shouldRefresh: true;
+		yourself.
+
+	mcRepo := self glorpSession execute: query.
+	^ mcRepo notNil
+			ifTrue: [ mcRepo ]
+			ifFalse: [ aBlock value ]
+]
+
+{ #category : #queries }
 SPMonticelloPackageRDBRepository >> getMCRepoByUrl: anUrl ifAbsent: aBlock [
 
 	| mcRepo |
 	
-	mcRepo := self glorpSession readOneOf: SPGlorpMonticelloRepository where: [ :e | e repoUrl = anUrl ].
+	mcRepo := self glorpSession readOneOf: SPMonticelloRepository where: [ :e | e repoUrl = anUrl ].
 	^ mcRepo isNil
 		ifTrue: [ aBlock value ]
 		ifFalse: [ mcRepo ]
@@ -140,6 +155,19 @@ SPMonticelloPackageRDBRepository >> mcPackageIdOf: aMCPackage [
 	^ aMCPackage id isNil
 			ifTrue: [ self storeMCPackage: aMCPackage ]
 			ifFalse: [ aMCPackage id ]
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> selectReposByUrl: anOffset limit: aLimit [
+
+	| q |
+	
+	q := Query read: SPMonticelloRepository.
+	q orderBy: [ :e | e repoUrl ].
+	q offset: anOffset.
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
 ]
 
 { #category : #storing }
