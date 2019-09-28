@@ -92,7 +92,7 @@ SPWebContext >> context: anObject [
 { #category : #enumerating }
 SPWebContext >> do: aBlock [
 
-	SPCurrentContext 
+	^ SPCurrentContext 
 		value: self context
 		during: aBlock
 ]

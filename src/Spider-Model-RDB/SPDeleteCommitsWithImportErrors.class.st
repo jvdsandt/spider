@@ -19,6 +19,20 @@ SPDeleteCommitsWithImportErrors >> exampleDeleteIcebergErrors [
 ]
 
 { #category : #examples }
+SPDeleteCommitsWithImportErrors >> exampleDeleteMagritteErrors [
+	"SPWebContext default do: [ self new exampleDeleteMagritteErrors ]"
+
+	| repo dt |
+	
+	repo := self gitRepo getGitRepoByUrl: 'https://github.com/magritte-metamodel/magritte.git'
+		ifAbsent: [ self error: 'Repo not found' ].
+		
+	dt := DateAndTime fromUnixTime: 0.
+	
+	self executeForRepo: repo after: dt
+]
+
+{ #category : #examples }
 SPDeleteCommitsWithImportErrors >> exampleDeleteMooseErrors [
 	"SPWebContext default do: [ self new exampleDeleteMooseErrors ]"
 

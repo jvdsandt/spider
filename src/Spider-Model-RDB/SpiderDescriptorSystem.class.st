@@ -682,7 +682,7 @@ SpiderDescriptorSystem >> descriptorForSPMonticelloRepoToPackageRef: aDescriptor
 			to: (mcPackageTable fieldNamed: 'ID')).
 			
 	(aDescriptor newMapping: OneToOneMapping)
-		attributeName: #repository;
+		attributeName: #repo;
 		beForPseudoVariable;
 		referenceClass: SPMonticelloRepository;
 		join: (Join

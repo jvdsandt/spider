@@ -15,10 +15,10 @@ SPGitRepeCodeChecker class >> examplePharo [
 
 	| localRef instance |
 	
-	localRef := 'd:\stdev\repos\pharo.git' asFileReference.
+	localRef := '/Users/jan/Projects/SPImporter/github/pharo-project/pharo.git' asFileReference.
 	instance := self new initWithLocalRef: localRef.
 	
-	instance checkRevparse: 'Pharo8.0'.
+	instance checkRevparse: '3a40e7d'.
 	^ instance
 ]
 

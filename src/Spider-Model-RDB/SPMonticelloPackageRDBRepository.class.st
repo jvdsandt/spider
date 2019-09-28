@@ -16,6 +16,12 @@ SPMonticelloPackageRDBRepository >> getMCPackageAncestorsById: anId [
 { #category : #queries }
 SPMonticelloPackageRDBRepository >> getMCPackageById: anId [
 
+	^ self getMCPackageById: anId ifAbsent: [ self error: 'MCPackage not found' ]
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> getMCPackageById: anId ifAbsent: aBlock [
+
 	| query mcPackage |
 	
 	query := (Query readOneOf: SPMonticelloPackage where: [ :each | each id = anId ])
@@ -24,8 +30,21 @@ SPMonticelloPackageRDBRepository >> getMCPackageById: anId [
 
 	mcPackage := self glorpSession execute: query.
 	mcPackage isNil
-		ifTrue: [ self error: 'MCPackage not found' ].
+		ifTrue: [ ^ aBlock value ].
 	^ mcPackage
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> getMCPackageByMcId: aBytes ifAbsent: aBlock [
+
+	| mcPackage |
+	
+	mcPackage := self glorpSession readOneOf: SPMonticelloPackage 
+		where: [ :e | e mcId = aBytes ].
+
+	^ mcPackage isNil
+		ifTrue: [ aBlock value ]
+		ifFalse: [ mcPackage ]
 ]
 
 { #category : #queries }
@@ -78,6 +97,22 @@ SPMonticelloPackageRDBRepository >> getMCRepoByUrl: anUrl ifAbsent: aBlock [
 	^ mcRepo isNil
 		ifTrue: [ aBlock value ]
 		ifFalse: [ mcRepo ]
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> getOldestMCPackageWithPackage: aPackageId [
+
+	| q list |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e package id = aPackageId ].
+	q orderBy: [ :e | e datetime ].
+	q limit: 1.
+	
+	list := self glorpSession execute: q.
+
+	^ list notEmpty
+		ifTrue: [ list first ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #internal }
@@ -155,6 +190,40 @@ SPMonticelloPackageRDBRepository >> mcPackageIdOf: aMCPackage [
 	^ aMCPackage id isNil
 			ifTrue: [ self storeMCPackage: aMCPackage ]
 			ifFalse: [ aMCPackage id ]
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> selectAuthorsLike: aString offset: anOffset limit: aLimit [
+
+	| q |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e author like: aString ].
+	q 
+		retrieve: [ :e | e author ];
+		retrieve: [ :e | e author count ];
+		retrieve: [ :e | e datetime min ];
+		retrieve: [ :e | e datetime max ].
+	
+	q groupBy: [ :e | e author ].
+	q orderBy: [ :e | e author ].
+	q offset: anOffset.
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> selectRepoPacakges: aRepo offset: anOffset limit: aLimit [
+
+	| q |
+	
+	q := Query read: SPMonticelloRepoToPackageRef where: [ :e | e repo = aRepo ].
+	q alsoFetch: [ :e | e mcPackage ].
+	q orderBy: [ :e | e mcPackage datetime descending ].
+	q offset: anOffset.
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
 ]
 
 { #category : #queries }

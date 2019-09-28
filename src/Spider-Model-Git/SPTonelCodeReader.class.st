@@ -10,7 +10,7 @@ SPTonelCodeReader >> getPackageFileRef: aPackageName ifAbsent: aBlock [
 	| ref |
 	
 	ref := fileReference / aPackageName.
-	^ ref exists
+	^ (ref exists and: [ self isPackageDirectory: ref ])
 		ifTrue: [ ref ]
 		ifFalse: [ aBlock value ]
 ]
@@ -27,9 +27,15 @@ SPTonelCodeReader >> getPackageSnapshot: aPackageName ifAbsent: aBlock [
 ]
 
 { #category : #'API-packages' }
+SPTonelCodeReader >> isPackageDirectory: aFileRef [
+
+	^ (aFileRef / 'package.st') exists
+]
+
+{ #category : #'API-packages' }
 SPTonelCodeReader >> packageDirectories [
 
-	^ fileReference directories select: [ :each | (each / 'package.st') exists ]
+	^ fileReference directories select: [ :each | self isPackageDirectory: each ]
 ]
 
 { #category : #'API-packages' }
