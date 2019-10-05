@@ -220,7 +220,7 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit7 [
 { #category : #accessing }
 SPGitCommitLGitBuilderSpiderTest >> testBuildCommit8 [
 
-	| spCommit |
+	| spCommit diffs diff |
 
 	spCommit := SPLibGitCommitBuilder new
 		setContext: self context;
@@ -230,6 +230,11 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit8 [
 	self assert: spCommit message trimRight equals: 'Removed second package'.
 	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
 
+	diffs := spCommit diffs.
+	self assert: diffs size equals: 1.
+	diff := diffs first.
+	self assert: diff class equals: SPRemovedPackage.
+	
 ]
 
 { #category : #accessing }
@@ -248,8 +253,7 @@ Feature 123' withUnixLineEndings.
 	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
 	self assert: spCommit parents size equals: 2.
 	self assert: (spCommit parents collect: [ :e | e shaShortString ]) asArray equals: #( '4946380' 'e5344df' ).
-	
-	"self assert: spCommit diffs isEmpty"
+	self assert: spCommit diffs isEmpty
 	
 
 ]

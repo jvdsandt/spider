@@ -123,12 +123,7 @@ SPGitCommit >> datetime [
 
 { #category : #accessing }
 SPGitCommit >> diffs [
-
-	self parents isEmpty
-		ifTrue: [ 
-			^ self packages collect: [ :each | SPAddedPackage added: each ] ].
-		
-	^ self comparePackagesWith: self parents first
+	^ self comparePackagesWithAll: self parents
 ]
 
 { #category : #accessing }
