@@ -34,6 +34,19 @@ SPMethodRDBRepository >> getMethodById: anId ifAbsent: aBlock [
 	^ method
 ]
 
+{ #category : #queries }
+SPMethodRDBRepository >> getSelectorsLike: aString max: aLimit [
+
+	| q |
+	
+	q := Query read: SPMethod where: [ :e | e selector ilike: aString ].
+	q retrieve: [ :e | e selector distinct ].
+	q orderBy: [ :e | e selector ].
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
 { #category : #accessing }
 SPMethodRDBRepository >> glorpSession [
 

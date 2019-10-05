@@ -45,6 +45,19 @@ SPClassRDBRepository >> getClassById: anId ifAbsent: aBlock [
 	^ spiderClass
 ]
 
+{ #category : #queries }
+SPClassRDBRepository >> getClassNamesLike: aString max: aLimit [
+
+	| q |
+	
+	q := Query read: SPGlorpClass where: [ :e | e name ilike: aString ].
+	q retrieve: [ :e | e name distinct ].
+	q orderBy: [ :e | e name ].
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
 { #category : #accessing }
 SPClassRDBRepository >> glorpSession [
 
