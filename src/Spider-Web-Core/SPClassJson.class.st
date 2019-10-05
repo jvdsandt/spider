@@ -7,6 +7,11 @@ Class {
 { #category : #rendering }
 SPClassJson >> renderClass: aClass in: aCategory on: aRenderer [
 
+	| gitCommit mcPackage |
+	
+	gitCommit := nil. "aClass oldestGitCommit."
+	mcPackage := nil. "aClass oldestMCPackage."
+
 	aRenderer object: [ 
 		self renderClassSummary: aClass on: aRenderer.
 		aRenderer 
@@ -19,7 +24,13 @@ SPClassJson >> renderClass: aClass in: aCategory on: aRenderer [
 				self renderVariablesOf: aClass on: aRenderer ].
 		aRenderer
 			key: 'instanceMethods' value: [ self renderMethodRefs: aClass instanceMethodRefs on: aRenderer ]; 
-			key: 'classMethods' value: [ self renderMethodRefs: aClass classMethodRefs on: aRenderer ] ]
+			key: 'classMethods' value: [ self renderMethodRefs: aClass classMethodRefs on: aRenderer ].
+		aRenderer 
+			key: 'gitCommit' value: (gitCommit ifNotNil: [
+				[ aRenderer object: [ self renderGitCommitSummary: gitCommit on: aRenderer ]	] ]);
+			key: 'mcPackage' value: (mcPackage ifNotNil: [
+				[ aRenderer object: [ self renderMCPackageSummary: mcPackage on: aRenderer ] ] ])
+	]
 ]
 
 { #category : #rendering }

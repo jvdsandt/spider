@@ -66,7 +66,7 @@ SPMonticelloPackageRDBRepository >> getMCPackageForRepo: aRepoUrl andFile: aFile
 	| mcPackageRef |
 	
 	mcPackageRef := self glorpSession readOneOf: SPMonticelloRepoToPackageRef where: [ :e |
-		e repository repoUrl = aRepoUrl AND: [ e filename = aFilename ] ].
+		e repo repoUrl = aRepoUrl AND: [ e filename = aFilename ] ].
 	
 	^ mcPackageRef isNil
 			ifTrue: [ aBlock value ]
@@ -97,6 +97,23 @@ SPMonticelloPackageRDBRepository >> getMCRepoByUrl: anUrl ifAbsent: aBlock [
 	^ mcRepo isNil
 		ifTrue: [ aBlock value ]
 		ifFalse: [ mcRepo ]
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> getOldestMCPackageWithClass: aClassId [
+
+	| q list |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e package classRefs 
+		anySatisfy: [ :r | r spiderClass id = aClassId ] ].
+	q orderBy: [ :e | e datetime ].
+	q limit: 1.
+	
+	list := self glorpSession execute: q.
+
+	^ list notEmpty
+		ifTrue: [ list first ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #queries }

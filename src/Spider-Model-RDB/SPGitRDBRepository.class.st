@@ -130,6 +130,23 @@ SPGitRDBRepository >> getGitRepoByUrl: anUrl ifAbsent: aBlock [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> getOldestCommitWithClass: aClassId [
+
+	| q list |
+	
+	q := Query read: SPGitCommit where: [ :e | e packages 
+		anySatisfy: [ :p | p classRefs anySatisfy: [ :r | r spiderClass id = aClassId ] ] ].
+
+	q orderBy: [ :e | e authorSignature datetime ].
+	q limit: 1.
+
+	list := self glorpSession execute: q.
+	^ list notEmpty
+			ifTrue: [ list first ]
+			ifFalse: [ nil ]
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> getOldestCommitWithPackage: aPackageId [
 
 	| q list |
