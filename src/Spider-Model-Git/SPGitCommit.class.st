@@ -85,21 +85,34 @@ SPGitCommit >> children [
 { #category : #comparing }
 SPGitCommit >> comparePackagesWith: olderCommit [
 
-	| oldPackages result |
+	^ self comparePackagesWithAll: (Array with: olderCommit)
+]
+
+{ #category : #comparing }
+SPGitCommit >> comparePackagesWithAll: olderCommits [
+	"Answer a collection of Added, Removed or Updated packages."
+
+	| oldPackagesByName result removedByName |
 	
-	oldPackages := olderCommit packagesByName.
+	oldPackagesByName := olderCommits collect: [ :each | each packagesByName ].
 	result := OrderedCollection new.
 	
-	self packages do: [ :each |
-		| oldPackage |
-		oldPackage := oldPackages removeKey: each name ifAbsent: [ nil ].
-		oldPackage isNil
-			ifTrue: [ result add: (SPAddedPackage added: each) ]
+	self packages do: [ :eachPackage |
+		| oldPackages |
+		oldPackages := oldPackagesByName collect: [ :each | each removeKey: eachPackage name ifAbsent: [ nil ] ].
+		oldPackages := oldPackages reject: #isNil.
+		oldPackages isEmpty
+			ifTrue: [ result add: (SPAddedPackage added: eachPackage) ]
 			ifFalse: [ 
-				oldPackage = each
-					ifFalse: [ result add: (SPUpdatedPackage old: oldPackage updated: each) ] ] ].
-	oldPackages do: [ :each |
-		result add: (SPRemovedPackage removed: each) ].
+				(oldPackages anySatisfy: [ :each | each = eachPackage ])
+					ifFalse: [ result add: (SPUpdatedPackage old: oldPackages updated: eachPackage) ] ] ].
+			
+	removedByName := Dictionary new.		
+	oldPackagesByName do: [ :eachDict |
+		eachDict keysAndAllValuesDo: [ :eachName :each |
+			(removedByName at: eachName ifAbsentPut: [ OrderedCollection new ])
+				add: each ] ].
+	result addAll: (removedByName collect: [ :each | SPRemovedPackage removed: each ]).
 	^ result
 ]
 

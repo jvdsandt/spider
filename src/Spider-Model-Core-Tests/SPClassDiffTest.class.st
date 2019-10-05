@@ -81,6 +81,88 @@ SPClassDiffTest >> testInstanceToClassMethod [
 ]
 
 { #category : #tests }
+SPClassDiffTest >> testMethodMerge [
+
+	| oldEdition1 oldEdition2 newEdition diffs |
+	
+	oldEdition1 := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^123' category: 'resources';
+		build.
+		
+	oldEdition2 := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm2 ^234' category: 'resources';
+		build.
+
+	newEdition := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^123' category: 'resources';
+		addInstanceMethodSource: 'm2 ^234' category: 'resources';
+		build.
+	
+	diffs := newEdition compareMethodsWithAll: (Array with: oldEdition1 with: oldEdition2).
+	self assert: diffs isEmpty.
+]
+
+{ #category : #tests }
+SPClassDiffTest >> testMethodMergeWithChange [
+
+	| oldEdition1 oldEdition2 newEdition diffs diff |
+	
+	oldEdition1 := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^123' category: 'resources';
+		build.
+		
+	oldEdition2 := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm2 ^234' category: 'resources';
+		build.
+
+	newEdition := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^123' category: 'resources';
+		addInstanceMethodSource: 'm2 ^234' category: 'other';
+		build.
+	
+	diffs := newEdition compareMethodsWithAll: (Array with: oldEdition1 with: oldEdition2).
+	self assert: diffs size equals: 1.
+	diff := diffs first.
+	self assert: diff selector equals: #m2.
+	self assert: diff oldObjects size equals: 1.
+	self assert: diff oldObject equals: (oldEdition2 instanceMethodRefNamed: #m2).
+
+]
+
+{ #category : #tests }
+SPClassDiffTest >> testMethodMergeWithChange2 [
+
+	| oldEdition1 oldEdition2 newEdition diffs diff |
+	
+	oldEdition1 := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^111' category: 'resources';
+		build.
+		
+	oldEdition2 := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^222' category: 'resources';
+		build.
+
+	newEdition := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^333' category: 'resources';
+		build.
+	
+	diffs := newEdition compareMethodsWithAll: (Array with: oldEdition1 with: oldEdition2).
+	self assert: diffs size equals: 1.
+	diff := diffs first.
+	self assert: diff selector equals: #m1.
+	self assert: diff oldObjects size equals: 2.
+]
+
+{ #category : #tests }
 SPClassDiffTest >> testNoDiff [
 
 	| oldEdition newEdition diffs |

@@ -2,15 +2,15 @@ Class {
 	#name : #SPDiffRemove,
 	#superclass : #SPDiff,
 	#instVars : [
-		'oldObject'
+		'oldObjects'
 	],
 	#category : #'Spider-Model-Core-Diff'
 }
 
 { #category : #'instance creation' }
-SPDiffRemove class >> removed: anOldObject [
+SPDiffRemove class >> removed: oldObjects [
 
-	^self new initOld: anOldObject
+	^self new initOld: oldObjects
 ]
 
 { #category : #visiting }
@@ -19,9 +19,9 @@ SPDiffRemove >> accept: aVisitor [
 ]
 
 { #category : #initialization }
-SPDiffRemove >> initOld: anOldObject [
+SPDiffRemove >> initOld: anOldObjects [
 
-	oldObject := anOldObject
+	oldObjects := anOldObjects
 ]
 
 { #category : #accessing }
@@ -31,5 +31,10 @@ SPDiffRemove >> name [
 
 { #category : #accessing }
 SPDiffRemove >> oldObject [
-	^ oldObject
+	^ self oldObjects first
+]
+
+{ #category : #accessing }
+SPDiffRemove >> oldObjects [
+	^ oldObjects
 ]

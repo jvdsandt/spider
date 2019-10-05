@@ -238,26 +238,45 @@ SPGlorpClass >> comment [
 { #category : #comparing }
 SPGlorpClass >> compareMethodsWith: olderClass [
 
-	| oldClassMethodRefs oldInstanceMethodRefs result |
+	^ self compareMethodsWithAll: (Array with: olderClass)
+]
+
+{ #category : #comparing }
+SPGlorpClass >> compareMethodsWithAll: olderClasses [
+	"Answer a collection of Added, Removed or Updated methods."
 	
-	oldClassMethodRefs := olderClass classMethodRefsBySelector.
-	oldInstanceMethodRefs := olderClass instanceMethodRefsBySelector.
+	| oldClassMethodRefs oldInstanceMethodRefs result removedByName |
+	
+	oldClassMethodRefs := olderClasses collect: [ :each | each classMethodRefsBySelector ].
+	oldInstanceMethodRefs := olderClasses collect: [ :each | each instanceMethodRefsBySelector ].
 	result := OrderedCollection new.
 	
 	self methodRefs do: [ :eachRef |
-		| oldRef |
-		oldRef := eachRef isClassSide 
-			ifTrue: [ oldClassMethodRefs removeKey: eachRef selector ifAbsent: [ nil ] ]
-			ifFalse: [ oldInstanceMethodRefs removeKey: eachRef selector ifAbsent: [ nil ] ].
-		oldRef isNil
+		| oldRefs |
+		oldRefs := eachRef isClassSide 
+			ifTrue: [ oldClassMethodRefs collect: [ :each | each removeKey: eachRef selector ifAbsent: [ nil ] ] ]
+			ifFalse: [ oldInstanceMethodRefs collect: [ :each | each removeKey: eachRef selector ifAbsent: [ nil ] ] ].
+		oldRefs := oldRefs reject: #isNil.
+		oldRefs isEmpty
 			ifTrue: [ result add: (SPAddedMethod added: eachRef) ]
 			ifFalse: [ 
-				eachRef = oldRef
-					ifFalse: [ result add: (SPUpdatedMethod old: oldRef updated: eachRef) ] ] ].
-	oldClassMethodRefs do: [ :eachRef |
-		result add: (SPRemovedMethod removed: eachRef) ].
-	oldInstanceMethodRefs do: [ :eachRef |
-		result add: (SPRemovedMethod removed: eachRef) ].
+				(oldRefs anySatisfy: [ :each | each = eachRef ])
+					ifFalse: [ result add: (SPUpdatedMethod old: oldRefs updated: eachRef) ] ] ].
+
+	removedByName := Dictionary new.
+	oldClassMethodRefs do: [ :eachDict |
+		eachDict keysAndValuesDo: [ :eachName :each |
+			removedByName at: eachName put: (
+				(removedByName at: eachName ifAbsent: [ #() ]) copyWith: each ) ] ].
+	result addAll: (removedByName collect: [ :each | SPRemovedMethod removed: each ]).	
+		
+	removedByName := Dictionary new.
+	oldInstanceMethodRefs do: [ :eachDict |
+		eachDict keysAndValuesDo: [ :eachName :each |
+			removedByName at: eachName put: (
+				(removedByName at: eachName ifAbsent: [ #() ]) copyWith: each ) ] ].
+	result addAll: (removedByName collect: [ :each | SPRemovedMethod removed: each ]).	
+		
 	^ result
 ]
 

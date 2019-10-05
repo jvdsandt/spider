@@ -108,21 +108,33 @@ SPPackage >> comment [
 { #category : #comparing }
 SPPackage >> compareClassesWith: olderPackage [
 
-	| oldClassRefs result |
+	^ self compareClassesWithAll: (Array with: olderPackage)
+]
+
+{ #category : #comparing }
+SPPackage >> compareClassesWithAll: olderPackages [
+
+	| oldRefsByName result removedByName |
 	
-	oldClassRefs := olderPackage classRefsByName.
+	oldRefsByName := olderPackages collect: [ :each | each classRefsByName ].
 	result := OrderedCollection new.
 	
 	self classRefs do: [ :eachRef |
-		| oldRef |
-		oldRef := oldClassRefs removeKey: eachRef name ifAbsent: [ nil ].
-		oldRef isNil
+		| oldRefs |
+		oldRefs := oldRefsByName collect: [ :each | each removeKey: eachRef name ifAbsent: [ nil ] ].
+		oldRefs := oldRefs reject: #isNil.
+		oldRefs isEmpty
 			ifTrue: [ result add: (SPAddedClass added: eachRef) ]
 			ifFalse: [ 
-				eachRef = oldRef
-					ifFalse: [ result add: (SPUpdatedClass old: oldRef updated: eachRef) ] ] ].
-	oldClassRefs do: [ :eachRef |
-		result add: (SPRemovedClass removed: eachRef) ].
+				(oldRefs anySatisfy: [ :each | each = eachRef ])
+					ifFalse: [ result add: (SPUpdatedClass old: oldRefs updated: eachRef) ] ] ].
+			
+	removedByName := Dictionary new.
+	oldRefsByName do: [ :eachDict |
+		eachDict keysAndValuesDo: [ :eachName :each |
+			removedByName at: eachName put: (
+				(removedByName at: eachName ifAbsent: [ #() ]) copyWith: each) ] ].
+	result addAll: (removedByName collect: [ :each | SPRemovedClass removed: each ]).
 	^ result
 ]
 
