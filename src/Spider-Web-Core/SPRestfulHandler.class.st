@@ -55,10 +55,16 @@ SPRestfulHandler >> isValidId: aString [
 { #category : #'accessing parameters' }
 SPRestfulHandler >> limitParameter [
 
+	^ self limitParameterDefault: self defaultLimit max: self maxLimit
+]
+
+{ #category : #'accessing parameters' }
+SPRestfulHandler >> limitParameterDefault: aDefault max: aMax [
+
 	| value |
 	
-	value := self requestContext request at: 'limit' ifAbsent: [ ^ self defaultLimit ].
-	^ (value asInteger max: 1) min: self maxLimit
+	value := self requestContext request at: 'limit' ifAbsent: [ ^ aDefault ].
+	^ (value asInteger max: 1) min: aMax
 ]
 
 { #category : #accessing }
