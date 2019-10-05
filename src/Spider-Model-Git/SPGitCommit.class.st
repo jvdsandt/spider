@@ -109,7 +109,7 @@ SPGitCommit >> comparePackagesWithAll: olderCommits [
 			
 	removedByName := Dictionary new.		
 	oldPackagesByName do: [ :eachDict |
-		eachDict keysAndAllValuesDo: [ :eachName :each |
+		eachDict keysAndValuesDo: [ :eachName :each |
 			(removedByName at: eachName ifAbsentPut: [ OrderedCollection new ])
 				add: each ] ].
 	result addAll: (removedByName collect: [ :each | SPRemovedPackage removed: each ]).
