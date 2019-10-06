@@ -245,17 +245,14 @@ SPGlorpClass >> compareMethodsWith: olderClass [
 SPGlorpClass >> compareMethodsWithAll: olderClasses [
 	"Answer a collection of Added, Removed or Updated methods."
 	
-	| oldClassMethodRefs oldInstanceMethodRefs result removedByName |
+	| oldMethodRefs result removedByName |
 	
-	oldClassMethodRefs := olderClasses collect: [ :each | each classMethodRefsBySelector ].
-	oldInstanceMethodRefs := olderClasses collect: [ :each | each instanceMethodRefsBySelector ].
+	oldMethodRefs := olderClasses collect: [ :each | each methodRefsByDiffKey ].
 	result := OrderedCollection new.
 	
 	self methodRefs do: [ :eachRef |
 		| oldRefs |
-		oldRefs := eachRef isClassSide 
-			ifTrue: [ oldClassMethodRefs collect: [ :each | each removeKey: eachRef selector ifAbsent: [ nil ] ] ]
-			ifFalse: [ oldInstanceMethodRefs collect: [ :each | each removeKey: eachRef selector ifAbsent: [ nil ] ] ].
+		oldRefs := oldMethodRefs collect: [ :each | each removeKey: eachRef diffKey ifAbsent: [ nil ] ].
 		oldRefs := oldRefs reject: #isNil.
 		oldRefs isEmpty
 			ifTrue: [ result add: (SPAddedMethod added: eachRef) ]
@@ -264,19 +261,12 @@ SPGlorpClass >> compareMethodsWithAll: olderClasses [
 					ifFalse: [ result add: (SPUpdatedMethod old: oldRefs updated: eachRef) ] ] ].
 
 	removedByName := Dictionary new.
-	oldClassMethodRefs do: [ :eachDict |
+	oldMethodRefs do: [ :eachDict |
 		eachDict keysAndValuesDo: [ :eachName :each |
 			removedByName at: eachName put: (
 				(removedByName at: eachName ifAbsent: [ #() ]) copyWith: each ) ] ].
 	result addAll: (removedByName collect: [ :each | SPRemovedMethod removed: each ]).	
-		
-	removedByName := Dictionary new.
-	oldInstanceMethodRefs do: [ :eachDict |
-		eachDict keysAndValuesDo: [ :eachName :each |
-			removedByName at: eachName put: (
-				(removedByName at: eachName ifAbsent: [ #() ]) copyWith: each ) ] ].
-	result addAll: (removedByName collect: [ :each | SPRemovedMethod removed: each ]).	
-		
+				
 	^ result
 ]
 
@@ -463,6 +453,16 @@ SPGlorpClass >> isSpiderTrait [
 { #category : #accessing }
 SPGlorpClass >> methodRefs [
 	^ methodRefs
+]
+
+{ #category : #accessing }
+SPGlorpClass >> methodRefsByDiffKey [
+	^ methodRefs 
+		inject: Dictionary new
+		into: [ :dict :each |
+			dict 
+				at: each diffKey put: each; 
+				yourself ]
 ]
 
 { #category : #accessing }

@@ -94,12 +94,12 @@ SPGitCommit >> comparePackagesWithAll: olderCommits [
 
 	| oldPackagesByName result removedByName |
 	
-	oldPackagesByName := olderCommits collect: [ :each | each packagesByName ].
+	oldPackagesByName := olderCommits collect: [ :each | each packagesByDiffKey ].
 	result := OrderedCollection new.
 	
 	self packages do: [ :eachPackage |
 		| oldPackages |
-		oldPackages := oldPackagesByName collect: [ :each | each removeKey: eachPackage name ifAbsent: [ nil ] ].
+		oldPackages := oldPackagesByName collect: [ :each | each removeKey: eachPackage diffKey ifAbsent: [ nil ] ].
 		oldPackages := oldPackages reject: #isNil.
 		oldPackages isEmpty
 			ifTrue: [ result add: (SPAddedPackage added: eachPackage) ]
@@ -113,7 +113,8 @@ SPGitCommit >> comparePackagesWithAll: olderCommits [
 			(removedByName at: eachName ifAbsentPut: [ OrderedCollection new ])
 				add: each ] ].
 	result addAll: (removedByName collect: [ :each | SPRemovedPackage removed: each ]).
-	^ result
+	
+	^ result sorted: [ :a :b | a name <= b name ]
 ]
 
 { #category : #accessing }
@@ -121,9 +122,21 @@ SPGitCommit >> datetime [
 	^ self authorSignature datetime
 ]
 
+{ #category : #printing }
+SPGitCommit >> description [
+
+	^ String streamContents: [ :s | self printDescriptionOn: s ]
+]
+
 { #category : #accessing }
 SPGitCommit >> diffs [
 	^ self comparePackagesWithAll: self parents
+]
+
+{ #category : #printing }
+SPGitCommit >> diffsPrintString [
+
+	^ String streamContents: [ :s | self printDiffsOn: s ]
 ]
 
 { #category : #accessing }
@@ -193,6 +206,26 @@ SPGitCommit >> message [
 ]
 
 { #category : #accessing }
+SPGitCommit >> messageLine [
+
+	| msg index maxLength |
+	
+	maxLength := 100.
+	msg := self message ifNil: [ '' ].
+	index := msg indexOf: Character cr.
+	index := index > 0
+		ifTrue: [ index min: (msg indexOf: Character lf) ]
+		ifFalse: [ msg indexOf: Character lf ].
+	
+	^ (index > maxLength or: [ index = 0 and: [ msg size > maxLength ] ])
+			ifTrue: [ (msg copyFrom: 1 to: 97), '...' ]
+			ifFalse: [ 
+				index > 0
+					ifTrue: [ msg copyFrom: 1 to: index-1 ]
+					ifFalse: [ msg ] ]
+]
+
+{ #category : #accessing }
 SPGitCommit >> packageNamed: aName [
 
 	^ self packages detect: [ :each | each name = aName ]
@@ -210,6 +243,13 @@ SPGitCommit >> packages [
 ]
 
 { #category : #accessing }
+SPGitCommit >> packagesByDiffKey [
+	^ self packages
+			inject: Dictionary new
+			into: [ :dict :each | dict at: each diffKey put: each; yourself ]
+]
+
+{ #category : #accessing }
 SPGitCommit >> packagesByName [
 	^ self packages
 			inject: Dictionary new
@@ -219,6 +259,34 @@ SPGitCommit >> packagesByName [
 { #category : #accessing }
 SPGitCommit >> parents [
 	^ parents
+]
+
+{ #category : #printing }
+SPGitCommit >> printDescriptionOn: aStream [
+
+	aStream 
+		nextPutAll: 'Commit ';
+		nextPutAll: self shaShortString;
+		nextPutAll: ' by ';
+		nextPutAll: self authorName;
+		nextPutAll: ' at ';
+		nextPutAll: self datetime asString;
+		cr;
+		nextPutAll: self messageLine;
+		cr.
+		
+	SPDiffPrinter new
+		tabs: 1;
+		stream: aStream;
+		visitAll: self diffs
+]
+
+{ #category : #printing }
+SPGitCommit >> printDiffsOn: aStream [
+
+	SPDiffPrinter new
+		stream: aStream;
+		visitAll: self diffs
 ]
 
 { #category : #printing }

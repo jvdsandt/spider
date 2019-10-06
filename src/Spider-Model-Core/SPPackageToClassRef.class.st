@@ -41,6 +41,12 @@ SPPackageToClassRef >> category [
 ]
 
 { #category : #accessing }
+SPPackageToClassRef >> diffKey [
+
+	^ Array with: self spiderClass name with: self spiderClass typeName
+]
+
+{ #category : #accessing }
 SPPackageToClassRef >> fullCategoryIn: aPackage [
 
 	^ self category isNil

@@ -61,6 +61,32 @@ SPClassDiffTest >> testEmptyClasses [
 ]
 
 { #category : #tests }
+SPClassDiffTest >> testInstanceAndClassMethodsAreDifferent [
+
+	| oldEdition newEdition diffs diff |
+	
+	oldEdition := SPClassBuilder new
+		name: #DummyClass;
+		addInstanceMethodSource: 'm1 ^123' category: 'resources';
+		build.
+		
+	newEdition := SPClassBuilder new
+		name: #DummyClass;
+		addClassMethodSource: 'm1 ^123' category: 'resources';
+		build.
+	
+	diffs := newEdition compareMethodsWith: oldEdition.
+	self assert: diffs size equals: 2.
+	diff := diffs first.
+	self assert: diff class equals: SPAddedMethod.
+	self assert: diff newObject isClassSide.
+	diff := diffs last.
+	self assert: diff class equals: SPRemovedMethod.
+	self assert: diff oldObject isInstanceSide.
+
+]
+
+{ #category : #tests }
 SPClassDiffTest >> testInstanceToClassMethod [
 
 	| oldEdition newEdition diffs |

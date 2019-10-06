@@ -83,6 +83,11 @@ SPClassBuilder >> addVariableRef: aVarRef [
 ]
 
 { #category : #building }
+SPClassBuilder >> beTrait [
+	classIsTrait := true
+]
+
+{ #category : #building }
 SPClassBuilder >> build [
 	"Build the Spider class. If exactly the same class is already present in
 	the repository than we reuse this existing Spider ckass."

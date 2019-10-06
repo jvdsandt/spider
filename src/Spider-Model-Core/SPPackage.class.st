@@ -86,6 +86,16 @@ SPPackage >> classRefs [
 ]
 
 { #category : #accessing }
+SPPackage >> classRefsByDiffKey [
+	^ self classRefs
+			inject: Dictionary new
+			into: [ :dict :each |
+				dict 
+					at: each diffKey put: each; 
+					yourself ]
+]
+
+{ #category : #accessing }
 SPPackage >> classRefsByName [
 	^ self classRefs
 			inject: Dictionary new
@@ -116,12 +126,12 @@ SPPackage >> compareClassesWithAll: olderPackages [
 
 	| oldRefsByName result removedByName |
 	
-	oldRefsByName := olderPackages collect: [ :each | each classRefsByName ].
+	oldRefsByName := olderPackages collect: [ :each | each classRefsByDiffKey ].
 	result := OrderedCollection new.
 	
 	self classRefs do: [ :eachRef |
 		| oldRefs |
-		oldRefs := oldRefsByName collect: [ :each | each removeKey: eachRef name ifAbsent: [ nil ] ].
+		oldRefs := oldRefsByName collect: [ :each | each removeKey: eachRef diffKey ifAbsent: [ nil ] ].
 		oldRefs := oldRefs reject: #isNil.
 		oldRefs isEmpty
 			ifTrue: [ result add: (SPAddedClass added: eachRef) ]
@@ -135,7 +145,8 @@ SPPackage >> compareClassesWithAll: olderPackages [
 			removedByName at: eachName put: (
 				(removedByName at: eachName ifAbsent: [ #() ]) copyWith: each) ] ].
 	result addAll: (removedByName collect: [ :each | SPRemovedClass removed: each ]).
-	^ result
+	
+	^ result sorted: [ :a :b | a name <= b name ]
 ]
 
 { #category : #actions }
@@ -160,6 +171,11 @@ SPPackage >> createClassDiffsWith: anAncestor [
 		diffs add: nil -> each ].
 
 	^ diffs
+]
+
+{ #category : #accessing }
+SPPackage >> diffKey [
+	^ self name
 ]
 
 { #category : #comparing }

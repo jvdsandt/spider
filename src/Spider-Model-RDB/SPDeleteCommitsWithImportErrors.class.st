@@ -46,6 +46,20 @@ SPDeleteCommitsWithImportErrors >> exampleDeleteMooseErrors [
 	self executeForRepo: repo after: dt
 ]
 
+{ #category : #examples }
+SPDeleteCommitsWithImportErrors >> exampleDeletePharoErrors [
+	"SPWebContext default do: [ self new exampleDeletePharoErrors ]"
+
+	| repo dt |
+	
+	repo := self gitRepo getGitRepoByUrl: 'https://github.com/pharo-project/pharo.git'
+		ifAbsent: [ self error: 'Repo not found' ].
+		
+	dt := DateAndTime fromString: '2019-10-01T00:00:00'.
+	
+	self executeForRepo: repo after: dt
+]
+
 { #category : #'as yet unclassified' }
 SPDeleteCommitsWithImportErrors >> executeForRepo: aRepo after: aDateTime [
 

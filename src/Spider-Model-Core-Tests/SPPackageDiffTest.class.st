@@ -11,6 +11,73 @@ SPPackageDiffTest >> spTestData [
 ]
 
 { #category : #tests }
+SPPackageDiffTest >> testClassAndExtensionAreDifferent [
+
+	| oldEdition newEdition diffs |
+	
+	
+	oldEdition := SPPackageBuilder new
+		name: 'P1';
+		addClassExtension: (SPClassExtensionBuilder new
+				name: #Dummy;
+				addInstanceMethodSource: 'm1 ^123' category: 'resources';
+				build);
+		build.
+		
+	newEdition := SPPackageBuilder new
+		name: 'P1';
+		addClass: (SPClassBuilder new
+				name: #Dummy;
+				addInstanceMethodSource: 'm1 ^123' category: 'resources';
+				build) category: '';
+		build.
+
+	diffs := newEdition compareClassesWith: oldEdition.
+	self assert: diffs size equals: 2.
+	self assert: diffs first class equals: SPAddedClass.
+	self assert: diffs first newObject isSpiderClass.
+	self assert: diffs last class equals: SPRemovedClass.
+	self assert: diffs last oldObject isSpiderClassExtension.
+	
+
+
+]
+
+{ #category : #tests }
+SPPackageDiffTest >> testClassAndTraitAreDifferent [
+
+	| oldEdition newEdition diffs |
+	
+	
+	oldEdition := SPPackageBuilder new
+		name: 'P1';
+		addClass: (SPClassBuilder new
+				name: #Dummy;
+				addInstanceMethodSource: 'm1 ^123' category: 'resources';
+				build) category: '';
+		build.
+		
+	newEdition := SPPackageBuilder new
+		name: 'P1';
+		addClass: (SPClassBuilder new
+				name: #Dummy;
+				beTrait;
+				addInstanceMethodSource: 'm1 ^123' category: 'resources';
+				build) category: '';
+		build.
+
+	diffs := newEdition compareClassesWith: oldEdition.
+	self assert: diffs size equals: 2.
+	self assert: diffs first class equals: SPAddedClass.
+	self assert: diffs first newObject isSpiderTrait.
+	self assert: diffs last class equals: SPRemovedClass.
+	self deny: diffs last oldObject isSpiderTrait.
+	
+
+
+]
+
+{ #category : #tests }
 SPPackageDiffTest >> testPackageUpdated [
 
 	| v1 v2 diffs |

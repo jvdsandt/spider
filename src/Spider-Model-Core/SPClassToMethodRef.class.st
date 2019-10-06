@@ -63,6 +63,12 @@ SPClassToMethodRef >> category [
 	^ category
 ]
 
+{ #category : #accessing }
+SPClassToMethodRef >> diffKey [
+
+	^ Array with: self type with: self selector
+]
+
 { #category : #comparing }
 SPClassToMethodRef >> hash [
 
@@ -124,7 +130,7 @@ SPClassToMethodRef >> printOn: aStream [
 	category printOn: aStream. 
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 SPClassToMethodRef >> selector [
 
 	^ self method selector
