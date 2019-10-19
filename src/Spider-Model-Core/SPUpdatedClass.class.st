@@ -21,7 +21,7 @@ SPUpdatedClass >> hasCommentDiff [
 { #category : #accessing }
 SPUpdatedClass >> methodDiffs [
 
-	^ methodDiffs ifNil: [ methodDiffs := self newSpiderClass compareMethodsWith: self oldSpiderClass ]
+	^ methodDiffs ifNil: [ methodDiffs := self newSpiderClass compareMethodsWithAll: self oldSpiderClasses ]
 ]
 
 { #category : #accessing }
@@ -46,4 +46,10 @@ SPUpdatedClass >> oldCategory [
 SPUpdatedClass >> oldSpiderClass [
 
 	^ self oldObject spiderClass
+]
+
+{ #category : #accessing }
+SPUpdatedClass >> oldSpiderClasses [
+
+	^ self oldObjects collect: [ :e | e spiderClass ]
 ]

@@ -15,5 +15,5 @@ SPUpdatedPackage >> accept: aVisitor [
 { #category : #accessing }
 SPUpdatedPackage >> classDiffs [
 
-	^ classDiffs ifNil: [ classDiffs := self newObject compareClassesWith: self oldObject ]
+	^ classDiffs ifNil: [ classDiffs := self newObject compareClassesWithAll: self oldObjects ]
 ]

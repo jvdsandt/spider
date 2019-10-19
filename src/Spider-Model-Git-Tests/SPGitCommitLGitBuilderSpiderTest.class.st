@@ -282,6 +282,7 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommitMerge20191012 [
 	diff := diff classDiffs first.
 	self assert: diff class equals: SPUpdatedClass.
 	self assert: diff oldObjects size equals: 2.
+	self assert: diff methodDiffs isEmpty
 	
 	
 	
