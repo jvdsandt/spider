@@ -204,11 +204,11 @@ SPClassBuilderTest >> testSlotExampleMovieClass [
 	self assert: #SlotExampleMovie equals: class name.
 	self assert: #normal equals: class classType.
 	
-	self assert: class instanceVarNames sorted equals: #( actors director name year ).
+	self assert: (class instanceVarNames includesAll: #( actors director name year )).
 	
-	self assert: (class instanceVarRefNamed: #year) variable equals: #year.
-	self assert: (class instanceVarRefNamed: #year) expression equals: '#year'.
-	self assert: (class instanceVarRefNamed: #year) expressionOrNil equals: nil.
+	self assert: (class instanceVarRefNamed: #name) variable equals: #name.
+	self assert: (class instanceVarRefNamed: #name) expression equals: '#name'.
+	self assert: (class instanceVarRefNamed: #name) expressionOrNil equals: nil.
 	self assert: (class instanceVarRefNamed: #director) expression equals: '#director => ToOneRelationSlot inverse: #directedMovies inClass: #SlotExamplePerson'.
 	
 	
