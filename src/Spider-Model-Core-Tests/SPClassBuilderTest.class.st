@@ -204,7 +204,7 @@ SPClassBuilderTest >> testSlotExampleMovieClass [
 	self assert: #SlotExampleMovie equals: class name.
 	self assert: #normal equals: class classType.
 	
-	self assert: (class instanceVarNames includesAll: #( actors director name year )).
+	self assert: (class instanceVarNames includesAll: #( actors director name )).
 	
 	self assert: (class instanceVarRefNamed: #name) variable equals: #name.
 	self assert: (class instanceVarRefNamed: #name) expression equals: '#name'.
