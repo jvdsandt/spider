@@ -2,3 +2,15 @@
 
 # spider
 The Smalltalk source graph
+
+## Code loading
+
+```smalltalk
+Metacello new
+	baseline: 'Spider';
+	repository: 'github://jvdsandt/spider/src';
+	onConflictUseLoaded;
+	load: #( 'all' ).
+```  
+  
+  
