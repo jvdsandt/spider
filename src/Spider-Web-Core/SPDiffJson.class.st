@@ -5,6 +5,19 @@ Class {
 }
 
 { #category : #rendering }
+SPDiffJson >> renderCommitDiff: aCommit on: aRenderer [
+
+	| diffs |
+	
+	diffs := aCommit diffs.
+	aRenderer object: [ 
+		aRenderer key: 'diffs' value: [ 
+			SPDiffToJsonVisitor new
+				renderer: aRenderer;
+				visitAll: diffs ] ]
+]
+
+{ #category : #rendering }
 SPDiffJson >> renderCommitDiffBetween: newCommit and: oldCommit on: aRenderer [
 
 	| diffs |

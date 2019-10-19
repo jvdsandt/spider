@@ -257,3 +257,33 @@ Feature 123' withUnixLineEndings.
 	
 
 ]
+
+{ #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommitMerge20191012 [
+
+	| spCommit diffs diff |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: '3fb5630fc');
+		build.
+	
+	self assert: spCommit messageLine equals: 'Merge commit ''692a09a709b2cf03e207f013a3005269b125e9fc'''.
+	
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' ).
+	self assert: spCommit parents size equals: 2.
+	self assert: (spCommit parents collect: [ :e | e shaShortString ]) asArray equals: #( 'cab10ae' '692a09a' ).
+	
+	diffs := spCommit diffs.
+	self assert: diffs size equals: 1.
+	diff := diffs first.
+	self assert: diff class equals: SPUpdatedPackage.
+	self assert: diff classDiffs size equals: 1.
+	diff := diff classDiffs first.
+	self assert: diff class equals: SPUpdatedClass.
+	self assert: diff oldObjects size equals: 2.
+	
+	
+	
+
+]

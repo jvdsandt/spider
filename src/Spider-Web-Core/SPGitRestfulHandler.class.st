@@ -56,10 +56,7 @@ SPGitRestfulHandler >> getCommitAsJson: aCommitId [
 	
 	| commit |
 	
-	(self isValidId: aCommitId)
-		ifTrue: [ commit := self gitRepo getCommitById: aCommitId asNumber ifAbsent: [ nil ] ].
-	commit isNil
-		ifTrue: [ commit := self gitRepo getCommitByShaString: aCommitId ifAbsent: [ ^ self notFound ] ].
+	commit := self findCommit: aCommitId.
 	
 	^ self renderJsonWith: [ :json |
 					SPGitCommitJson new
@@ -72,16 +69,13 @@ SPGitRestfulHandler >> getDiffAsJson: aCommitId [
 	<path: '/diff/{aCommitId}'>
 	<produces: 'application/json'>
 	
-	| newCommit oldCommit |
+	| aCommit |
 	
-	newCommit := self findCommit: aCommitId.
-	newCommit parents isEmpty
-		ifTrue: [ self notFound ].
-	oldCommit := newCommit parents first.
-	
+	aCommit := self findCommit: aCommitId.
+
 	^ self renderJsonWith: [ :json |
-					SPGitCommitJson new
-						renderCommit: newCommit on: json ]
+					SPDiffJson new
+						renderCommitDiff: aCommit on: json ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,17 +100,14 @@ SPGitRestfulHandler >> getDiffAsJson: aDomain owner: anOwner name: aName id: aCo
 	<path: '/diff/{aDomain}/{anOwner}/{aName}/commit/{aCommitId}'>
 	<produces: 'application/json'>
 	
-	| repo newCommit oldCommit |
+	| repo aCommit |
 	
 	repo := self gitRepo getRepo: aDomain owner: anOwner name: aName ifAbsent: [ ^ self notFound ].
-	newCommit := self findCommit: aCommitId in: repo.
-	newCommit parents isEmpty
-		ifTrue: [ self notFound ].
-	oldCommit := newCommit parents first.
+	aCommit := self findCommit: aCommitId in: repo.
 	
 	^ self renderJsonWith: [ :json |
 			SPDiffJson new
-				renderCommitDiffBetween: newCommit and: oldCommit on: json ]
+				renderCommit: aCommit on: json ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -18,6 +18,17 @@ SPDiffToJsonVisitor >> maxSourceSize: anObject [
 	maxSourceSize := anObject
 ]
 
+{ #category : #visiting }
+SPDiffToJsonVisitor >> renderOldClasses: aDiff [
+
+	renderer key: 'oldClasses' value: [ 
+		renderer array: [ 
+			aDiff oldObjects do: [ :each |
+				renderer object: [ 
+					SPClassJson new
+						renderClassSummary: each spiderClass in: each category on: renderer ] ] ] ]
+]
+
 { #category : #accessing }
 SPDiffToJsonVisitor >> renderer [
 	^ renderer
@@ -68,10 +79,7 @@ SPDiffToJsonVisitor >> visitDiffAddedPackage: aDiff [
 SPDiffToJsonVisitor >> visitDiffRemovedClass: aDiff [
 
 	renderer object: [ 
-		renderer key: 'oldClass' value: [ 
-			renderer object: [ 
-				SPClassJson new
-					renderClassSummary: aDiff oldClass in: aDiff oldObject category on: renderer ] ] ]
+		self renderOldClasses: aDiff ]
 ]
 
 { #category : #visiting }
@@ -97,10 +105,7 @@ SPDiffToJsonVisitor >> visitDiffRemovedPackage: aDiff [
 SPDiffToJsonVisitor >> visitDiffUpdatedClass: aDiff [
 
 	renderer object: [ 
-		renderer key: 'oldClass' value: [ 
-			renderer object: [ 
-				SPClassJson new
-					renderClassSummary: aDiff oldSpiderClass in: aDiff oldObject category on: renderer ] ].
+		self renderOldClasses: aDiff.
 		renderer key: 'newClass' value: [ 
 			renderer object: [ 
 				SPClassJson new
@@ -117,7 +122,6 @@ SPDiffToJsonVisitor >> visitDiffUpdatedClass: aDiff [
 					renderer object: [ 
 						renderer key: 'oldComment' value: aDiff oldSpiderClass comment.
 						renderer key: 'newComment' value: aDiff newSpiderClass comment ] ] ] ]
-				
 ]
 
 { #category : #visiting }
