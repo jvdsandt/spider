@@ -56,14 +56,14 @@ SPiderCommandLineHandler >> activateImport [
 { #category : #activation }
 SPiderCommandLineHandler >> activateSetGitCommitRootIds [
 
-	self url isEmptyOrNil 
-		ifTrue: [ ^ self exitFailure: 'url argument missing' ].
 	self logInfo: 'SetGitCommitRootIds'.
 	
 	self databaseUrl isEmptyOrNil 
 		ifTrue: [ ^ self exitFailure: 'databaseUrl option missing' ].
 	SPImporter databaseUrl: self databaseUrl.
+
 	SPWebContext databaseUrl: self databaseUrl.
+	SPWebContext default glorpSession accessor logging: false.
 	
 	self doSetGitCommitRootIds.
 	
