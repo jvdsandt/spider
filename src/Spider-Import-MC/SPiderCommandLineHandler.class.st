@@ -73,7 +73,7 @@ SPiderCommandLineHandler >> activateSetGitCommitRootIds [
 
 { #category : #accessing }
 SPiderCommandLineHandler >> availableSubCommands [
-	^ #( 'import' )
+	^ #( 'import' 'setGitCommitRootIds' )
 ]
 
 { #category : #accessing }
