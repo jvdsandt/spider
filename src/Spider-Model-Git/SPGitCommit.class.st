@@ -8,6 +8,7 @@ Class {
 		'parents',
 		'packages',
 		'status',
+		'rootId',
 		'sourceDir',
 		'format'
 	],
@@ -297,6 +298,16 @@ SPGitCommit >> printOn: aStream [
 	aStream nextPut: $(.
 	aStream nextPutAll: self shaShortString.
 	aStream nextPut: $)
+]
+
+{ #category : #initialization }
+SPGitCommit >> privRootId: anInteger [
+	rootId := anInteger
+]
+
+{ #category : #accessing }
+SPGitCommit >> rootId [
+	^ rootId
 ]
 
 { #category : #accessing }

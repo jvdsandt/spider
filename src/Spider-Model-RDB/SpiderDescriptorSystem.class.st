@@ -32,6 +32,7 @@ SpiderDescriptorSystem >> classModelForSPGitCommit: aClassModel [
 	aClassModel newAttributeNamed: #parents collectionOf: SPGitCommit.
 	aClassModel newAttributeNamed: #packages collectionOf: SPPackage.
 	aClassModel newAttributeNamed: #status type: Symbol.
+	aClassModel newAttributeNamed: #rootId type: Integer.
 	aClassModel newAttributeNamed: #sourceDir type: String.
 	aClassModel newAttributeNamed: #format type: Symbol.
 	
@@ -269,6 +270,8 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 	(aDescriptor newMapping: DirectMapping) 
 		from: #status to: (table fieldNamed: 'STATUS').
 	(aDescriptor newMapping: DirectMapping) 
+		from: #rootId to: (table fieldNamed: 'ROOT_ID').
+	(aDescriptor newMapping: DirectMapping) 
 		from: #sourceDir to: (table fieldNamed: 'SOURCE_DIR').
 	(aDescriptor newMapping: DirectMapping) 
 		from: #format to: (table fieldNamed: 'FORMAT').
@@ -301,13 +304,6 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 			from: (table fieldNamed: 'ID')
 			to: ((self tableNamed: 'GIT_COMMIT_PARENT_REFS') fieldNamed: 'PARENT_ID')).
 
-	(aDescriptor newMapping: ManyToManyMapping)
-		attributeName: #repos;
-		beForPseudoVariable;
-		referenceClass: SPGitRepo;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: ((self tableNamed: 'GIT_REPO_COMMITS') fieldNamed: 'COMMIT_ID')).
 
 ]
 
@@ -341,14 +337,6 @@ SpiderDescriptorSystem >> descriptorForSPGitRepo: aDescriptor [
 		shouldRefresh: true;
 		alsoFetch: [ :each | each commit ];
 		orderBy: [ :each | each commit authorSignature datetime ].
-	
-	(aDescriptor newMapping: ManyToManyMapping)
-		attributeName: #commits;
-		beForPseudoVariable;
-		referenceClass: SPGitCommit;
-		join: (Join
-			from: (table fieldNamed: 'ID')
-			to: ((self tableNamed: 'GIT_REPO_COMMITS') fieldNamed: 'REPO_ID')).
 
 ]
 
@@ -847,6 +835,7 @@ SpiderDescriptorSystem >> tableForGIT_COMMITS: aTable [
 	aTable createFieldNamed: 'AUTHOR_EMAIL' type: platform varchar.
 	aTable createFieldNamed: 'MESSAGE' type: platform varchar.
 	aTable createFieldNamed: 'STATUS' type: platform varchar.
+	aTable createFieldNamed: 'ROOT_ID' type: platform integer.
 	aTable createFieldNamed: 'SOURCE_DIR' type: platform varchar.
 	aTable createFieldNamed: 'FORMAT' type: platform varchar.
 ]
@@ -888,21 +877,6 @@ SpiderDescriptorSystem >> tableForGIT_REPOS: aTable [
 	(aTable createFieldNamed: 'ID' type: (platform serial)) bePrimaryKey.
 	aTable createFieldNamed: 'TXID' type: platform integer.
 	aTable createFieldNamed: 'URL' type: platform varchar.
-
-]
-
-{ #category : #tables }
-SpiderDescriptorSystem >> tableForGIT_REPO_COMMITS: aTable [
-
-	| repoIdField commitIdField |
-
-	repoIdField  := (aTable createFieldNamed: 'REPO_ID' type: (platform integer)) bePrimaryKey.
-	commitIdField := (aTable createFieldNamed: 'COMMIT_ID' type: platform integer) bePrimaryKey.
-	aTable createFieldNamed: 'TXID' type: platform integer.
-	
-	aTable addForeignKeyFrom: repoIdField to: ((self tableNamed: 'GIT_REPOS') fieldNamed: 'ID').
-	aTable addForeignKeyFrom: commitIdField to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID').
-
 
 ]
 

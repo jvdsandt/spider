@@ -7,13 +7,6 @@ Class {
 	#category : #'Spider-Model-RDB-Repos'
 }
 
-{ #category : #internal }
-SPGitRDBRepository >> createGitRepoFrom: anArray [
-	"(id, txid, root_id, url, forked_from_id)"
-
-	self todo
-]
-
 { #category : #storing }
 SPGitRDBRepository >> deleteCommit: aCommit from: aRepo [
 
@@ -200,6 +193,33 @@ SPGitRDBRepository >> getRepoCommits: aRepo limit: aLimit [
 	^self glorpSession execute: query
 ]
 
+{ #category : #storing }
+SPGitRDBRepository >> getRootIdForCommit: aGitCommit [
+	"Determine the rootId for <aGitCommit>.
+	- If all parents have the same rootId, than use this value
+	- If there are no parents or no parents with a rootId
+		- return and create a new rootId if this commit contains any code
+		- answer nil if this commit does not contain any code
+	- If there are parents with different rootId's than merge these"
+
+	| parentIds |
+
+	aGitCommit rootId notNil
+		ifTrue: [ ^ aGitCommit rootId ].
+		
+	parentIds := ((aGitCommit parents collect: #rootId) reject: #isNil) asSet.
+	parentIds size = 1
+		ifTrue: [ ^ parentIds anyOne ].
+		
+	parentIds isEmpty
+		ifTrue: [ 
+			^ aGitCommit hasPackages 
+				ifTrue: [ self storeCommitRoot: aGitCommit shaString ]
+				ifFalse: [ nil ] ].
+
+	^ self mergeCommitRoots: parentIds
+]
+
 { #category : #accessing }
 SPGitRDBRepository >> gitCommitIdOf: aGitCommit [
 
@@ -243,18 +263,9 @@ SPGitRDBRepository >> insertGitCommitQuery [
 
 	| sql |
 	
-	sql := 'INSERT INTO git_commits (txid, sha, author_datetime, author_tzoffset, author_name, author_email, message, status, source_dir, format)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING (id)'.
+	sql := 'INSERT INTO git_commits (txid, sha, author_datetime, author_tzoffset, author_name, author_email, message, status, root_id, source_dir, format)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING (id)'.
 
-	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
-]
-
-{ #category : #'accessing - queries' }
-SPGitRDBRepository >> insertGitRepoCommitQuery [
-
-	| sql |
-	
-	sql := 'INSERT INTO git_repo_commits (repo_id, commit_id, txid) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
@@ -277,6 +288,35 @@ ON CONFLICT (repo_id, type, name) DO UPDATE SET
 	txid = $4,
 	commit_id = $5'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
+{ #category : #storing }
+SPGitRDBRepository >> mergeCommitRoots: aRootIdsInput [
+
+	| rootIds statement result shas |
+
+	rootIds := aRootIdsInput sorted.
+	rootIds allButFirstDo: [ :eachId |
+		
+		statement := self p3client format: 'SELECT root_shas FROM git_commit_roots WHERE id = $1'.
+		result := statement query: (Array with: eachId).
+		shas := result firstRecord first.
+	
+		statement := self p3client format: 'UPDATE git_commit_roots SET root_shas = root_shas || $2 WHERE id = $1'.
+		statement execute: (Array with: rootIds first with: (self stringArrayAsPostgres: shas)).
+		
+		statement := self p3client format: 'UPDATE git_commits SET root_id = $2 WHERE root_id = $1'.
+		statement execute: (Array with: eachId with: rootIds first).
+		
+		statement := self p3client format: 'DELETE FROM git_commit_roots WHERE id = $1'.
+		statement execute: (Array with: eachId) ].
+	^ rootIds first
+]
+
+{ #category : #accessing }
+SPGitRDBRepository >> p3client [
+
+	^ context client
 ]
 
 { #category : #accessing }
@@ -425,12 +465,15 @@ SPGitRDBRepository >> selectReposByUrlWithDomain: aDomain owner: anOwner offset:
 { #category : #storing }
 SPGitRDBRepository >> storeCommit: aGitCommit [
 
-	| gitCommit gitCommitId rows |
+	| gitCommit gitCommitId rows rootId |
 	
 	gitCommit := self getCommitByShaString: aGitCommit shaString ifAbsent: [ nil ].
 	gitCommit notNil
 		ifTrue: [ ^ gitCommit id ].
 		
+	rootId := self getRootIdForCommit: aGitCommit.
+	aGitCommit privRootId: rootId.
+
 	gitCommitId := self insertGitCommitQuery getOne: (
 		OrderedCollection new
 			add: self transactionId;
@@ -441,6 +484,7 @@ SPGitRDBRepository >> storeCommit: aGitCommit [
 			add: aGitCommit authorSignature email;
 			add: aGitCommit message;
 			add: aGitCommit status;
+			add: rootId;
 			add: aGitCommit sourceDir;
 			add: aGitCommit format;
 			yourself ).
@@ -464,11 +508,18 @@ SPGitRDBRepository >> storeCommit: aGitCommit [
 { #category : #storing }
 SPGitRDBRepository >> storeCommit: aGitCommit for: aRepo [
 
-	| gitCommitId gitRepoId |
+	aGitCommit id ifNil: [ self storeCommit: aGitCommit ].
+	aRepo id ifNil: [ (self storeRepo: aRepo) id ]
+]
+
+{ #category : #storing }
+SPGitRDBRepository >> storeCommitRoot: aShaString [
+
+	| statement result |
 	
-	gitCommitId := aGitCommit id ifNil: [ self storeCommit: aGitCommit ].
-	gitRepoId := aRepo id ifNil: [ (self storeRepo: aRepo) id ].
-	self insertGitRepoCommitQuery execute: (Array with: gitRepoId with: gitCommitId with: self transactionId)
+	statement := self p3client format: 'INSERT INTO git_commit_roots (txid, root_shas) VALUES ($1, $2) RETURNING (id)'.
+	result := statement query: (Array with: self transactionId with: (self stringArrayAsPostgres: (Array with: aShaString))).
+	^ result firstRecord first
 ]
 
 { #category : #storing }
@@ -501,4 +552,15 @@ SPGitRDBRepository >> storeRepoRef: aRepo type: aTypeChar named: aName to: aComm
 		with: aName
 		with: self transactionId
 		with: commitId)
+]
+
+{ #category : #storing }
+SPGitRDBRepository >> stringArrayAsPostgres: anArray [
+
+	^ String streamContents: [ :s |
+			s nextPut: ${.
+			anArray
+				do: [ :each | s nextPut: $"; nextPutAll: each; nextPut: $" ]
+				separatedBy: [ s nextPut: $, ].
+			s nextPut: $} ]
 ]

@@ -31,8 +31,9 @@ SPiderCommandLineHandler >> activate [
 	self activateHelpWithoutArguments
 		ifTrue: [ ^ self ].
 	self subCommand = 'import'
-		ifTrue: [ 
-			self activateImport ]
+		ifTrue: [ ^ self activateImport ].
+	self subCommand = 'setGitCommitRootIds'
+		ifTrue: [ ^ self activateSetGitCommitRootIds ]
 ]
 
 { #category : #activation }
@@ -49,6 +50,24 @@ SPiderCommandLineHandler >> activateImport [
 	self doGitImport.
 	
 	self logInfo: 'Import finished.'.
+	self quit
+]
+
+{ #category : #activation }
+SPiderCommandLineHandler >> activateSetGitCommitRootIds [
+
+	self url isEmptyOrNil 
+		ifTrue: [ ^ self exitFailure: 'url argument missing' ].
+	self logInfo: 'SetGitCommitRootIds'.
+	
+	self databaseUrl isEmptyOrNil 
+		ifTrue: [ ^ self exitFailure: 'databaseUrl option missing' ].
+	SPImporter databaseUrl: self databaseUrl.
+	SPWebContext databaseUrl: self databaseUrl.
+	
+	self doSetGitCommitRootIds.
+	
+	self logInfo: 'SetGitCommitRootIds finished.'.
 	self quit
 ]
 
@@ -82,6 +101,12 @@ SPiderCommandLineHandler >> doGitImport [
 	SPGitImporter import: self url.
 	
 	self quit.
+]
+
+{ #category : #activation }
+SPiderCommandLineHandler >> doSetGitCommitRootIds [
+
+	SPWebContext default do: [ SPSetGitCommitRootIds new execute ]
 ]
 
 { #category : #accessing }
