@@ -14,10 +14,6 @@ BaselineOfSpider >> baselineOf: spec [
 				spec 
 					repository: 'github://pharo-contributions/OSSubprocess:v1.0.1/repository';
 					loads: 'OSSubprocess' ].
-			spec baseline: 'Ring2' with: [ 
-				spec 
-					repository: 'github://jvdsandt/Ring2/src';
-					loads: 'core' ].
 			spec baseline: 'P3' with: [ 
 				spec 
 					repository: 'github://svenvc/P3:master/repository';
@@ -39,7 +35,7 @@ BaselineOfSpider >> baselineOf: spec [
 			spec package: 'Spider-Model-Git-Tests' with: [ spec requires: #('Spider-Model-MC-Tests' 'Spider-Model-Git') ].
 			spec package: 'Spider-Model-RDB' with: [ spec requires: #( 'Spider-Model-Git' 'P3' ) ].
 			spec package: 'Spider-Model-RDB-Tests' with: [ spec requires: #( 'Spider-Model-Git-Tests' 'Spider-Model-RDB' ) ].
-			spec package: 'Spider-Model-Ring2' with: [ spec requires: #( 'Ring2' 'Spider-Model-Core' ) ].
+			spec package: 'Spider-Model-Ring2' with: [ spec requires: #( 'Spider-Model-Core' ) ].
 			spec package: 'Spider-Model-Ring2-Tests' with: [ spec requires: #( 'Spider-Model-Ring2' ) ].
 
 			spec package: 'Spider-Import-MC' with: [ spec requires: #( 'Spider-Model-MC' 'Spider-Model-Git' 'Spider-Model-RDB' 'OSSubprocess' ) ].
@@ -54,5 +50,12 @@ BaselineOfSpider >> baselineOf: spec [
 			spec group: 'tests' with: #('Spider-Model-Core-Tests' 'Spider-Model-MC-Tests' 'Spider-Model-Git-Tests' ).
 			
 			spec group: 'importer' with: #( 'default' 'P3' 'Spider-Import-MC' 'Spider-Model-RDB-Tests' ).
-			spec group: 'all' with: #( 'default' 'Spider-Model-RDB-Tests' 'Spider-Import-MC' 'Spider-Web-Browser' 'Spider-Model-Ring2-Tests' 'Spider-Model-FixScripts' ) ]
+			spec group: 'all' with: #( 'default' 'Spider-Model-RDB-Tests' 'Spider-Import-MC' 'Spider-Web-Browser' 'Spider-Model-Ring2-Tests' 'Spider-Model-FixScripts' ) ].
+		
+	spec for: #( #'pharo7.x' ) do: [ 
+		spec baseline: 'Ring2' with: [ 
+			spec 
+				repository: 'github://jvdsandt/Ring2/src';
+				loads: 'core' ].
+		spec package: 'Spider-Model-Ring2' with: [ spec requires: #( 'Ring2' ) ] ]
 ]
