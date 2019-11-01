@@ -22,6 +22,14 @@ SpiderDescriptorSystem >> classModelForSPClassToVariableRef: aClassModel [
 ]
 
 { #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPGitClassDiffRecord: aClassModel [
+
+	aClassModel newAttributeNamed: #commit type: SPGitCommit.
+	aClassModel newAttributeNamed: #newClass type: SPGlorpClass.
+	aClassModel newAttributeNamed: #oldClass type: SPGlorpClass.
+]
+
+{ #category : #'class models' }
 SpiderDescriptorSystem >> classModelForSPGitCommit: aClassModel [
 
 	aClassModel newAttributeNamed: #id type: Integer.
@@ -41,6 +49,24 @@ SpiderDescriptorSystem >> classModelForSPGitCommit: aClassModel [
 
 
 
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPGitMethodDiffRecord: aClassModel [
+
+	aClassModel newAttributeNamed: #commit type: SPGitCommit.
+	aClassModel newAttributeNamed: #isMeta type: Boolean.
+	aClassModel newAttributeNamed: #className type: Symbol.
+	aClassModel newAttributeNamed: #newMethod type: SPGlorpClass.
+	aClassModel newAttributeNamed: #oldMethod type: SPGlorpClass.
+]
+
+{ #category : #'class models' }
+SpiderDescriptorSystem >> classModelForSPGitPackageDiffRecord: aClassModel [
+
+	aClassModel newAttributeNamed: #commit type: SPGitCommit.
+	aClassModel newAttributeNamed: #newPackage type: SPPackage.
+	aClassModel newAttributeNamed: #oldPackage type: SPPackage.
 ]
 
 { #category : #'class models' }
@@ -251,6 +277,33 @@ SpiderDescriptorSystem >> descriptorForSPClassToVariableRef: aDescriptor [
 ]
 
 { #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPGitClassDiffRecord: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'DIFF_GIT_CLASSES'.
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #commit;
+		join: (Join
+			from: (table fieldNamed: 'COMMIT_ID')
+			to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #oldClass;
+		join: (Join
+			from: (table fieldNamed: 'OLD_CLASS_ID')
+			to: ((self tableNamed: 'CLASSES') fieldNamed: 'ID')).			
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #newClass;
+		join: (Join
+			from: (table fieldNamed: 'NEW_CLASS_ID')
+			to: ((self tableNamed: 'CLASSES') fieldNamed: 'ID')).
+]
+
+{ #category : #descriptors }
 SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 
 	| table |
@@ -305,6 +358,65 @@ SpiderDescriptorSystem >> descriptorForSPGitCommit: aDescriptor [
 			to: ((self tableNamed: 'GIT_COMMIT_PARENT_REFS') fieldNamed: 'PARENT_ID')).
 
 
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPGitMethodDiffRecord: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'DIFF_GIT_METHODS'.
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: DirectMapping) 
+		from: #className to: (table fieldNamed: 'CLASS_NAME').
+	(aDescriptor newMapping: DirectMapping) 
+		from: #isMeta to: (table fieldNamed: 'META').
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #commit;
+		join: (Join
+			from: (table fieldNamed: 'COMMIT_ID')
+			to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #oldMethod;
+		join: (Join
+			from: (table fieldNamed: 'OLD_METHOD_ID')
+			to: ((self tableNamed: 'METHODS') fieldNamed: 'ID')).			
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #newMethod;
+		join: (Join
+			from: (table fieldNamed: 'NEW_METHOD_ID')
+			to: ((self tableNamed: 'METHODS') fieldNamed: 'ID')).
+]
+
+{ #category : #descriptors }
+SpiderDescriptorSystem >> descriptorForSPGitPackageDiffRecord: aDescriptor [
+
+	| table |
+	
+	table := self tableNamed: 'DIFF_GIT_PACKAGES'.
+	aDescriptor table: table.
+	
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #commit;
+		join: (Join
+			from: (table fieldNamed: 'COMMIT_ID')
+			to: ((self tableNamed: 'GIT_COMMITS') fieldNamed: 'ID')).
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #oldPackage;
+		join: (Join
+			from: (table fieldNamed: 'OLD_PACKAGE_ID')
+			to: ((self tableNamed: 'PACKAGES') fieldNamed: 'ID')).			
+
+	(aDescriptor newMapping: OneToOneMapping)
+		attributeName: #newPackage;
+		join: (Join
+			from: (table fieldNamed: 'NEW_PACKAGE_ID')
+			to: ((self tableNamed: 'PACKAGES') fieldNamed: 'ID')).
 ]
 
 { #category : #descriptors }
@@ -821,6 +933,32 @@ SpiderDescriptorSystem >> tableForCLASS_VAR_REFS: aTable [
 	(aTable createFieldNamed: 'VARIABLE' type: platform varchar) bePrimaryKey.
 	aTable createFieldNamed: 'EXPRESSION' type: platform text.
 
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForDIFF_GIT_CLASSES: aTable [
+
+	aTable createFieldNamed: 'COMMIT_ID' type: platform integer.
+	aTable createFieldNamed: 'OLD_CLASS_ID' type: platform integer.
+	aTable createFieldNamed: 'NEW_CLASS_ID' type: platform integer.
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForDIFF_GIT_METHODS: aTable [
+
+	aTable createFieldNamed: 'COMMIT_ID' type: platform integer.
+	aTable createFieldNamed: 'CLASS_NAME' type: platform varchar.
+	aTable createFieldNamed: 'META' type: platform boolean. 
+	aTable createFieldNamed: 'OLD_METHOD_ID' type: platform integer.
+	aTable createFieldNamed: 'NEW_METHOD_ID' type: platform integer.
+]
+
+{ #category : #tables }
+SpiderDescriptorSystem >> tableForDIFF_GIT_PACKAGES: aTable [
+
+	aTable createFieldNamed: 'COMMIT_ID' type: platform integer.
+	aTable createFieldNamed: 'OLD_PACKAGE_ID' type: platform integer.
+	aTable createFieldNamed: 'NEW_PACKAGE_ID' type: platform integer.
 ]
 
 { #category : #tables }

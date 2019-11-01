@@ -17,3 +17,9 @@ SPUpdatedPackage >> classDiffs [
 
 	^ classDiffs ifNil: [ classDiffs := self newObject compareClassesWithAll: self oldObjects ]
 ]
+
+{ #category : #accessing }
+SPUpdatedPackage >> newPackage [
+
+	^ self newObject
+]

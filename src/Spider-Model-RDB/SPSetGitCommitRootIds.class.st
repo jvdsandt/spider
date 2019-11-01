@@ -10,31 +10,35 @@ SPSetGitCommitRootIds >> example [
 
 	| repo |
 	
-	repo := self gitRepo getGitRepoByUrl: 'https://github.com/mumez/SIXX.git' ifAbsent: [ nil ].
+	repo := self gitRepo getGitRepoByUrl: 'https://github.com/pharo-nosql/voyage.git' ifAbsent: [ nil ].
 	
 	self executeForRepo: repo. 
 ]
 
 { #category : #executing }
 SPSetGitCommitRootIds >> execute [
+	"SPWebContext default do: [ self new execute ]"
 
 	| repos |
 	
-	repos := self glorpSession readManyOf: SPGitRepo.
+	repos := self glorpSession read: SPGitRepo.
 	self logInfo: 'Found ', repos size asString, ' fit repos.'.
 	
 	repos do: [ :each | self executeForRepo: each ]
 ]
 
 { #category : #executing }
-SPSetGitCommitRootIds >> executeForCommit: aCommit [
+SPSetGitCommitRootIds >> executeForCommit: aCommit alreadySeen: aSet [
 
 	| parentIds |
 	
-	aCommit rootId notNil
+	(aCommit rootId notNil or: [ aSet includes: aCommit ])
 		ifTrue: [ ^ self ].
 		
-	aCommit parents do: [ :each | self executeForCommit: each ].
+	self logInfo: 'Checking commit ', aCommit  shaShortString.
+	aSet add: aCommit.
+		
+	aCommit parents do: [ :each | self executeForCommit: each  alreadySeen: aSet ].
 	parentIds := ((aCommit parents collect: #rootId) reject: #isNil) asSet.
 
 	parentIds size = 1
@@ -55,12 +59,12 @@ SPSetGitCommitRootIds >> executeForCommit: aCommit [
 SPSetGitCommitRootIds >> executeForRepo: aGitRepo [
 
 	aGitRepo commitRefs do: [ :each |
-		each commit rootId isNil
+		(each commit rootId isNil and: [ each commit hasPackages ])
 			ifTrue: [ 
 				self logInfo: 'Setting rootId''s for ', aGitRepo url, ' ref: ', each name.
 				self context 
 					doTransaction: self class name, ' - ', aGitRepo url
-					with: [ self executeForCommit: each commit ].
+					with: [ self executeForCommit: each commit alreadySeen: Set new. ].
 				self glorpSession initializeCache ] ]
 ]
 

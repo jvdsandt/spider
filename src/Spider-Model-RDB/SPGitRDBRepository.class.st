@@ -349,6 +349,27 @@ WHERE t1.id in (select id from all_children) order by t1.id desc' format: (Array
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> selectAllCommitsOf: aRepoId [
+	"A recursive query to retrieve all commits of <aRepoId>."
+
+	| sql query |
+	
+	sql := 'WITH RECURSIVE all_parents AS (
+	SELECT commit_id AS id FROM git_repo_refs WHERE repo_id = {1}
+	UNION
+	SELECT gcpr.parent_id FROM git_commit_parent_refs gcpr, all_parents ap WHERE ap.id = gcpr.commit_id)
+SELECT DISTINCT 
+	t1.ID, t1.TXID, t1.SHA, t1.AUTHOR_DATETIME, t1.AUTHOR_TZOFFSET, t1.AUTHOR_NAME, t1.AUTHOR_EMAIL, t1.MESSAGE, t1.STATUS, t1.SOURCE_DIR, t1.FORMAT 
+FROM git_commits t1 
+WHERE t1.id in (select id from all_parents) order by t1.id desc' format: (Array with: aRepoId).
+	
+	query := Query read: SPGitCommit.
+	query sql: sql.
+	
+	^ query executeWithParameters: (Array with: aRepoId) in: self glorpSession
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> selectAllCommitsOfRepo: aRepoId [
 	"A recursive query to retrieve all child commits of <aCommitId>."
 
