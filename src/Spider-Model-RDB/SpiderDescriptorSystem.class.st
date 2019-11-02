@@ -57,8 +57,8 @@ SpiderDescriptorSystem >> classModelForSPGitMethodDiffRecord: aClassModel [
 	aClassModel newAttributeNamed: #commit type: SPGitCommit.
 	aClassModel newAttributeNamed: #isMeta type: Boolean.
 	aClassModel newAttributeNamed: #className type: Symbol.
-	aClassModel newAttributeNamed: #newMethod type: SPGlorpClass.
-	aClassModel newAttributeNamed: #oldMethod type: SPGlorpClass.
+	aClassModel newAttributeNamed: #newMethod type: SPMethod.
+	aClassModel newAttributeNamed: #oldMethod type: SPMethod.
 ]
 
 { #category : #'class models' }

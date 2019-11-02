@@ -93,6 +93,15 @@ SPiderPostgreSQLContext >> createClassRepo [
 ]
 
 { #category : #running }
+SPiderPostgreSQLContext >> createDiffRepo [
+
+	^ SPDiffPostgresRepository new
+			setContext: self;
+			setClient: client;
+			yourself
+]
+
+{ #category : #running }
 SPiderPostgreSQLContext >> createGitRepo [
 
 	^ SPGitPostgresRepository new
@@ -143,6 +152,18 @@ SPiderPostgreSQLContext >> createSessionRepo [
 			setContext: self;
 			setClient: client;
 			yourself
+]
+
+{ #category : #testing }
+SPiderPostgreSQLContext >> isPostgresContext [ 
+
+	^ true
+]
+
+{ #category : #testing }
+SPiderPostgreSQLContext >> isRDBContext [ 
+
+	^ true
 ]
 
 { #category : #accessing }

@@ -95,9 +95,9 @@ SPiderContextTestResource >> resetForClasses [
 SPiderContextTestResource >> resetForGit [
 
 	self resetForPackages.
-	self context gitRepo checkSchema
-
-	
+	self context gitRepo checkSchema.
+	self context isRDBContext 
+		ifTrue: [ self context diffRepo checkSchema ]
 ]
 
 { #category : #running }
@@ -112,15 +112,13 @@ SPiderContextTestResource >> resetForMCPackages [
 { #category : #running }
 SPiderContextTestResource >> resetForMethods [
 
-	(self context isKindOf: SPiderPostgreSQLContext)
+	self context isPostgresContext 
 		ifTrue: [ 
 			self clearPostgresTables: self context client.
 			self context glorpSession initializeCache ].
 
 	self context sessionRepo checkSchema.
 	self context methodRepo checkSchema.
-
-	
 ]
 
 { #category : #running }

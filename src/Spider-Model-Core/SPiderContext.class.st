@@ -90,6 +90,12 @@ SPiderContext >> currentTransactionId [
 	^ self currentTransaction id
 ]
 
+{ #category : #acessing }
+SPiderContext >> diffRepo [
+
+	^ repos at: #diffRepo ifAbsentPut: [ self createDiffRepo ]
+]
+
 { #category : #actions }
 SPiderContext >> doTransaction: aMessage with: aBlock [
 
@@ -121,6 +127,18 @@ SPiderContext >> initialize [
 	
 	repos := Dictionary new.
 
+]
+
+{ #category : #testing }
+SPiderContext >> isPostgresContext [
+
+	^ false
+]
+
+{ #category : #testing }
+SPiderContext >> isRDBContext [
+
+	^ false
 ]
 
 { #category : #actions }
