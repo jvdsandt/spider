@@ -437,6 +437,15 @@ SPGitRDBRepository >> selectRepoRefsOfCommit: aCommitId [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> selectReposByCommitRootId: aRootId [
+
+	| q |
+	
+	q := Query read: SPGitRepo where: [ :e | e commitRefs anySatisfy: [ :ref | ref commit rootId = aRootId ] ].
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> selectReposByUrl [
 
 	^ self selectReposByUrl: 0 limit: 100

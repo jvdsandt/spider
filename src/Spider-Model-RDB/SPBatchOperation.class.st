@@ -121,3 +121,9 @@ SPBatchOperation >> rehashPackageIds: aList txid: txid [
 		
 	self logInfo: aList size printString, ' package hashes updated'
 ]
+
+{ #category : #initialization }
+SPBatchOperation >> reset [
+
+	self context glorpSession reset
+]

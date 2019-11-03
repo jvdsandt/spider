@@ -125,6 +125,37 @@ SPGitCommitLGitBuilderSpiderTest >> testBuildCommit2 [
 ]
 
 { #category : #accessing }
+SPGitCommitLGitBuilderSpiderTest >> testBuildCommit20191102_d03a74f [
+
+	| spCommit diffs diff classDiff |
+
+	spCommit := SPLibGitCommitBuilder new
+		setContext: self context;
+		commit: (self lgitRepo revparse: 'd03a74f');
+		build.
+	
+	self assert: spCommit messageLine equals: 'Moved SpiderGitDemoFeature123Test to GitDemo2 package'.
+	
+	self assert: spCommit packageNames equals: #( 'Spider-GitDemo1' 'Spider-GitDemo2' ).
+	self assert: spCommit parents size equals: 1.
+	
+	diffs := spCommit diffs.
+	self assert: diffs size equals: 2.
+	diff := diffs first.
+	self assert: diff class equals: SPUpdatedPackage.
+	self assert: diff classDiffs size equals: 1.
+	
+	classDiff := diff classDiffs first.
+	self assert: classDiff class equals: SPRemovedClass.
+	
+	classDiff := diffs last classDiffs first.
+	self assert: classDiff class equals: SPAddedClass.
+	
+	
+
+]
+
+{ #category : #accessing }
 SPGitCommitLGitBuilderSpiderTest >> testBuildCommit3 [
 
 	| spCommit spClass |

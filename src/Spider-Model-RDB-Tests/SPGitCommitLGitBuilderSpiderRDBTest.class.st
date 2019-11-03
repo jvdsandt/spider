@@ -63,7 +63,7 @@ SPGitCommitLGitBuilderSpiderRDBTest >> testBuildCommit1WithRepo [
 { #category : #tests }
 SPGitCommitLGitBuilderSpiderRDBTest >> testBuildCommit2 [
 
-	| commit parentCommit |
+	| commit parentCommit diffRecordBuilder |
 
 	super testBuildCommit2.
 	
@@ -73,5 +73,12 @@ SPGitCommitLGitBuilderSpiderRDBTest >> testBuildCommit2 [
 	
 	parentCommit := commit parents first.
 	self assert: parentCommit children size equals: 1.
-	self assert: parentCommit children first equals: commit
+	self assert: parentCommit children first equals: commit.
+	
+	diffRecordBuilder := SPGitDiffRecordBuilder new
+		setCommit: commit;
+		buildAndStoreWith: self context diffRepo.
+		
+	self assert: diffRecordBuilder classRecords size equals: 1.
+	self assert: diffRecordBuilder methodRecords size equals: 4.
 ]

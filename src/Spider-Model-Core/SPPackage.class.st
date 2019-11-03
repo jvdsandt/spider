@@ -123,6 +123,8 @@ SPPackage >> compareClassesWith: olderPackage [
 
 { #category : #comparing }
 SPPackage >> compareClassesWithAll: olderPackages [
+	"Compare the receivers classes with the classes in <olderPackages>. Answer a collection of
+	SPAddedClass, SPUpdatedClass and SPRemovedClass objects."
 
 	| oldRefsByName result removedByName |
 	

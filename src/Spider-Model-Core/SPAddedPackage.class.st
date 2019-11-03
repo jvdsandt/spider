@@ -1,6 +1,9 @@
 Class {
 	#name : #SPAddedPackage,
 	#superclass : #SPDiffAdd,
+	#instVars : [
+		'classDiffs'
+	],
 	#category : #'Spider-Model-Core-Diff'
 }
 
@@ -9,8 +12,19 @@ SPAddedPackage >> accept: aVisitor [
 	aVisitor visitDiffAddedPackage: self
 ]
 
+{ #category : #internal }
+SPAddedPackage >> calcClassDiffs [
+
+	^ self newObject classRefs collect: [ :each | SPAddedClass added: each ]
+]
+
 { #category : #accessing }
 SPAddedPackage >> classDiffs [
 
-	^ self newObject classes collect: [ :each | SPAddedClass added: each ]
+	^ classDiffs ifNil: [ classDiffs := self calcClassDiffs ]
+]
+
+{ #category : #accessing }
+SPAddedPackage >> newPackage [
+	^ self newObject
 ]

@@ -243,7 +243,8 @@ SPGlorpClass >> compareMethodsWith: olderClass [
 
 { #category : #comparing }
 SPGlorpClass >> compareMethodsWithAll: olderClasses [
-	"Answer a collection of Added, Removed or Updated methods."
+	"Compare the receivers methods with the methods in <olderClasses>. Answer a collection of
+	SPAddedMethod, SPUpdatedMethod and SPRemovedMethod objects."
 	
 	| oldMethodRefs result removedByName |
 	

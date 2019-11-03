@@ -1,12 +1,27 @@
 Class {
 	#name : #SPAddedClass,
 	#superclass : #SPDiffAdd,
+	#instVars : [
+		'methodDiffs'
+	],
 	#category : #'Spider-Model-Core-Diff'
 }
 
 { #category : #visiting }
 SPAddedClass >> accept: aVisitor [
 	aVisitor visitDiffAddedClass: self
+]
+
+{ #category : #internal }
+SPAddedClass >> calcMethodDiffs [
+
+	^ self newSpiderClass methodRefs collect: [ :each | SPAddedMethod added: each ]
+]
+
+{ #category : #accessing }
+SPAddedClass >> methodDiffs [
+
+	^ methodDiffs ifNil: [ methodDiffs := self calcMethodDiffs ]
 ]
 
 { #category : #'instance creation' }

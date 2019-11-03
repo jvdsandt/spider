@@ -91,7 +91,8 @@ SPGitCommit >> comparePackagesWith: olderCommit [
 
 { #category : #comparing }
 SPGitCommit >> comparePackagesWithAll: olderCommits [
-	"Answer a collection of Added, Removed or Updated packages."
+	"Compare the receivers packages with the packages in <olderCommits>. Answer a collection of
+	SPAddedPackage, SPUpdatedPackage and SPRemovedPackage objects."
 
 	| oldPackagesByName result removedByName |
 	

@@ -122,11 +122,23 @@ SPTestDataCore >> createPackageAV1 [
 
 { #category : #creating }
 SPTestDataCore >> createPackageAV2 [
+	"A new version of class A and a new class extension"
 
 	^ self packageBuilder 
 		name: 'PackageA';
 		addClass: self createClassAV2 category: nil;
 		addClass: self createClassBV1 category: nil;
+		addClassExtension: self createClassExtensionNumberV1;
+		build
+]
+
+{ #category : #creating }
+SPTestDataCore >> createPackageAV3 [
+	"Class B was removed"
+
+	^ self packageBuilder 
+		name: 'PackageA';
+		addClass: self createClassAV2 category: nil;
 		addClassExtension: self createClassExtensionNumberV1;
 		build
 ]

@@ -13,7 +13,7 @@ SPDiffRDBRepository >> deleteDiffGitClassesByCommitIdQuery [
 
 	| sql |
 	
-	sql := 'DELETE FROM diff_git_classes WHERE ncommit_id = $1'.
+	sql := 'DELETE FROM diff_git_classes WHERE commit_id = $1'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
@@ -22,7 +22,7 @@ SPDiffRDBRepository >> deleteDiffGitMethodsByCommitIdQuery [
 
 	| sql |
 	
-	sql := 'DELETE FROM diff_git_methods WHERE ncommit_id = $1'.
+	sql := 'DELETE FROM diff_git_methods WHERE commit_id = $1'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
@@ -31,7 +31,7 @@ SPDiffRDBRepository >> deleteDiffGitPackagesByCommitIdQuery [
 
 	| sql |
 	
-	sql := 'DELETE FROM diff_git_packages WHERE ncommit_id = $1'.
+	sql := 'DELETE FROM diff_git_packages WHERE commit_id = $1'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
@@ -57,7 +57,7 @@ SPDiffRDBRepository >> insertDiffGitMethodsQuery [
 
 	| sql |
 	
-	sql := 'INSERT INTO diff_git_methods (commit_id, class_name, meta, old_class_id, new_class_id) VALUES ($1,$2,$3,$4,$5)'.
+	sql := 'INSERT INTO diff_git_methods (commit_id, class_name, meta, old_method_id, new_method_id) VALUES ($1,$2,$3,$4,$5)'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
 ]
 
@@ -90,7 +90,7 @@ SPDiffRDBRepository >> storeGitClassDiffs: aRecords [
 { #category : #storing }
 SPDiffRDBRepository >> storeGitMethodDiffs: aRecords [
 
-	self insertDiffGitClassesQuery executeBatch: (
+	self insertDiffGitMethodsQuery executeBatch: (
 		aRecords collect: [ :each |
 			Array 
 				with: 	each commit id

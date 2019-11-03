@@ -9,6 +9,11 @@ SPAddedMethod >> accept: aVisitor [
 	aVisitor visitDiffAddedMethod: self
 ]
 
+{ #category : #testing }
+SPAddedMethod >> isClassSide [
+	^ self newObject isClassSide 
+]
+
 { #category : #accessing }
 SPAddedMethod >> name [
 	^ self selector

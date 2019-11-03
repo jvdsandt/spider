@@ -9,6 +9,11 @@ SPRemovedMethod >> accept: aVisitor [
 	aVisitor visitDiffRemovedMethod: self
 ]
 
+{ #category : #testing }
+SPRemovedMethod >> isClassSide [
+	^ self oldObject isClassSide 
+]
+
 { #category : #accessing }
 SPRemovedMethod >> name [
 	^ self selector

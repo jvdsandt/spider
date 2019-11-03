@@ -9,6 +9,11 @@ SPUpdatedMethod >> accept: aVisitor [
 	aVisitor visitDiffUpdatedMethod: self
 ]
 
+{ #category : #testing }
+SPUpdatedMethod >> isClassSide [
+	^ self newObject isClassSide
+]
+
 { #category : #visiting }
 SPUpdatedMethod >> name [
 	^ self selector

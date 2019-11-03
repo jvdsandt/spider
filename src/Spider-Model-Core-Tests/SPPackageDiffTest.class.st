@@ -95,3 +95,26 @@ SPPackageDiffTest >> testPackageUpdated [
 	self assert: diffs last newObject isSpiderClassExtension.
 
 ]
+
+{ #category : #tests }
+SPPackageDiffTest >> testPackageUpdatedClassRemoved [
+
+	| v2 v3 diffs methodDiffs |
+	
+	v2 := self spTestData createPackageAV2.
+	v3 := self spTestData createPackageAV3.
+	
+	diffs := v3 compareClassesWith: v2.
+	
+	self assert: diffs size equals: 1.
+	self assert: diffs first class equals: SPRemovedClass.
+	self assert: diffs first name equals: #ClassB.
+	
+	methodDiffs := diffs first methodDiffs sorted: [ :d1 :d2 | d1 selector <= d2 selector ].
+	self assert: methodDiffs size equals: 2.
+	self assert: methodDiffs first class equals: SPRemovedMethod.
+	self assert: methodDiffs first selector equals: #method2:.
+	self assert: methodDiffs first oldCategory equals: 'accessing'.
+	self assert: methodDiffs last class equals: SPRemovedMethod.
+
+]
