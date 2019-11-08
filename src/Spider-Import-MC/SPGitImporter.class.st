@@ -174,6 +174,7 @@ SPGitImporter >> branchNameFromRef: aRefName [
 SPGitImporter >> createDiffRecords: aCommit [
 
 	SPCreateGitDiffRecords new
+		context: self context;
 		executeForCommit: aCommit
 ]
 
