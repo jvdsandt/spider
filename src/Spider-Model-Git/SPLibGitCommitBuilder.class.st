@@ -61,15 +61,16 @@ SPLibGitCommitBuilder >> buildAllPackages [
 { #category : #internal }
 SPLibGitCommitBuilder >> buildPackageFromSnapshot: mcSnapshot name: aName [
 
-	| packageBuilder |
+	| packageBuilder thePackage |
 	
 	packageBuilder := context packageRepo newMCBuilder.
 	packageBuilder name: aName.
 	packageBuilder snapshot: mcSnapshot.
 	
-	self logInfo: ('Building package ', aName, ' from commit ', (self commit id hexString first: 7)).
-	
-	^ packageBuilder build
+	self logInfo: ('Building package ', aName, ' from commit ', (self commit id hexString first: 7), ' ...').
+	thePackage := packageBuilder build.
+	self logInfo: (thePackage id ifNil: [ 'New version created' ] ifNotNil: [ 'Version already present: ', thePackage id asString ]).	
+	^ thePackage 
 ]
 
 { #category : #internal }

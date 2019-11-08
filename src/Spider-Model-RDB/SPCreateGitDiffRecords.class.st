@@ -54,7 +54,7 @@ SPCreateGitDiffRecords >> executeForNewCommits [
 	query := Query read: SPGitCommit where: [ :e | e id > lastCommitId ].
 	query 
 		orderBy: [ :e | e id ];
-		limit: 1000.
+		limit: 5000.
 	commits := self glorpSession execute: query.
 	
 	commits do: [ :each |

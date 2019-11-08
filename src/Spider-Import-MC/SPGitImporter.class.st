@@ -171,6 +171,13 @@ SPGitImporter >> branchNameFromRef: aRefName [
 ]
 
 { #category : #'actions-internal' }
+SPGitImporter >> createDiffRecords: aCommit [
+
+	SPCreateGitDiffRecords new
+		executeForCommit: aCommit
+]
+
+{ #category : #'actions-internal' }
 SPGitImporter >> deleteRefs: aRefColl [
 
 	| message |
@@ -187,7 +194,7 @@ SPGitImporter >> deleteRefs: aRefColl [
 { #category : #'actions-internal' }
 SPGitImporter >> doImport: lgitCommit [
 
-	| startTS duration message |
+	| startTS duration message spCommit |
 
 	message := 'Import git commit {1} from {2}'	 format: { 
 		lgitCommit id hexString first: 7.
@@ -198,15 +205,15 @@ SPGitImporter >> doImport: lgitCommit [
 	context
 		doTransaction: message
 		with: [ 
-			| spCommit |
 			spCommit := SPLibGitCommitBuilder new
 				setContext: self context;
 				commit: lgitCommit;
 				build.
 			self gitRepo storeCommit: spCommit for: self spGitRepo ].		
 	duration := Time millisecondClockValue - startTS.
-	self logInfo: 'Finished in ', duration asString, 'ms.'
+	self logInfo: 'Finished in ', duration asString, 'ms.'.
 
+	self createDiffRecords: spCommit 
 ]
 
 { #category : #'actions-internal' }

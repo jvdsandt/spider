@@ -63,8 +63,8 @@ SPRestfulHandler >> limitParameterDefault: aDefault max: aMax [
 
 	| value |
 	
-	value := self requestContext request at: 'limit' ifAbsent: [ ^ aDefault ].
-	^ (value asInteger max: 1) min: aMax
+	value := self requestIntParameterAt: 'limit' ifAbsent: [ ^ aDefault ].
+	^ (value max: 1) min: aMax
 ]
 
 { #category : #accessing }
@@ -111,10 +111,7 @@ SPRestfulHandler >> notFoundJson [
 { #category : #'accessing parameters' }
 SPRestfulHandler >> offsetParameter [
 
-	| offset |
-	
-	offset := self requestContext request at: 'offset' ifAbsent: [ ^ nil ].
-	^ offset asInteger max: 0
+	^ self requestIntParameterAt: 'offset' ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }
@@ -142,6 +139,12 @@ SPRestfulHandler >> renderHtml: aComponent [
 SPRestfulHandler >> renderJsonWith: anObject [
 
 	^ WAJsonCanvas builder render: anObject
+]
+
+{ #category : #'accessing parameters' }
+SPRestfulHandler >> requestIntParameterAt: aName ifAbsent: aBlock [
+
+	^ (self requestContext request at: aName ifAbsent: [ ^ aBlock value ]) asUnsignedInteger
 ]
 
 { #category : #accessing }

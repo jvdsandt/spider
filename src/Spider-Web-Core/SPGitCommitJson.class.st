@@ -57,7 +57,8 @@ SPGitCommitJson >> renderCommitSummary: anItem on: aRenderer [
 	aRenderer key: 'sha' value: anItem shaString.
 	aRenderer key: 'datetime' value: anItem datetime.
 	aRenderer key: 'authorName' value: anItem authorName.
-	aRenderer key: 'message' value: anItem message
+	aRenderer key: 'message' value: anItem message.
+	aRenderer key: 'rootId' value: anItem rootId
 ]
 
 { #category : #rendering }
@@ -75,7 +76,8 @@ SPGitCommitJson >> renderItem: anItem on: aRenderer [
 SPGitCommitJson >> renderPackageSummary: aPackage on: aRenderer [
 
 	SPPackageJson new
-		renderPackageSummary: aPackage on: aRenderer 
+		package: aPackage;
+		renderPackageSummaryOn: aRenderer 
 ]
 
 { #category : #rendering }

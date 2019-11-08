@@ -4,6 +4,23 @@ Class {
 	#category : #'Spider-Web-Core'
 }
 
+{ #category : #accessing }
+SPJsonComponent >> context [
+	^ self webContext context
+]
+
+{ #category : #accessing }
+SPJsonComponent >> diffRepo [ 
+
+	^ self context diffRepo
+]
+
+{ #category : #accessing }
+SPJsonComponent >> gitRepo [ 
+
+	^ self context gitRepo
+]
+
 { #category : #rendering }
 SPJsonComponent >> renderGitCommitSummary: aCommit on: aRenderer [
 
@@ -22,4 +39,10 @@ SPJsonComponent >> renderMCPackageSummary: mcPackage on: aRenderer [
 		key: 'author' value: mcPackage author;
 		key: 'datetime' value: mcPackage datetime;
 		key: 'message' value: mcPackage message
+]
+
+{ #category : #accessing }
+SPJsonComponent >> webContext [
+	^ SPWebContext default
+	
 ]

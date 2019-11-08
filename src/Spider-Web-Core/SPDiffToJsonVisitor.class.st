@@ -72,7 +72,8 @@ SPDiffToJsonVisitor >> visitDiffAddedPackage: aDiff [
 	renderer object: [ 
 		renderer key: 'newPackage' value: [ 
 			SPPackageJson new
-				renderPackageSummary: aDiff newObject on: renderer ] ]
+				package: aDiff newObject;
+				renderPackageSummaryOn: renderer ] ]
 ]
 
 { #category : #visiting }
@@ -98,7 +99,8 @@ SPDiffToJsonVisitor >> visitDiffRemovedPackage: aDiff [
 	renderer object: [ 
 		renderer key: 'oldPackage' value: [ 
 			SPPackageJson new
-				renderPackageSummary: aDiff oldObject on: renderer ] ]
+				package: aDiff oldObject;
+				renderPackageSummaryOn: renderer ] ]
 ]
 
 { #category : #visiting }
@@ -143,11 +145,13 @@ SPDiffToJsonVisitor >> visitDiffUpdatedPackage: aDiff [
 		renderer key: 'oldPackage' value: [ 
 			renderer object: [ 
 				SPPackageJson new
-					renderPackageSummary: aDiff oldObject on: renderer ] ].
+					package: aDiff oldObject;
+					renderPackageSummaryOn: renderer ] ].
 		renderer key: 'newPackage' value: [ 
 			renderer object: [ 
 				SPPackageJson new
-					renderPackageSummary: aDiff newObject on: renderer ] ].
+					package: aDiff newObject;
+					renderPackageSummaryOn: renderer ] ].
 			
 		renderer key: 'classDiffs' value: [ 
 			renderer array: [ 

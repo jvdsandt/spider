@@ -13,6 +13,5 @@ SPTranscriptLogger >> logLevel: aLevel source: aSource message: anObject [
 			nextPutAll: ' ['; nextPutAll: aLevel; nextPutAll: '] ';
 			nextPutAll: aSource asString;
 			nextPutAll: ' - ';
-			nextPutAll: anObject asString;
-			nextPutAll: OSPlatform current lineEnding ])
+			nextPutAll: anObject asString ])
 ]
