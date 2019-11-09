@@ -24,13 +24,17 @@ SPCoreRestfulHandler >> getClassAsJson: anId [
 	| spiderClass packageId category |
 	
 	spiderClass := self classRepo getClassById: anId ifAbsent: [ ^ self notFound ].
-	packageId := self requestContext request at: 'packageId' ifAbsent: [ nil ].
+	packageId := self requestIntParameterAt: 'packageId' ifAbsent: [ nil ].
 	category := packageId isNil
 		ifTrue: [ nil ]
 		ifFalse: [ self packageRepo getClassCategoryFor: spiderClass id in: packageId ].
 	
 	^ self renderJsonWith: [ :json |
-				SPClassJson new renderClass: spiderClass in: category on: json ]
+			SPClassJson new 
+				spiderClass: spiderClass;
+				category: category;
+				gitRootId: (self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ]);
+				renderClassOn: json ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -39,12 +43,18 @@ SPCoreRestfulHandler >> getMethodAsJson: anId [
 	<path: '/methods/{anId}'>
 	<produces: 'application/json'>
 	
-	| method |
+	| method gitRootId className isMeta |
 	
 	method := self methodRepo getMethodById: anId ifAbsent: [ ^ self notFound ].
+	gitRootId := self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ].
+	className := self requestParameterAt: 'className' ifAbsent: [ nil ].
+	isMeta := self requestBoolParameterAt: 'isMeta' ifAbsent: [ nil ].
 	
 	^ self renderJsonWith: [ :json |
-				SPMethodJson new renderMethod: method on: json ]
+			SPMethodJson new 
+				method: method;
+				gitRootId: gitRootId className: className meta: isMeta;
+				renderMethodOn: json ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,10 +106,10 @@ SPCoreRestfulHandler >> getPackageAsJson: anId [
 	package := self packageRepo getPackageById: anId ifAbsent: [ ^ self notFound ].
 	
 	^ self renderJsonWith: [ :json |
-				SPPackageJson new 
-					package: package;
-					gitRootId: (self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ]);
-					renderPackageOn: json ]
+			SPPackageJson new 
+				package: package;
+				gitRootId: (self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ]);
+				renderPackageOn: json ]
 ]
 
 { #category : #'as yet unclassified' }

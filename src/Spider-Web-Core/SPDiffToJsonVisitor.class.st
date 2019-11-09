@@ -26,7 +26,8 @@ SPDiffToJsonVisitor >> renderOldClasses: aDiff [
 			aDiff oldObjects do: [ :each |
 				renderer object: [ 
 					SPClassJson new
-						renderClassSummary: each spiderClass in: each category on: renderer ] ] ] ]
+						packageToClassRef: each;
+						renderClassSummaryOn: renderer ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -53,7 +54,8 @@ SPDiffToJsonVisitor >> visitDiffAddedClass: aDiff [
 		renderer key: 'newClass' value: [ 
 			renderer object: [ 
 				SPClassJson new
-					renderClassSummary: aDiff newClass in: aDiff newObject category on: renderer ] ] ]
+					packageToClassRef: aDiff newObject;
+					renderClassSummaryOn: renderer ] ] ]
 ]
 
 { #category : #visiting }
@@ -63,7 +65,8 @@ SPDiffToJsonVisitor >> visitDiffAddedMethod: aDiff [
 		renderer key: 'newMethod' value: [ 
 			renderer object: [ 
 				SPMethodJson new
-					renderMethodSummary: aDiff newMethod in: aDiff newCategory on: renderer ] ] ]
+					methodRef: aDiff newObject;
+					renderMethodSummaryOn: renderer ] ] ]
 ]
 
 { #category : #visiting }
@@ -90,7 +93,8 @@ SPDiffToJsonVisitor >> visitDiffRemovedMethod: aDiff [
 		renderer key: 'oldMethod' value: [ 
 			renderer object: [ 
 				SPMethodJson new
-					renderMethodSummary: aDiff oldObject on: renderer ] ] ]
+					methodRef: aDiff oldObject;
+					renderMethodSummaryOn: renderer ] ] ]
 ]
 
 { #category : #visiting }
@@ -111,7 +115,8 @@ SPDiffToJsonVisitor >> visitDiffUpdatedClass: aDiff [
 		renderer key: 'newClass' value: [ 
 			renderer object: [ 
 				SPClassJson new
-					renderClassSummary: aDiff newSpiderClass in: aDiff newObject category on: renderer ] ].
+					packageToClassRef: aDiff newObject;
+					renderClassSummaryOn: renderer ] ].
 			
 		renderer key: 'methodDiffs' value: [ 
 			renderer array: [ 
@@ -132,10 +137,12 @@ SPDiffToJsonVisitor >> visitDiffUpdatedMethod: aDiff [
 	renderer object: [ 
 		renderer key: 'oldMethod' value: [ 
 			SPMethodJson new
-				renderMethodSummary: aDiff oldMethod in: aDiff oldCategory on: renderer ].
+				methodRef: aDiff oldObject;
+				renderMethodSummaryOn: renderer ].
 		renderer key: 'newMethod' value: [ 
 			SPMethodJson new
-				renderMethodSummary: aDiff newMethod in: aDiff newCategory on: renderer ] ]
+				methodRef: aDiff newMethod;
+				renderMethodSummaryOn: renderer ] ]
 ]
 
 { #category : #visiting }

@@ -50,15 +50,12 @@ SPPackageJson >> package: anObject [
 { #category : #rendering }
 SPPackageJson >> renderClassRefs: aList on: json [
 
-	| classJson |
-	
-	classJson := SPClassJson new.
-
 	json array: [ 
 		aList do: [ :each |
 			json object: [ 
-				classJson renderClassSummary: each spiderClass on: json.
-				json key: 'category' value: each category ] ] ]
+				SPClassJson new
+					packageToClassRef: each;
+					renderClassSummaryOn: json ] ] ]
 ]
 
 { #category : #rendering }

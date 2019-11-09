@@ -4,10 +4,21 @@ Class {
 	#instVars : [
 		'method',
 		'gitCommit',
-		'mcPackage'
+		'mcPackage',
+		'category'
 	],
 	#category : #'Spider-Web-Core'
 }
+
+{ #category : #accessing }
+SPMethodJson >> category [
+	^ category
+]
+
+{ #category : #accessing }
+SPMethodJson >> category: anObject [
+	category := anObject
+]
 
 { #category : #accessing }
 SPMethodJson >> gitCommit [
@@ -47,31 +58,36 @@ SPMethodJson >> method: anObject [
 	method := anObject
 ]
 
-{ #category : #rendering }
-SPMethodJson >> renderMethod: aMethod on: json [
+{ #category : #accessing }
+SPMethodJson >> methodRef: aRef [
 
-	json object: [ 
-		json 
-			key: 'id' value: aMethod id;
-			key: 'selector' value: aMethod selector;
-			key: 'source' value: aMethod source ]
+	self method: aRef method.
+	self category: aRef category
 ]
 
 { #category : #rendering }
-SPMethodJson >> renderMethodSummary: aMethod in: aCategory on: json [
+SPMethodJson >> renderMethodOn: json [
 
 	json object: [ 
 		json 
-			key: 'id' value: aMethod id;
-			key: 'selector' value: aMethod selector;
-			key: 'category' value: aCategory ]
+			key: 'id' value: method id;
+			key: 'selector' value: method selector.
+		category
+			ifNotNil: [ json key: 'category' value: category ].
+		json
+			key: 'source' value: method source;
+			key: 'gitCommit' value: (gitCommit ifNotNil: [
+				[ json object: [ self renderGitCommitSummary: gitCommit on: json ] ] ])
+	]
 ]
 
 { #category : #rendering }
-SPMethodJson >> renderMethodSummary: aMethod on: json [
+SPMethodJson >> renderMethodSummaryOn: json [
 
 	json object: [ 
 		json 
-			key: 'id' value: aMethod id;
-			key: 'selector' value: aMethod selector ]
+			key: 'id' value: method id;
+			key: 'selector' value: method selector.
+		category
+			ifNotNil: [ json key: 'category' value: category ] ]
 ]

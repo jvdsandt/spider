@@ -142,9 +142,24 @@ SPRestfulHandler >> renderJsonWith: anObject [
 ]
 
 { #category : #'accessing parameters' }
+SPRestfulHandler >> requestBoolParameterAt: aName ifAbsent: aBlock [
+
+	| value |
+	
+	value := 	self requestParameterAt: aName ifAbsent: [ ^ aBlock value ].
+	^ value = 'true' or: [ value = '1' ]
+]
+
+{ #category : #'accessing parameters' }
 SPRestfulHandler >> requestIntParameterAt: aName ifAbsent: aBlock [
 
 	^ (self requestContext request at: aName ifAbsent: [ ^ aBlock value ]) asUnsignedInteger
+]
+
+{ #category : #'accessing parameters' }
+SPRestfulHandler >> requestParameterAt: aName ifAbsent: aBlock [
+
+	^ self requestContext request at: aName ifAbsent: aBlock
 ]
 
 { #category : #accessing }

@@ -1,30 +1,76 @@
 Class {
 	#name : #SPClassJson,
 	#superclass : #SPJsonComponent,
+	#instVars : [
+		'spiderClass',
+		'category',
+		'gitCommit',
+		'mcPackage'
+	],
 	#category : #'Spider-Web-Core'
 }
 
-{ #category : #rendering }
-SPClassJson >> renderClass: aClass in: aCategory on: aRenderer [
+{ #category : #accessing }
+SPClassJson >> category [
+	^ category
+]
 
-	| gitCommit mcPackage |
-	
-	gitCommit := nil. "aClass oldestGitCommit."
-	mcPackage := nil. "aClass oldestMCPackage."
+{ #category : #accessing }
+SPClassJson >> category: anObject [
+	category := anObject
+]
+
+{ #category : #accessing }
+SPClassJson >> gitCommit [
+	^ gitCommit
+]
+
+{ #category : #accessing }
+SPClassJson >> gitCommit: anObject [
+	gitCommit := anObject
+]
+
+{ #category : #accessing }
+SPClassJson >> gitRootId: anId [
+
+	self gitCommit: ((anId notNil and: [ spiderClass notNil ])
+		ifTrue: [ self diffRepo getCommitOfClass: spiderClass in: anId ]
+		ifFalse: [ nil ])
+]
+
+{ #category : #accessing }
+SPClassJson >> mcPackage [
+	^ mcPackage
+]
+
+{ #category : #accessing }
+SPClassJson >> mcPackage: anObject [
+	mcPackage := anObject
+]
+
+{ #category : #accessing }
+SPClassJson >> packageToClassRef: aRef [
+
+	self spiderClass: aRef spiderClass.
+	self category: aRef category
+]
+
+{ #category : #rendering }
+SPClassJson >> renderClassOn: aRenderer [
 
 	aRenderer object: [ 
-		self renderClassSummary: aClass on: aRenderer.
+		self renderClassSummaryOn: aRenderer.
 		aRenderer 
-			key: 'comment' value: aClass comment.
-		aClass isSpiderClassExtension
+			key: 'comment' value: spiderClass comment.
+		spiderClass isSpiderClassExtension
 			ifFalse: [ 
 				aRenderer
-					key: 'definition' value: (aClass definitionIn: aCategory);
-					key: 'classDefinition' value: (aClass classDefinitionIn: aCategory).
-				self renderVariablesOf: aClass on: aRenderer ].
+					key: 'definition' value: (spiderClass definitionIn: category);
+					key: 'classDefinition' value: (spiderClass classDefinitionIn: category).
+				self renderVariablesOf: spiderClass on: aRenderer ].
 		aRenderer
-			key: 'instanceMethods' value: [ self renderMethodRefs: aClass instanceMethodRefs on: aRenderer ]; 
-			key: 'classMethods' value: [ self renderMethodRefs: aClass classMethodRefs on: aRenderer ].
+			key: 'instanceMethods' value: [ self renderMethodRefs: spiderClass instanceMethodRefs on: aRenderer ]; 
+			key: 'classMethods' value: [ self renderMethodRefs: spiderClass classMethodRefs on: aRenderer ].
 		aRenderer 
 			key: 'gitCommit' value: (gitCommit ifNotNil: [
 				[ aRenderer object: [ self renderGitCommitSummary: gitCommit on: aRenderer ]	] ]);
@@ -34,32 +80,16 @@ SPClassJson >> renderClass: aClass in: aCategory on: aRenderer [
 ]
 
 { #category : #rendering }
-SPClassJson >> renderClass: aClass on: aRenderer [
-
-	self renderClass: aClass in: nil on: aRenderer 
-]
-
-{ #category : #rendering }
-SPClassJson >> renderClassSummary: aClass in: aCategory on: json [
+SPClassJson >> renderClassSummaryOn: json [
 
 	json
-		key: 'id' value: aClass id;
-		key: 'name' value: aClass name;
-		key: 'type' value: aClass typeName.
-	aClass isSpiderClass 
-		ifTrue: [ json key: 'superclass' value: aClass superclassName ].
-	json key: 'category' value: aCategory
-]
-
-{ #category : #rendering }
-SPClassJson >> renderClassSummary: aClass on: json [
-
-	json
-		key: 'id' value: aClass id;
-		key: 'name' value: aClass name;
-		key: 'type' value: aClass typeName.
-	aClass isSpiderClass 
-		ifTrue: [ json key: 'superclass' value: aClass superclassName ]
+		key: 'id' value: spiderClass id;
+		key: 'name' value: spiderClass name;
+		key: 'type' value: spiderClass typeName.
+	spiderClass isSpiderClass 
+		ifTrue: [ json key: 'superclass' value: spiderClass superclassName ].
+	category notNil
+		ifTrue: [ json key: 'category' value: category ]
 ]
 
 { #category : #rendering }
@@ -83,4 +113,14 @@ SPClassJson >> renderVariablesOf: aClass on: json [
 		ifFalse: [ 
 			json key: 'classInstanceVariables' value: aClass classInstanceVarNames.
 			json key: 'poolDictionaries' value: aClass poolDictionaryNames ]
+]
+
+{ #category : #accessing }
+SPClassJson >> spiderClass [
+	^ spiderClass
+]
+
+{ #category : #accessing }
+SPClassJson >> spiderClass: anObject [
+	spiderClass := anObject
 ]
