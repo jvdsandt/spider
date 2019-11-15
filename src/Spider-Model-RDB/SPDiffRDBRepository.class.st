@@ -117,7 +117,7 @@ SPDiffRDBRepository >> gitVersionsOfMethod: aSelector className: aClassName meta
 ]
 
 { #category : #queries }
-SPDiffRDBRepository >> gitVersionsOfPackage: aName in: aGitRootId [
+SPDiffRDBRepository >> gitVersionsOfPackageNamed: aName in: aGitRootId [
 
 	| q |
 	

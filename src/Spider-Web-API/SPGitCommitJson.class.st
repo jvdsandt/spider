@@ -1,7 +1,7 @@
 Class {
 	#name : #SPGitCommitJson,
 	#superclass : #SPJsonComponent,
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-API'
 }
 
 { #category : #rendering }
@@ -18,6 +18,7 @@ SPGitCommitJson >> renderCommit: anItem from: aRepo on: aRenderer [
 
 	aRenderer object: [ 
 		self renderCommitSummary: anItem on: aRenderer.
+		aRenderer key: 'message' value: anItem message.
 		aRenderer key: 'parents' value: [ 
 			aRenderer array: [ 
 				anItem parents do: [ :each |
@@ -57,7 +58,7 @@ SPGitCommitJson >> renderCommitSummary: anItem on: aRenderer [
 	aRenderer key: 'sha' value: anItem shaString.
 	aRenderer key: 'datetime' value: anItem datetime.
 	aRenderer key: 'authorName' value: anItem authorName.
-	aRenderer key: 'message' value: anItem message.
+	aRenderer key: 'messageLine' value: anItem messageLine.
 	aRenderer key: 'rootId' value: anItem rootId
 ]
 

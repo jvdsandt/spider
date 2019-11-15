@@ -7,7 +7,7 @@ Class {
 		'gitCommit',
 		'mcPackage'
 	],
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-API'
 }
 
 { #category : #accessing }

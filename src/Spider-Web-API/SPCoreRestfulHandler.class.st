@@ -1,7 +1,7 @@
 Class {
 	#name : #SPCoreRestfulHandler,
 	#superclass : #SPRestfulHandler,
-	#category : #'Spider-Web-Core-API'
+	#category : #'Spider-Web-API'
 }
 
 { #category : #'tools registry' }
@@ -118,5 +118,15 @@ SPCoreRestfulHandler >> getPackageVersionsAsJson: aName [
 	<path: '/package_versions/{aName}'>
 	<produces: 'application/json'>
 	
+	| gitRootId list |
+	
+	gitRootId := self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ].
+	
+	list := self diffRepo gitVersionsOfPackageNamed: aName in: gitRootId. 	
 
+	^ self renderJsonWith: [ :json |
+			SPGitPackageVersionListJson new 
+				name: aName;
+				list: list;
+				renderContentOn: json ]
 ]

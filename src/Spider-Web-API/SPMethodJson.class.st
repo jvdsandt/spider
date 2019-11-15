@@ -7,7 +7,7 @@ Class {
 		'mcPackage',
 		'category'
 	],
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-API'
 }
 
 { #category : #accessing }

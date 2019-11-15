@@ -1,7 +1,7 @@
 Class {
 	#name : #SPRestfulHandler,
 	#superclass : #WARestfulHandler,
-	#category : #'Spider-Web-Core-API'
+	#category : #'Spider-Web-API'
 }
 
 { #category : #accessing }
@@ -27,6 +27,12 @@ SPRestfulHandler >> createRoutes [
 SPRestfulHandler >> defaultLimit [
 
 	^ 100
+]
+
+{ #category : #accessing }
+SPRestfulHandler >> diffRepo [
+
+	^ self context diffRepo
 ]
 
 { #category : #accessing }

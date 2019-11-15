@@ -1,7 +1,7 @@
 Class {
 	#name : #SPDiffJson,
 	#superclass : #SPJsonComponent,
-	#category : #'Spider-Web-Core'
+	#category : #'Spider-Web-API'
 }
 
 { #category : #rendering }
