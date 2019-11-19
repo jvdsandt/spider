@@ -50,9 +50,6 @@ SPBatchOperation >> deleteCommit: aCommit txid: txid [
 	statement := self p3client format: 'DELETE FROM git_repo_refs WHERE commit_id = $1'.
 	statement execute: (Array with: aCommit id).
 	
-	statement := self p3client format: 'DELETE FROM git_repo_commits WHERE commit_id = $1'.
-	statement execute: (Array with: aCommit id).
-
 	statement := self p3client format: 'DELETE FROM git_commit_pack_refs WHERE commit_id = $1'.
 	statement execute: (Array with: aCommit id).
 

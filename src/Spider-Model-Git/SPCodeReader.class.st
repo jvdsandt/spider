@@ -14,9 +14,16 @@ SPCodeReader class >> on: aFileReference [
 ]
 
 { #category : #'instance creation' }
-SPCodeReader class >> onLGitCommit: lgitCommit format: aFormatSymbol sourceDir: aSourceDir [
+SPCodeReader class >> onSPCommit: spiderCommit in: lgitRepo [
 
+	| lgitCommit |
 	
+	lgitCommit := LGitCommit of: lgitRepo fromHexString: spiderCommit shaString.
+	spiderCommit isTonelFormat 
+		ifTrue: [ ^ SPTonelCodeReader on: (FileSystem onGitCommit: lgitCommit) root / spiderCommit sourceDir ].
+	spiderCommit isFileTreeFormat 
+		ifTrue: [ ^ SPFileTreeCodeReader on: (FileSystem onGitCommit: lgitCommit) root / spiderCommit sourceDir ].
+	self error: 'Unknown format'
 ]
 
 { #category : #'API-packages' }
@@ -57,4 +64,10 @@ SPCodeReader >> getPackageSnapshot: aPackageName ifAbsent: aBlock [
 SPCodeReader >> on: aFileReference [
 
 	fileReference := aFileReference
+]
+
+{ #category : #'API-packages' }
+SPCodeReader >> packageNames [
+
+	self subclassResponsibility
 ]

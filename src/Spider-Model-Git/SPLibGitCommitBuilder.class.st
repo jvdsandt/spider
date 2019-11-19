@@ -50,15 +50,6 @@ SPLibGitCommitBuilder >> build [
 ]
 
 { #category : #internal }
-SPLibGitCommitBuilder >> buildAllPackages [
-	
-	packages := codeReader packageNames collect: [ :each |
-		| snapshot |
-		snapshot := codeReader getPackageSnapshot: each.
-		self buildPackageFromSnapshot: snapshot name: each ]
-]
-
-{ #category : #internal }
 SPLibGitCommitBuilder >> buildPackageFromSnapshot: mcSnapshot name: aName [
 
 	| packageBuilder thePackage |
@@ -76,7 +67,7 @@ SPLibGitCommitBuilder >> buildPackageFromSnapshot: mcSnapshot name: aName [
 { #category : #internal }
 SPLibGitCommitBuilder >> buildPackages [
 	
-	| resolver diffParents |
+	| resolver parentReaders |
 	
 	resolver := SPGitFormatResolver onGitCommit: commit.
 	resolver resolve.
@@ -87,57 +78,19 @@ SPLibGitCommitBuilder >> buildPackages [
 	sourceDir := resolver sourceDirectory.
 	format := resolver format.
 	
-	diffParents := parents select: [ :each | each format = format and: [ each hasPackages ] ].
-	diffParents isEmpty
-		ifTrue: [ self buildAllPackages ]
-		ifFalse: [ self buildPackagesFromDiffs: diffParents ].
-		
-	codeReader packageNames sorted asArray = (self packages collect: #name) sorted asArray
-		ifFalse: [ self halt ]
-		
-		
-
-]
-
-{ #category : #internal }
-SPLibGitCommitBuilder >> buildPackagesFromDiff: aParent [
-
-	| oldCommit diff tempPackages |
+	parentReaders := self parentCodeReaders.
 	
-	oldCommit := LGitCommit of: commit repository fromHexString: aParent shaString.
-	
-	diff := (SPGitLibGitDiff forFormat: format)
-		initWithOld: oldCommit oldSourceDir: aParent sourceDir new: commit newSourceDir: sourceDir;
-		yourself.
-		
-	tempPackages := aParent packagesByName copy.
-	diff updatedPackages sorted do: [ :each |
-		| snapshot |
-		snapshot := codeReader getPackageSnapshot: each ifAbsent: [ nil ].
-		snapshot isNil
-			ifTrue: [ tempPackages removeKey: each ]
+	packages := codeReader packageNames collect: [ :each |
+		| sha parentAssoc snapshot |
+		sha := codeReader getPackageSha: each.
+		parentAssoc := parentReaders 
+			detect: [ :eachAssoc | (eachAssoc value getPackageSha: each) = sha ]
+			ifNone: [ nil ].
+		parentAssoc 	notNil
+			ifTrue: [ parentAssoc key packageNamed: each ]
 			ifFalse: [ 
-				| p |
-				p := self buildPackageFromSnapshot: snapshot name: each.
-				tempPackages at: each put: p ] ].
-	packages := tempPackages values asArray
-]
-
-{ #category : #internal }
-SPLibGitCommitBuilder >> buildPackagesFromDiffs: aParents [
-
-	| parentForDiff |
-	
-	parentForDiff := aParents first.
-	[ parentForDiff notNil and: [ parentForDiff isImportError ] ]
-		whileTrue: [ 
-			parentForDiff := parentForDiff parents isEmpty
-				ifTrue: [ nil ]
-				ifFalse: [ parentForDiff parents first ] ].
-			
-	parentForDiff isNil
-		ifTrue: [ self buildAllPackages ]
-		ifFalse: [ self buildPackagesFromDiff: parentForDiff ]
+				snapshot := codeReader getPackageSnapshot: each.
+				self buildPackageFromSnapshot: snapshot name: each ]	]
 ]
 
 { #category : #internal }
@@ -168,8 +121,8 @@ SPLibGitCommitBuilder >> commit [
 ]
 
 { #category : #accessing }
-SPLibGitCommitBuilder >> commit: anObject [
-	commit := anObject
+SPLibGitCommitBuilder >> commit: aLGitCommit [
+	commit := aLGitCommit
 ]
 
 { #category : #initialization }
@@ -181,9 +134,23 @@ SPLibGitCommitBuilder >> initialize [
 ]
 
 { #category : #accessing }
+SPLibGitCommitBuilder >> lgitRepo [
+
+	^ self commit repository
+]
+
+{ #category : #accessing }
 SPLibGitCommitBuilder >> packages [
 
 	^ packages
+]
+
+{ #category : #'as yet unclassified' }
+SPLibGitCommitBuilder >> parentCodeReaders [
+
+	^ (parents select: [ :each | each hasPackages ])
+			collect: [ :eachCommit |
+				eachCommit -> (SPCodeReader onSPCommit: eachCommit in: self lgitRepo) ]
 ]
 
 { #category : #internal }

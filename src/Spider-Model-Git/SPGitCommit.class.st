@@ -191,6 +191,12 @@ SPGitCommit >> initWithSha: hashBytes authorSignature: anAuthorSig message: aMes
 ]
 
 { #category : #testing }
+SPGitCommit >> isFileTreeFormat [
+
+	^ format = #filetree
+]
+
+{ #category : #testing }
 SPGitCommit >> isImportError [
 
 	^ self status = #importerror
@@ -200,6 +206,12 @@ SPGitCommit >> isImportError [
 SPGitCommit >> isImported [
 
 	^ self status = #imported
+]
+
+{ #category : #testing }
+SPGitCommit >> isTonelFormat [ 
+
+	^ format = #tonel
 ]
 
 { #category : #accessing }
