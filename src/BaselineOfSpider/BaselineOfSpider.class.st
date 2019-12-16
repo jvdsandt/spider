@@ -18,6 +18,10 @@ BaselineOfSpider >> baselineOf: spec [
 				spec 
 					repository: 'github://svenvc/P3:master/repository';
 					loads: 'glorp' ].
+			spec baseline: 'AWSToolbox' with: [ 
+				spec 
+					repository: 'github://jvdsandt/pharo-aws-toolbox/repository';
+					loads: #( 'Core' ) ].
 			spec baseline: 'Seaside3' with: [ 
 				spec 
 					repository: 'github://SeasideSt/Seaside:v3.3.4/repository';
@@ -39,6 +43,7 @@ BaselineOfSpider >> baselineOf: spec [
 			spec package: 'Spider-Model-Ring2-Tests' with: [ spec requires: #( 'Spider-Model-Ring2' ) ].
 
 			spec package: 'Spider-Import-MC' with: [ spec requires: #( 'Spider-Model-MC' 'Spider-Model-Git' 'Spider-Model-RDB' 'OSSubprocess' ) ].
+			spec package: 'Spider-Import-LambdaHooks' with: [ spec requires: #( 'AWSToolbox' ) ].
 
 			spec package: 'Spider-Web-Core' with: [ spec requires: #( 'Spider-Model-RDB' 'Seaside3' 'Bootstrap' ) ].
 			spec package: 'Spider-Web-API' with: [ spec requires: #( 'Spider-Web-Core' )].
