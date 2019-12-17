@@ -41,7 +41,7 @@ SPAPIGatewayGitHubHooksHandler >> handleAPIRequest: apiRequest [
 		ifAbsent: [ ^ self badRequestResponse: 'X-GitHub-Delivery header missing' ].
 	signature := apiRequest headers at: 'X-Hub-Signature'
 		ifAbsent: [ ^ self badRequestResponse: 'X-Hub-Signature header missing' ].
-	body := apiRequest body.
+	body := apiRequest bodyDecoded.
 	
 	^ self handleGitHubEvent: (SPGitHubEventData new
 		setEventName: githubEvent guid: guid data: body signature: signature;
