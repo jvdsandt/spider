@@ -34,6 +34,9 @@ SPAPIGatewayGitHubHooksHandler >> handleAPIRequest: apiRequest [
 			self initEventWriter.
 			self isInitialized 
 				ifFalse: [ ^ self serverErrorResponse: 'Initialization failed' ] ].
+			
+	apiRequest isHttpGetMethod
+		ifTrue: [ ^ self handleGetInfo: apiRequest ].
 	
 	githubEvent := apiRequest headers at: 'X-GitHub-Event' 
 		ifAbsent: [ ^ self badRequestResponse: 'X-GitHub-Event header missing' ].
@@ -44,8 +47,19 @@ SPAPIGatewayGitHubHooksHandler >> handleAPIRequest: apiRequest [
 	body := apiRequest bodyDecoded.
 	
 	^ self handleGitHubEvent: (SPGitHubEventData new
-		setEventName: githubEvent guid: guid data: body signature: signature;
-		yourself)
+			setEventName: githubEvent guid: guid data: body signature: signature;
+			yourself)
+]
+
+{ #category : #invoking }
+SPAPIGatewayGitHubHooksHandler >> handleGetInfo: apiRequest [
+
+	^ OrderedDictionary new
+			at: 'image' put: SystemVersion current imageVersionString;
+			at: 'startedAt' put: self environment startedAt asString;
+			at: 'invocationCount' put: self environment invocationCount;
+			at: 'invocationErrorCount' put: self environment invocationErrorCount;
+			yourself
 ]
 
 { #category : #invoking }
