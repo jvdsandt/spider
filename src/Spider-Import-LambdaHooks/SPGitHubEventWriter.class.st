@@ -20,3 +20,13 @@ SPGitHubEventWriter >> write: eventData [
 	
 	writerQueue writeMessage: request
 ]
+
+{ #category : #accessing }
+SPGitHubEventWriter >> writerQueue [
+	^ writerQueue
+]
+
+{ #category : #accessing }
+SPGitHubEventWriter >> writerQueue: anObject [
+	writerQueue := anObject
+]

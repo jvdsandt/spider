@@ -76,7 +76,7 @@ SPAPIGatewayGitHubHooksHandler >> handleGitHubEvent: eventData [
 { #category : #initialization }
 SPAPIGatewayGitHubHooksHandler >> initEventWriter [
 
-	| queueUrl sqsservice |
+	| queueUrl sqsservice sqswriter |
 
 	queueUrl := self environment getEnv: 'GITHUB_EVENTS_QUEUE_URL'.
 	queueUrl isEmptyOrNil 
@@ -86,8 +86,11 @@ SPAPIGatewayGitHubHooksHandler >> initEventWriter [
 
 	sqsservice := AWSSQService newWithCredentials: self environment awsCredentials 
 			region: self environment region.
-	eventWriter := AWSSQSWriter service: sqsservice queueUrl: queueUrl
+	sqswriter := AWSSQSWriter service: sqsservice queueUrl: queueUrl.
 
+	eventWriter := SPGitHubEventWriter new
+		writerQueue: sqswriter;
+		yourself
 ]
 
 { #category : #testing }
