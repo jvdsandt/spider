@@ -164,10 +164,12 @@ SPGitImporter class >> updateRepoAtLGit: aLocation [
 { #category : #'actions-internal' }
 SPGitImporter >> branchNameFromRef: aRefName [
 
-	| index |
+	|  prefix |
 	
-	index := aRefName lastIndexOf: $/.
-	^ aRefName allButFirst: index
+	prefix := 'refs/heads/'.
+	^ (aRefName beginsWith: prefix)
+		ifTrue: [ aRefName allButFirst: prefix size ]
+		ifFalse: [ aRefName ]
 ]
 
 { #category : #'actions-internal' }
@@ -272,7 +274,7 @@ SPGitImporter >> importAll [
 					ifFalse: [ tags at: each put: object ] ] ].
 
 	branches := Dictionary new.
-	self lgitRepo remoteBranchesDo: [ :each |
+	self lgitRepo branchesDo: [ :each |
 		| branchName object ref |
 		branchName := self branchNameFromRef: each name.
 		object := each object.
