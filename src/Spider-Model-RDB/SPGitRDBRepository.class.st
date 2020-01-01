@@ -380,7 +380,7 @@ SPGitRDBRepository >> selectAllCommitsOfRepo: aRepoId [
 	UNION
 	SELECT gcpr.commit_id FROM git_commit_parent_refs gcpr, all_children ap WHERE ap.id = gcpr.parent_id)
 SELECT DISTINCT 
-	t1.ID, t1.TXID, t1.SHA, t1.AUTHOR_DATETIME, t1.AUTHOR_TZOFFSET, t1.AUTHOR_NAME, t1.AUTHOR_EMAIL, t1.MESSAGE, t1.STATUS, t1.SOURCE_DIR, t1.FORMAT 
+	t1.ID, t1.TXID, t1.SHA, t1.AUTHOR_DATETIME, t1.AUTHOR_TZOFFSET, t1.AUTHOR_NAME, t1.AUTHOR_EMAIL, t1.MESSAGE, t1.STATUS, t1.ROOT_ID, t1.SOURCE_DIR, t1.FORMAT 
 FROM git_commits t1 
 WHERE t1.id in (select id from all_children) order by t1.id desc' format: (Array with: aRepoId).
 	
@@ -401,7 +401,7 @@ SPGitRDBRepository >> selectAllParentsOf: aCommitId [
 	UNION
 	SELECT gcpr.parent_id FROM git_commit_parent_refs gcpr, all_parents ap WHERE ap.id = gcpr.commit_id)
 SELECT DISTINCT 
-	t1.ID, t1.TXID, t1.SHA, t1.AUTHOR_DATETIME, t1.AUTHOR_TZOFFSET, t1.AUTHOR_NAME, t1.AUTHOR_EMAIL, t1.MESSAGE, t1.STATUS, t1.SOURCE_DIR, t1.FORMAT 
+	t1.ID, t1.TXID, t1.SHA, t1.AUTHOR_DATETIME, t1.AUTHOR_TZOFFSET, t1.AUTHOR_NAME, t1.AUTHOR_EMAIL, t1.MESSAGE, t1.STATUS, t1.ROOT_ID, t1.SOURCE_DIR, t1.FORMAT
 FROM git_commits t1 
 WHERE t1.id in (select id from all_parents) order by t1.id desc' format: (Array with: aCommitId).
 	
