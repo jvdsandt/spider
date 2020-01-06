@@ -180,6 +180,30 @@ SPPackage >> diffKey [
 	^ self name
 ]
 
+{ #category : #'gt-inspector-extension' }
+SPPackage >> gtInspectorItemsIn: composite [
+	^ (composite fastTable)
+		title: 'Classes';
+		display: [ self classRefs ];
+		column: 'Name' 
+			evaluated: [:each | GTObjectPrinter asTruncatedTextFrom: each name ];
+		column: 'Type' 
+			evaluated: [:each | GTObjectPrinter asTruncatedTextFrom: each spiderClass type ];
+		column: 'Category' 
+			evaluated: [:each | GTObjectPrinter asTruncatedTextFrom: each category ];
+		selectionPopulate: #selection 
+			entitled: 'Open key'
+			with: [ :table | (table rawSelection collect: #key) gtInspectorInterestingObject ];
+		beMultiple;
+		send: [ :selection | 
+			selection isNil 
+			ifTrue:[nil]
+			ifFalse:[ (selection size = 1) 
+				ifTrue: [ selection anyOne value ] 
+				ifFalse: [ selection collect: #value ] ]]
+
+]
+
 { #category : #comparing }
 SPPackage >> hash [ 
 

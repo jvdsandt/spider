@@ -94,6 +94,18 @@ SPPackageRDBRepository >> getPackageNamesLike: aString max: aLimit [
 	^ self glorpSession execute: q
 ]
 
+{ #category : #queries }
+SPPackageRDBRepository >> getPackagesCreatedAfter: aDateAndTime [
+
+	| q |
+	
+	q := (Query read: SPPackage where: [ :e | e transaction startedAt <= aDateAndTime ])
+		orderBy: [ :e | e transaction startedAt descending ];
+		yourself.
+
+	^ self glorpSession execute: q
+]
+
 { #category : #accessing }
 SPPackageRDBRepository >> glorpSession [
 

@@ -23,6 +23,12 @@ SPSessionRDBRepository >> insertTransactionQuery [
 ]
 
 { #category : #queries }
+SPSessionRDBRepository >> latestTransactions: aCount [
+
+	^ self latestTransactionsBefore: DateAndTime now + 2 years max: aCount
+]
+
+{ #category : #queries }
 SPSessionRDBRepository >> latestTransactionsBefore: aDateAndTime max: anInteger [ 
 
 	| q |

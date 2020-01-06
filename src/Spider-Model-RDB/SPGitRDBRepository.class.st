@@ -99,6 +99,18 @@ SPGitRDBRepository >> getCommitByShaString: aString ifAbsent: aBlock [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> getCommitsCreatedAfter: aDateAndTime [
+
+	| q |
+	
+	q := (Query read: SPGitCommit where: [ :e | e transaction startedAt <= aDateAndTime ])
+		orderBy: [ :e | e transaction startedAt descending ];
+		yourself.
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> getGitCommitIdByShaString: aString [
 
 	| q |
@@ -120,6 +132,19 @@ SPGitRDBRepository >> getGitRepoByUrl: anUrl ifAbsent: aBlock [
 	^ gitRepo isNil
 			ifTrue: [ aBlock value ]
 			ifFalse: [ gitRepo ]
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> getLatestCommits: aCount [
+
+	| q |
+	
+	q := (Query read: SPGitCommit)
+		orderBy: [ :e | e authorSignature datetime ];
+		limit: aCount;
+		yourself.
+
+	^ self glorpSession execute: q
 ]
 
 { #category : #queries }

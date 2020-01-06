@@ -60,12 +60,6 @@ VALUES ($1,$2,$3) RETURNING (id)'.
 
 ]
 
-{ #category : #queries }
-SPSessionPostgresRepository >> latestTransactions: aCount [
-
-	^ self latestTransactionsBefore: DateAndTime now + 2 years max: aCount
-]
-
 { #category : #'accessing - queries' }
 SPSessionPostgresRepository >> selectLatestTransactionsQuery [
 
