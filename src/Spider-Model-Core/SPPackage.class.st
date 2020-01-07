@@ -236,6 +236,11 @@ SPPackage >> packageHash [
 	^ packageHash
 ]
 
+{ #category : #accessing }
+SPPackage >> packageHashLabel [
+	^ (self packageHash last: 4) hex
+]
+
 { #category : #printing }
 SPPackage >> printHashSignatureOn: stream [
 
@@ -253,7 +258,7 @@ SPPackage >> printOn: aStream [
 	aStream nextPut: $(.
 	name printOn: aStream.
 	aStream nextPut: $#.
-	aStream nextPutAll: ((packageHash last: 4) hex first: 7).
+	aStream nextPutAll: self packageHashLabel.
 	aStream nextPut: $)
 ]
 

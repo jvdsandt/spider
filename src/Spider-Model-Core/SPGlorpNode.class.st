@@ -34,3 +34,8 @@ SPGlorpNode >> hash [
 SPGlorpNode >> id [
 	^ id
 ]
+
+{ #category : #accessing }
+SPGlorpNode >> transaction [
+	^ transaction
+]
