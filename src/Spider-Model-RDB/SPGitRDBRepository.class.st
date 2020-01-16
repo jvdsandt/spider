@@ -103,7 +103,7 @@ SPGitRDBRepository >> getCommitsCreatedAfter: aDateAndTime [
 
 	| q |
 	
-	q := (Query read: SPGitCommit where: [ :e | e transaction startedAt <= aDateAndTime ])
+	q := (Query read: SPGitCommit where: [ :e | e transaction startedAt >= aDateAndTime ])
 		orderBy: [ :e | e transaction startedAt descending ];
 		yourself.
 
@@ -140,7 +140,7 @@ SPGitRDBRepository >> getLatestCommits: aCount [
 	| q |
 	
 	q := (Query read: SPGitCommit)
-		orderBy: [ :e | e authorSignature datetime ];
+		orderBy: [ :e | e authorSignature datetime descending ];
 		limit: aCount;
 		yourself.
 

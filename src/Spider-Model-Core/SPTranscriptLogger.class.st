@@ -8,7 +8,7 @@ Class {
 SPTranscriptLogger >> logLevel: aLevel source: aSource message: anObject [
 
 	Transcript show: (String streamContents: [ :s |
-		ZTimestamp now printOn: s.
+		ZTimestamp now printOn: s format: #( $- $ $: nil ).
 		s
 			nextPutAll: ' ['; nextPutAll: aLevel; nextPutAll: '] ';
 			nextPutAll: aSource asString;

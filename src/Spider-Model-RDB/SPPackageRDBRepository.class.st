@@ -99,7 +99,7 @@ SPPackageRDBRepository >> getPackagesCreatedAfter: aDateAndTime [
 
 	| q |
 	
-	q := (Query read: SPPackage where: [ :e | e transaction startedAt <= aDateAndTime ])
+	q := (Query read: SPPackage where: [ :e | e transaction startedAt >= aDateAndTime ])
 		orderBy: [ :e | e transaction startedAt descending ];
 		yourself.
 

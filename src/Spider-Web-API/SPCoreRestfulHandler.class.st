@@ -66,7 +66,7 @@ SPCoreRestfulHandler >> getNames: aTerm [
 	| limit term result |
 	
 	limit := self limitParameterDefault: 10 max: 50.
-	term := aTerm select: [ :ch | ch isLetter or: [ ch isDigit ] ].
+	term := aTerm select: [ :ch | ch isLetter or: [ ch isDigit or: [ #( $- $_ $: ) includes: ch ] ] ].
 	result := OrderedDictionary new.
 	
 	term size >= 3

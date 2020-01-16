@@ -13,6 +13,8 @@ SPMCImportDashboard class >> register [
 	| app |
 	
 	app := WAAdmin register: self asApplicationAt: 'spider'.
+	app addFilter: SPContextFilter new
+
 	
 
 ]
@@ -34,6 +36,12 @@ SPMCImportDashboard >> initialize [
 	super initialize.
 	
 	self returnHome
+]
+
+{ #category : #rendering }
+SPMCImportDashboard >> openImportLog [
+
+	mainPanel := SPLatestImportsView new
 ]
 
 { #category : #rendering }
@@ -95,6 +103,10 @@ SPMCImportDashboard >> renderNavigationbarOn: html [
 					html tbsNav
 						class: 'navbar-nav';
 						with: [ 
+						html listItem: [ 
+							html anchor
+								callback: [ self openImportLog ];
+								with: 'Import log' ].
 						html listItem: [ 
 							html anchor
 								callback: [ self openMCRepos ];
