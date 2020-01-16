@@ -34,7 +34,7 @@ SPGitProcess >> fetch [
 	OSSUnixSubprocess new
 		workingDirectory: self directory fullName;
 		command: 'git';
-		arguments: #('fetch' 'origin' '+refs/heads/*:refs/remotes/origin/*');
+		arguments: #('fetch' '--prune-tags' 'origin' '+refs/heads/*:refs/heads/*');
 		runAndWait
 ]
 
