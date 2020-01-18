@@ -82,6 +82,19 @@ SPPackageRDBRepository >> getPackageById: anId ifAbsent: aBlock [
 ]
 
 { #category : #queries }
+SPPackageRDBRepository >> getPackageNames: aStringSearchCriteria max: aLimit [
+
+	| q |
+	
+	q := Query read: SPPackage where: aStringSearchCriteria asWhereNameBlock.
+	q retrieve: [ :e | e name distinct ].
+	q orderBy: [ :e | e name ].
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPPackageRDBRepository >> getPackageNamesLike: aString max: aLimit [
 
 	| q |

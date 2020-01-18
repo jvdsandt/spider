@@ -73,7 +73,7 @@ SPCoreRestfulHandler >> getNames: aTerm [
 		ifTrue: [ 
 			term := '%', term, '%'.
 			result
-				at: 'selecors' put: (self methodRepo getSelectorsLike: term max: limit);
+				at: 'selectors' put: (self methodRepo getSelectorsLike: term max: limit);
 				at: 'classNames' put: (self classRepo getClassNamesLike: term max: limit);
 				at: 'packageNames' put: (self packageRepo getPackageNamesLike: term max: limit) ].
 		
@@ -129,4 +129,32 @@ SPCoreRestfulHandler >> getPackageVersionsAsJson: aName [
 				name: aName;
 				list: list;
 				renderContentOn: json ]
+]
+
+{ #category : #'as yet unclassified' }
+SPCoreRestfulHandler >> getSearch [
+	<get>
+	<path: '/search'>
+	<produces: 'application/json'>
+	
+	| limit criteria result |
+	
+	limit := self limitParameterDefault: 10 max: 50.
+	criteria := SPStringSearchCriteria new
+		term: (self requestParameterAt: 'q' ifAbsent: [ '' ]);
+		caseSensitive: (self requestBoolParameterAt: 'caseSensitive' ifAbsent: [ false ]);
+		wildcardBefore: (self requestBoolParameterAt: 'wcb' ifAbsent: [ false ]);
+		wildcardAfter: (self requestBoolParameterAt: 'wca' ifAbsent: [ true ]);
+		after: (self requestParameterAt: 'after' ifAbsent: [ nil ]);
+		yourself.
+	
+	result := OrderedDictionary new.
+	criteria hasValidTerm
+		ifTrue: [ 
+			result
+				at: 'selectors' put: (self methodRepo getSelectors: criteria max: limit);
+				at: 'classNames' put: (self classRepo getClassNames: criteria max: limit);
+				at: 'packageNames' put: (self packageRepo getPackageNames: criteria max: limit) ].
+		
+	^ self renderJsonWith: result
 ]

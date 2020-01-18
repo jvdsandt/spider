@@ -46,6 +46,19 @@ SPClassRDBRepository >> getClassById: anId ifAbsent: aBlock [
 ]
 
 { #category : #queries }
+SPClassRDBRepository >> getClassNames: aStringSearchCriteria max: aLimit [
+
+	| q |
+	
+	q := Query read: SPGlorpClass where: aStringSearchCriteria asWhereNameBlock.
+	q retrieve: [ :e | e name distinct ].
+	q orderBy: [ :e | e name ].
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPClassRDBRepository >> getClassNamesLike: aString max: aLimit [
 
 	| q |
