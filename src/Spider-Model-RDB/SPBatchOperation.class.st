@@ -8,6 +8,30 @@ Class {
 	#category : #'Spider-Model-RDB-Batch'
 }
 
+{ #category : #'as yet unclassified' }
+SPBatchOperation class >> deleteAllCommitsOfRepoUrl: repoUrl in: aContext [
+
+	| repo roots |
+	
+	repo := aContext gitRepo getGitRepoByUrl: repoUrl
+		ifAbsent: [ self error: 'Repo not found' ].
+	
+	roots := Set new.
+	repo commitRefs do: [ :each | 
+		| commit |
+		commit := each commit.
+		(commit rootId notNil and: [ roots anySatisfy: [ :r | r rootId = commit rootId ] ])
+			ifFalse: [ 
+				| list |
+				list := aContext gitRepo selectAllParentsOf: commit id.
+				roots addAll: (list select: [ :e | e parents isEmpty ]) ] ].
+
+	roots do: [ :each |
+		self new
+			context: aContext;
+			deleteCommit: each ]
+]
+
 { #category : #accessing }
 SPBatchOperation >> classRepo [
 

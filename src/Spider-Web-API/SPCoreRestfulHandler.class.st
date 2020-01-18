@@ -58,29 +58,6 @@ SPCoreRestfulHandler >> getMethodAsJson: anId [
 ]
 
 { #category : #'as yet unclassified' }
-SPCoreRestfulHandler >> getNames: aTerm [
-	<get>
-	<path: '/search_names/{aTerm}'>
-	<produces: 'application/json'>
-	
-	| limit term result |
-	
-	limit := self limitParameterDefault: 10 max: 50.
-	term := aTerm select: [ :ch | ch isLetter or: [ ch isDigit or: [ #( $- $_ $: ) includes: ch ] ] ].
-	result := OrderedDictionary new.
-	
-	term size >= 3
-		ifTrue: [ 
-			term := '%', term, '%'.
-			result
-				at: 'selectors' put: (self methodRepo getSelectorsLike: term max: limit);
-				at: 'classNames' put: (self classRepo getClassNamesLike: term max: limit);
-				at: 'packageNames' put: (self packageRepo getPackageNamesLike: term max: limit) ].
-		
-	^ self renderJsonWith: result
-]
-
-{ #category : #'as yet unclassified' }
 SPCoreRestfulHandler >> getNamesList [
 	<get>
 	<path: '/_names'>
