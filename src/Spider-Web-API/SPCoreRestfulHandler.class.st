@@ -90,6 +90,28 @@ SPCoreRestfulHandler >> getPackageAsJson: anId [
 ]
 
 { #category : #'as yet unclassified' }
+SPCoreRestfulHandler >> getPackageNameAsJson: aName [
+	<get>
+	<path: '/package_names/{aName}'>
+	<produces: 'application/json'>
+	
+	| gitRootId info |
+	
+	gitRootId := self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ].
+
+	info := (SPPackageNameInfo new initWithName: aName gitRootId: gitRootId)
+		retrieveInfo: self context;
+		yourself.
+	info versionCount = 0
+		ifTrue: [ ^ self notFoundJson ].
+
+	^ self renderJsonWith: [ :json |
+			SPPackageNameJson new 
+				info: info;
+				renderContentOn: json ]
+]
+
+{ #category : #'as yet unclassified' }
 SPCoreRestfulHandler >> getPackageVersionsAsJson: aName [
 	<get>
 	<path: '/package_versions/{aName}'>

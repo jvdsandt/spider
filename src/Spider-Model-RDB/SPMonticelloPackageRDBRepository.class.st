@@ -8,6 +8,31 @@ Class {
 }
 
 { #category : #queries }
+SPMonticelloPackageRDBRepository >> getAuthorAndCountsOfPackageNamed: aName [
+
+	| q |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e package name = aName ].
+	q retrieve: [ :e | e author ].
+	q retrieve: [ :e | e countStar ].
+	q groupBy: [ :e | e author ].
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> getAuthorsOfPackageNamed: aName [
+
+	| q |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e package name = aName ].
+	q retrieve: [ :e | e author distinct ].
+	q orderBy: [ :e | e author ].
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPMonticelloPackageRDBRepository >> getMCPackageAncestorsById: anId [
 
 	^ (self getMCPackageById: anId) ancestors
@@ -100,6 +125,34 @@ SPMonticelloPackageRDBRepository >> getMCRepoByUrl: anUrl ifAbsent: aBlock [
 ]
 
 { #category : #queries }
+SPMonticelloPackageRDBRepository >> getMCReposWithPackageNamed: aName [
+
+	| query |
+	
+	query := Query read: SPMonticelloRepository 
+		where: [ :each | each mcPackageRefs anySatisfy: [ :ref |
+				ref mcPackage name = aName AND: [ ref mcPackage package notNil ] ] ].
+
+	^ self glorpSession execute: query
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> getNewestMCPackageWithPackageNamed: aName [
+
+	| q list |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e package name = aName ].
+	q orderBy: [ :e | e datetime descending].
+	q limit: 1.
+	
+	list := self glorpSession execute: q.
+
+	^ list notEmpty
+		ifTrue: [ list first ]
+		ifFalse: [ nil ]
+]
+
+{ #category : #queries }
 SPMonticelloPackageRDBRepository >> getOldestMCPackageWithClass: aClassId [
 
 	| q list |
@@ -122,6 +175,22 @@ SPMonticelloPackageRDBRepository >> getOldestMCPackageWithPackage: aPackageId [
 	| q list |
 	
 	q := Query read: SPMonticelloPackage where: [ :e | e package id = aPackageId ].
+	q orderBy: [ :e | e datetime ].
+	q limit: 1.
+	
+	list := self glorpSession execute: q.
+
+	^ list notEmpty
+		ifTrue: [ list first ]
+		ifFalse: [ nil ]
+]
+
+{ #category : #queries }
+SPMonticelloPackageRDBRepository >> getOldestMCPackageWithPackageNamed: aName [
+
+	| q list |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e package name = aName ].
 	q orderBy: [ :e | e datetime ].
 	q limit: 1.
 	

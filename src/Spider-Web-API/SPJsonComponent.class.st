@@ -29,6 +29,17 @@ SPJsonComponent >> renderGitCommitSummary: aCommit on: aRenderer [
 ]
 
 { #category : #rendering }
+SPJsonComponent >> renderGitRepoSummary: aGitRepo on: aRenderer [
+
+	aRenderer object: [ 
+		aRenderer key: 'id' value: aGitRepo id.
+		aRenderer key: 'name' value: aGitRepo name.
+		aRenderer key: 'owner' value: aGitRepo owner.
+		aRenderer key: 'domain' value: aGitRepo domain.
+		aRenderer key: 'url' value: aGitRepo url ]
+]
+
+{ #category : #rendering }
 SPJsonComponent >> renderMCPackageSummary: mcPackage on: aRenderer [
 
 	aRenderer 
@@ -39,6 +50,14 @@ SPJsonComponent >> renderMCPackageSummary: mcPackage on: aRenderer [
 		key: 'author' value: mcPackage author;
 		key: 'datetime' value: mcPackage datetime;
 		key: 'message' value: mcPackage message
+]
+
+{ #category : #rendering }
+SPJsonComponent >> renderMCRepoSummary: aMCRepo on: aRenderer [
+
+	aRenderer object: [ 
+		aRenderer key: 'id' value: aMCRepo id.
+		aRenderer key: 'repoUrl' value: aMCRepo repoUrl ]
 ]
 
 { #category : #accessing }

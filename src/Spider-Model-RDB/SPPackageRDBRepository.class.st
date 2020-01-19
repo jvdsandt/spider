@@ -15,6 +15,16 @@ SPPackageRDBRepository >> classIdOf: aSpiderClass [
 		ifFalse: [ aSpiderClass id ]
 ]
 
+{ #category : #queries }
+SPPackageRDBRepository >> countOfPackagesNamed: aName [
+
+	| q |
+	
+	q := Query readOneOf: SPPackage where: [ :e | e name = aName ].
+	q retrieve: [ :e | e countStar ].
+	^ self glorpSession execute: q
+]
+
 { #category : #'accessing - queries' }
 SPPackageRDBRepository >> deletePackageByIdQuery [
 

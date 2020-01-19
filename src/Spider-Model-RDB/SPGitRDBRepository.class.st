@@ -66,6 +66,21 @@ SPGitRDBRepository >> deleteRepoRefs: aRefColl from: aRepo [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> getAuthorsOfPackageNamed: aName [
+
+	| q |
+	
+	q := Query read: SPGitCommit 
+		where: [ :e | e packages anySatisfy: [ :p | p name = aName ] ].
+	q retrieve: [ :e | e authorSignature name distinct ].
+	q retrieve: [ :e | e authorSignature email ].
+	q orderBy: [ :e | e authorSignature name ].
+
+	^ (self glorpSession execute: q) collect: [ :each |
+			SPGitAuthor name: each first email: each last ]
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> getCommitById: anId ifAbsent: aBlock [
 
 	| gitCommit |
@@ -148,6 +163,22 @@ SPGitRDBRepository >> getLatestCommits: aCount [
 ]
 
 { #category : #queries }
+SPGitRDBRepository >> getNewestCommitWithPackageNamed: aName [
+
+	| q list |
+	
+	q := Query read: SPGitCommit 
+		where: [ :e | e packages anySatisfy: [ :p | p name = aName ] ].
+	q orderBy: [ :e | e authorSignature datetime descending ].
+	q limit: 1.
+
+	list := self glorpSession execute: q.
+	^ list notEmpty
+			ifTrue: [ list first ]
+			ifFalse: [ nil ]
+]
+
+{ #category : #queries }
 SPGitRDBRepository >> getOldestCommitWithClass: aClassId [
 
 	| q list |
@@ -170,6 +201,22 @@ SPGitRDBRepository >> getOldestCommitWithPackage: aPackageId [
 	| q list |
 	
 	q := Query read: SPGitCommit where: [ :e | e packages anySatisfy: [ :p | p id = aPackageId ] ].
+	q orderBy: [ :e | e authorSignature datetime ].
+	q limit: 1.
+
+	list := self glorpSession execute: q.
+	^ list notEmpty
+			ifTrue: [ list first ]
+			ifFalse: [ nil ]
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> getOldestCommitWithPackageNamed: aName [
+
+	| q list |
+	
+	q := Query read: SPGitCommit 
+		where: [ :e | e packages anySatisfy: [ :p | p name = aName ] ].
 	q orderBy: [ :e | e authorSignature datetime ].
 	q limit: 1.
 
@@ -216,6 +263,30 @@ SPGitRDBRepository >> getRepoCommits: aRepo limit: aLimit [
 	query limit: aLimit.
 	
 	^self glorpSession execute: query
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> getReposWithPackageNamed: aName [
+
+	| q |
+	
+	q := Query read: SPGitRepo 
+		where: [ :e | e commitRefs anySatisfy: [ :ref | 
+				ref commit packages anySatisfy: [ :p |
+					p name = aName ] ] ].
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPGitRDBRepository >> getReposWithRootId: aRootId [
+
+	| q |
+	
+	q := Query read: SPGitRepo 
+		where: [ :e | e commitRefs anySatisfy: [ :ref | ref commit rootId = aRootId ] ].
+	
+	^ self glorpSession execute: q
 ]
 
 { #category : #storing }
