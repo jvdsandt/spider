@@ -44,6 +44,21 @@ SPDiffRDBRepository >> deleteGitDiffsFromCommit: aCommitId [
 ]
 
 { #category : #queries }
+SPDiffRDBRepository >> getAuthorAndCountsOfPackageNamed: aName [
+
+	| q |
+	
+	q := Query read: SPGitPackageDiffRecord where: 
+		[ :e | (e oldPackage asOuterJoin name = aName) OR: (e newPackage asOuterJoin name = aName) ].
+		
+	q retrieve: [ :e | e commit authorSignature name ].
+	q retrieve: [ :e | e countStar ].
+	q groupBy: [ :e | e commit authorSignature name ].
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPDiffRDBRepository >> getCommitOfClass: aClass in: aGitRootId [
 
 	| q |

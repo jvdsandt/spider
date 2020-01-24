@@ -14,7 +14,7 @@ SPClassNameInfo >> initWithName: aName gitRootId: anId [
 { #category : #initialization }
 SPClassNameInfo >> retrieveInfo: aContext [
 
-	versionCount := aContext gitRepo classRepo countOfClassesNamed: name.
+	versionCount := aContext classRepo countOfClassesNamed: name.
 	versionCount = 0
 		ifTrue: [ ^ self ].
 

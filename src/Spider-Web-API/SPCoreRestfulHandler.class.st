@@ -38,6 +38,28 @@ SPCoreRestfulHandler >> getClassAsJson: anId [
 ]
 
 { #category : #'as yet unclassified' }
+SPCoreRestfulHandler >> getClassNameAsJson: aName [
+	<get>
+	<path: '/class_names/{aName}'>
+	<produces: 'application/json'>
+	
+	| gitRootId info |
+	
+	gitRootId := self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ].
+
+	info := (SPClassNameInfo new initWithName: aName gitRootId: gitRootId)
+		retrieveInfo: self context;
+		yourself.
+	info versionCount = 0
+		ifTrue: [ ^ self notFoundJson ].
+
+	^ self renderJsonWith: [ :json |
+			SPPackageNameJson new 
+				info: info;
+				renderContentOn: json ]
+]
+
+{ #category : #'as yet unclassified' }
 SPCoreRestfulHandler >> getMethodAsJson: anId [
 	<get>
 	<path: '/methods/{anId}'>

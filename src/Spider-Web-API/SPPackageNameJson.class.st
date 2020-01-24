@@ -27,8 +27,7 @@ SPPackageNameJson >> renderContentOn: aRenderer [
 SPPackageNameJson >> renderGitAuthorsOn: json [
 
 	json array: [ 
-		info gitAuthorNames do: [ :each |
-			json value: each ] ]
+		info gitAuthors do: [ :each | each jsonOn: json ] ]
 ]
 
 { #category : #rendering }
@@ -43,8 +42,7 @@ SPPackageNameJson >> renderGitReposOn: json [
 SPPackageNameJson >> renderMCAuthorsOn: json [
 
 	json array: [ 
-		info mcAuthors do: [ :each |
-			json value: each ] ]
+		info mcAuthors do: [ :each | each jsonOn: json ] ]
 ]
 
 { #category : #rendering }

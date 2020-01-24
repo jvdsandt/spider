@@ -21,10 +21,20 @@ SPPackageNameInfo >> retrieveInfo: aContext [
 	gitRepos := aContext gitRepo getReposWithPackageNamed: name.
 	oldestGitCommit := aContext gitRepo getOldestCommitWithPackageNamed: name.
 	newestGitCommit := aContext gitRepo getNewestCommitWithPackageNamed: name.
-	gitAuthors := aContext gitRepo getAuthorsOfPackageNamed: name.
+	gitAuthors := (aContext diffRepo getAuthorAndCountsOfPackageNamed: name)
+		collect: [ :eachRow |
+			Dictionary new
+				at: 'author' put: eachRow first;
+				at: 'count' put: eachRow last;
+				yourself ].
 	
 	mcRepos := aContext mcPackageRepo getMCReposWithPackageNamed: name.
 	oldestMCPackage := aContext mcPackageRepo getOldestMCPackageWithPackageNamed: name.
 	newestMCPackage := aContext mcPackageRepo getNewestMCPackageWithPackageNamed: name.
-	mcAuthors := aContext mcPackageRepo getAuthorAndCountsOfPackageNamed: name.
+	mcAuthors := (aContext mcPackageRepo getAuthorAndCountsOfPackageNamed: name)
+		collect: [ :eachRow |
+			Dictionary new
+				at: 'author' put: eachRow first;
+				at: 'count' put: eachRow last;
+				yourself ]
 ]
