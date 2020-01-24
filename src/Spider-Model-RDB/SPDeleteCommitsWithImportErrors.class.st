@@ -55,7 +55,7 @@ SPDeleteCommitsWithImportErrors >> exampleDeletePharoErrors [
 	repo := self gitRepo getGitRepoByUrl: 'https://github.com/pharo-project/pharo.git'
 		ifAbsent: [ self error: 'Repo not found' ].
 		
-	dt := DateAndTime fromString: '2019-10-01T00:00:00'.
+	dt := DateAndTime fromString: '2020-01-01T00:00:00'.
 	
 	self executeForRepo: repo after: dt
 ]
@@ -72,13 +72,9 @@ SPDeleteCommitsWithImportErrors >> executeForRepo: aRepo after: aDateTime [
 { #category : #'as yet unclassified' }
 SPDeleteCommitsWithImportErrors >> executeForRepoDirect: aRepo after: aDateTime [
 
-	| query commits errorCommits |
+	| commits errorCommits |
 	
-	query := Query read: SPGitRepo where: [ :e | e id = aRepo id ].
-	query retrieve: [ :e | e commits ].
-	
-	commits := self glorpSession execute: query.
-	commits := commits select: [ :each | each datetime > aDateTime ].
+	commits := aRepo allCommitsAfter: aDateTime.
 
 	errorCommits := commits select: [ :each | each isImportError ].
 	errorCommits := errorCommits sorted: [ :a :b | a datetime > b datetime ].

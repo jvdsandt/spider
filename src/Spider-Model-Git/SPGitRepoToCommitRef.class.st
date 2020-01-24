@@ -31,6 +31,12 @@ SPGitRepoToCommitRef >> = other [
 ]
 
 { #category : #accessing }
+SPGitRepoToCommitRef >> allCommitsAfter: aDatetime [
+
+	^ self commit withAllParentsAfter: aDatetime
+]
+
+{ #category : #accessing }
 SPGitRepoToCommitRef >> commit [
 	^ commit
 ]

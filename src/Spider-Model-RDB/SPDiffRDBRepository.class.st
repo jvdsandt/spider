@@ -86,6 +86,33 @@ SPDiffRDBRepository >> getCommitOfPackage: aPackage in: aGitRootId [
 ]
 
 { #category : #queries }
+SPDiffRDBRepository >> getGitRootIdsForClassNamed: aName [
+
+	| q |
+	
+	q := Query read: SPGitClassDiffRecord where: 
+		[ :e | e oldClass asOuterJoin name = aName OR: [ e newClass asOuterJoin name = aName ] ].
+	q retrieve: [ :e | e commit rootId distinct ].
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> gitVersionsOfClass: aName type: aType [
+
+	| q |
+	
+	q := Query read: SPGitClassDiffRecord where: 
+		[ :e | ((e oldClass asOuterJoin name = aName) AND: (e oldClass type = aType)) OR: (
+				(e newClass asOuterJoin name = aName) AND: (e newClass type = aType)) ].
+		
+	q alsoFetch: [ :e | e commit ].
+	q orderBy: [ :e | e commit authorSignature datetime descending ].
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPDiffRDBRepository >> gitVersionsOfClass: aName type: aType in: aGitRootId [
 
 	| q |
@@ -109,6 +136,20 @@ SPDiffRDBRepository >> gitVersionsOfMethod: aSelector className: aClassName meta
 	q := Query read: SPGitMethodDiffRecord where: 
 		[ :e | e commit rootId = aGitRootId AND: (e className = aClassName) AND: (e isMeta = isMeta) AND: (
 			(e oldMethod asOuterJoin selector = aSelector) OR: (e newMethod asOuterJoin selector = aSelector)) ].
+		
+	q alsoFetch: [ :e | e commit ].
+	q orderBy: [ :e | e commit authorSignature datetime descending ].
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> gitVersionsOfPackageNamed: aName [
+
+	| q |
+	
+	q := Query read: SPGitPackageDiffRecord where: 
+		[ :e | (e oldPackage asOuterJoin name = aName) OR: (e newPackage asOuterJoin name = aName) ].
 		
 	q alsoFetch: [ :e | e commit ].
 	q orderBy: [ :e | e commit authorSignature datetime descending ].

@@ -1,20 +1,20 @@
 Class {
-	#name : #SPPackageNameInfo,
+	#name : #SPClassNameInfo,
 	#superclass : #SPNameInfo,
 	#category : #'Spider-Web-API'
 }
 
 { #category : #initialization }
-SPPackageNameInfo >> initWithName: aName gitRootId: anId [
+SPClassNameInfo >> initWithName: aName gitRootId: anId [
 
 	name := aName.
 	gitRootId := anId
 ]
 
 { #category : #initialization }
-SPPackageNameInfo >> retrieveInfo: aContext [
+SPClassNameInfo >> retrieveInfo: aContext [
 
-	versionCount := aContext gitRepo packageRepo countOfPackagesNamed: name.
+	versionCount := aContext gitRepo classRepo countOfClassesNamed: name.
 	versionCount = 0
 		ifTrue: [ ^ self ].
 

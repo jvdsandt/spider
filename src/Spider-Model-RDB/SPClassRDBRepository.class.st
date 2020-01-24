@@ -7,6 +7,16 @@ Class {
 	#category : #'Spider-Model-RDB-Repos'
 }
 
+{ #category : #queries }
+SPClassRDBRepository >> countOfClassesNamed: aName [
+
+	| q |
+	
+	q := Query readOneOf: SPGlorpClass where: [ :e | e name = aName ].
+	q retrieve: [ :e | e countStar ].
+	^ self glorpSession execute: q
+]
+
 { #category : #'accessing - queries' }
 SPClassRDBRepository >> deleteClassByIdQuery [
 

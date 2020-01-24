@@ -50,6 +50,19 @@ SPGitRepo >> = other [
 ]
 
 { #category : #accessing }
+SPGitRepo >> allCommitsAfter: aDatetime [
+
+	| set |
+	
+	set := Set new.
+	
+	self commitRefs do: [ :each |
+		each isBranch
+			ifTrue: [ set addAll: (each allCommitsAfter: aDatetime) ] ].
+	^ set sorted: [ :c1 :c2 | c1 datetime > c2 datetime ]
+]
+
+{ #category : #accessing }
 SPGitRepo >> branchNamed: aName [
 
 	^ self branchNamed: aName ifAbsent: [ NotFound signalFor: aName ]
