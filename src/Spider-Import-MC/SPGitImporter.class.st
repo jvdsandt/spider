@@ -314,7 +314,7 @@ SPGitImporter >> importRevparse: aString [
 { #category : #initialization }
 SPGitImporter >> initSpiderGitRepo [
 
-	spGitRepo := self gitRepo getGitRepoByUrl: self getRemoteUrl ifAbsent: [ nil ].
+	spGitRepo := self gitRepo getRepoByUrl: self getRemoteUrl ifAbsent: [ nil ].
 	spGitRepo isNil
 		ifTrue: [ 
 			context

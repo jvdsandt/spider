@@ -33,7 +33,7 @@ SPGitRDBRepositoryTest >> testCreateRepo [
 	repo := SPGitRepo url: url.
 	self gitRepo storeRepo: repo.
 	
-	repoRead := self gitRepo getGitRepoByUrl: url ifAbsent: [ nil ].
+	repoRead := self gitRepo getRepoByUrl: url ifAbsent: [ nil ].
 	self assert: repoRead equals: repo.
 
 	repoRead := self gitRepo getRepo: 'GitHub' owner: 'jvdsandt' name: 'spider-gittest' ifAbsent: [ nil ].

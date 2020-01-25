@@ -42,7 +42,7 @@ SPLatestImportsView >> renderContentOn: html [
 	
 	transactions := self selectLatestTransactions.
 
-	commits := self gitRepo getCommitsCreatedAfter: transactions last startedAt.
+	commits := self gitRepo getCommitsImportedAfter: transactions last startedAt.
 	commits := commits groupedBy: #transaction.
 	
 	packages := self context packageRepo getPackagesCreatedAfter: transactions last startedAt.

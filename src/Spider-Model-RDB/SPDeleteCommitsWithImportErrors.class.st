@@ -10,7 +10,7 @@ SPDeleteCommitsWithImportErrors >> exampleDeleteIcebergErrors [
 
 	| repo dt |
 	
-	repo := self gitRepo getGitRepoByUrl: 'https://github.com/pharo-vcs/iceberg.git'
+	repo := self gitRepo getRepoByUrl: 'https://github.com/pharo-vcs/iceberg.git'
 		ifAbsent: [ self error: 'Repo not found' ].
 		
 	dt := DateAndTime fromUnixTime: 0.
@@ -24,7 +24,7 @@ SPDeleteCommitsWithImportErrors >> exampleDeleteMagritteErrors [
 
 	| repo dt |
 	
-	repo := self gitRepo getGitRepoByUrl: 'https://github.com/magritte-metamodel/magritte.git'
+	repo := self gitRepo getRepoByUrl: 'https://github.com/magritte-metamodel/magritte.git'
 		ifAbsent: [ self error: 'Repo not found' ].
 		
 	dt := DateAndTime fromUnixTime: 0.
@@ -38,7 +38,7 @@ SPDeleteCommitsWithImportErrors >> exampleDeleteMooseErrors [
 
 	| repo dt |
 	
-	repo := self gitRepo getGitRepoByUrl: 'https://github.com/moosetechnology/Moose.git'
+	repo := self gitRepo getRepoByUrl: 'https://github.com/moosetechnology/Moose.git'
 		ifAbsent: [ self error: 'Repo not found' ].
 		
 	dt := DateAndTime fromUnixTime: 0.
@@ -52,7 +52,7 @@ SPDeleteCommitsWithImportErrors >> exampleDeletePharoErrors [
 
 	| repo dt |
 	
-	repo := self gitRepo getGitRepoByUrl: 'https://github.com/pharo-project/pharo.git'
+	repo := self gitRepo getRepoByUrl: 'https://github.com/pharo-project/pharo.git'
 		ifAbsent: [ self error: 'Repo not found' ].
 		
 	dt := DateAndTime fromString: '2020-01-01T00:00:00'.

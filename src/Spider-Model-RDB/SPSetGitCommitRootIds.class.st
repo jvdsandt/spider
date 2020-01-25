@@ -10,7 +10,7 @@ SPSetGitCommitRootIds >> example [
 
 	| repo |
 	
-	repo := self gitRepo getGitRepoByUrl: 'https://github.com/pharo-nosql/voyage.git' ifAbsent: [ nil ].
+	repo := self gitRepo getRepoByUrl: 'https://github.com/pharo-nosql/voyage.git' ifAbsent: [ nil ].
 	
 	self executeForRepo: repo. 
 ]

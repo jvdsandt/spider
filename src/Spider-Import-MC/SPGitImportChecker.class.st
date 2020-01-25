@@ -99,7 +99,7 @@ SPGitImportChecker class >> newWithContext: aSPiderContext repoUrl: aRepoUrl [
 
 	| repo |
 	
-	repo := aSPiderContext gitRepo getGitRepoByUrl: aRepoUrl 
+	repo := aSPiderContext gitRepo getRepoByUrl: aRepoUrl 
 		ifAbsent: [ self error: 'Repo not found' ].
 	^ self new initWithContext: aSPiderContext repo: repo
 ]

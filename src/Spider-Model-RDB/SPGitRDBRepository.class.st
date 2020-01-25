@@ -114,19 +114,7 @@ SPGitRDBRepository >> getCommitByShaString: aString ifAbsent: aBlock [
 ]
 
 { #category : #queries }
-SPGitRDBRepository >> getCommitsCreatedAfter: aDateAndTime [
-
-	| q |
-	
-	q := (Query read: SPGitCommit where: [ :e | e transaction startedAt >= aDateAndTime ])
-		orderBy: [ :e | e transaction startedAt descending ];
-		yourself.
-
-	^ self glorpSession execute: q
-]
-
-{ #category : #queries }
-SPGitRDBRepository >> getGitCommitIdByShaString: aString [
+SPGitRDBRepository >> getCommitIdByShaString: aString [
 
 	| q |
 	
@@ -137,16 +125,15 @@ SPGitRDBRepository >> getGitCommitIdByShaString: aString [
 ]
 
 { #category : #queries }
-SPGitRDBRepository >> getGitRepoByUrl: anUrl ifAbsent: aBlock [
+SPGitRDBRepository >> getCommitsImportedAfter: aDateAndTime [
 
-	| gitRepo |
+	| q |
 	
-	gitRepo := self glorpSession readOneOf: SPGitRepo 
-		where: [ :e | e url asLowercase = anUrl asLowercase ].
-		
-	^ gitRepo isNil
-			ifTrue: [ aBlock value ]
-			ifFalse: [ gitRepo ]
+	q := (Query read: SPGitCommit where: [ :e | e transaction startedAt >= aDateAndTime ])
+		orderBy: [ :e | e transaction startedAt descending ];
+		yourself.
+
+	^ self glorpSession execute: q
 ]
 
 { #category : #queries }
@@ -253,16 +240,16 @@ SPGitRDBRepository >> getRepo: aDomain owner: anOwner name: aName ifAbsent: aBlo
 ]
 
 { #category : #queries }
-SPGitRDBRepository >> getRepoCommits: aRepo limit: aLimit [
+SPGitRDBRepository >> getRepoByUrl: anUrl ifAbsent: aBlock [
 
-	| repoIds query |
+	| gitRepo |
 	
-	repoIds := Array with: aRepo id.
-	query := Query read: SPGitCommit where: [ :e | e repos anySatisfy: [ :r | r in: repoIds ] ].
-	query orderBy: [ :e | e authorSignature datetime desc ].
-	query limit: aLimit.
-	
-	^self glorpSession execute: query
+	gitRepo := self glorpSession readOneOf: SPGitRepo 
+		where: [ :e | e url asLowercase = anUrl asLowercase ].
+		
+	^ gitRepo isNil
+			ifTrue: [ aBlock value ]
+			ifFalse: [ gitRepo ]
 ]
 
 { #category : #queries }
@@ -330,10 +317,10 @@ SPGitRDBRepository >> glorpSession [
 	^ context glorpSession
 ]
 
-{ #category : #queries }
+{ #category : #testing }
 SPGitRDBRepository >> includesCommitWithShaString: aString [
 
-	^ (self getGitCommitIdByShaString: aString) notNil
+	^ (self getCommitIdByShaString: aString) notNil
 ]
 
 { #category : #'accessing - queries' }
@@ -653,7 +640,7 @@ SPGitRDBRepository >> storeRepo: aGitRepo [
 
 	| gitRepo |
 	
-	gitRepo := self getGitRepoByUrl: aGitRepo url ifAbsent: [ nil ].
+	gitRepo := self getRepoByUrl: aGitRepo url ifAbsent: [ nil ].
 	gitRepo isNil
 		ifFalse: [ ^ gitRepo ].
 
@@ -661,7 +648,7 @@ SPGitRDBRepository >> storeRepo: aGitRepo [
 		with: self transactionId
 		with: aGitRepo url).
 		
-	^ self getGitRepoByUrl: aGitRepo url ifAbsent: [ nil ]
+	^ self getRepoByUrl: aGitRepo url ifAbsent: [ nil ]
 ]
 
 { #category : #storing }
@@ -670,7 +657,7 @@ SPGitRDBRepository >> storeRepoRef: aRepo type: aTypeChar named: aName to: aComm
 	| repoId commitId |
 	
 	repoId := aRepo id ifNil: [ (self storeRepo: aRepo) id ].
-	commitId := aCommit id ifNil: [ self getGitCommitIdByShaString: aCommit shaString ].
+	commitId := aCommit id ifNil: [ self getCommitIdByShaString: aCommit shaString ].
 	
 	self insertGitRepoRefQuery execute: (Array
 		with: repoId

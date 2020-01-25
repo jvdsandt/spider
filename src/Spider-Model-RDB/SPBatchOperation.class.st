@@ -13,7 +13,7 @@ SPBatchOperation class >> deleteAllCommitsOfRepoUrl: repoUrl in: aContext [
 
 	| repo roots |
 	
-	repo := aContext gitRepo getGitRepoByUrl: repoUrl
+	repo := aContext gitRepo getRepoByUrl: repoUrl
 		ifAbsent: [ self error: 'Repo not found' ].
 	
 	roots := Set new.
