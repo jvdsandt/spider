@@ -1,8 +1,19 @@
 Class {
 	#name : #SPGitCommitJson,
 	#superclass : #SPJsonComponent,
+	#instVars : [
+		'repo',
+		'repoRefs'
+	],
 	#category : #'Spider-Web-API'
 }
+
+{ #category : #accessing }
+SPGitCommitJson >> branchNames [
+
+	^ (self repoRefs select: [ :each | each isBranch ])
+			collect: [ :each | each name ]
+]
 
 { #category : #rendering }
 SPGitCommitJson >> renderBranchRef: aCommitRef from: aRepo on: aRenderer [
@@ -15,6 +26,13 @@ SPGitCommitJson >> renderBranchRef: aCommitRef from: aRepo on: aRenderer [
 
 { #category : #rendering }
 SPGitCommitJson >> renderCommit: anItem from: aRepo on: aRenderer [
+
+	self repo: aRepo.
+	self renderCommit: anItem on: aRenderer
+]
+
+{ #category : #rendering }
+SPGitCommitJson >> renderCommit: anItem on: aRenderer [
 
 	aRenderer object: [ 
 		self renderCommitSummary: anItem on: aRenderer.
@@ -30,16 +48,12 @@ SPGitCommitJson >> renderCommit: anItem from: aRepo on: aRenderer [
 					aRenderer object: [ 
 						self renderCommitSummary: each on: aRenderer ] ] ] ].
 		aRenderer key: 'packages' value: [ self renderPackages: anItem packages on: aRenderer ].
-		aRepo notNil
+		self repo notNil
 			ifTrue: [ 
 				aRenderer key: 'repo' value: [ 
-					SPGitRepoJson new renderItem: aRepo on: aRenderer ] ] ]
-]
-
-{ #category : #rendering }
-SPGitCommitJson >> renderCommit: anItem on: aRenderer [
-
-	self renderCommit: anItem from: nil on: aRenderer
+					SPGitRepoJson new renderItem: self repo on: aRenderer ].
+				aRenderer key: 'tags' value: self tagNames.
+				aRenderer key: 'branches' value: self branchNames ] ]
 ]
 
 { #category : #rendering }
@@ -97,4 +111,31 @@ SPGitCommitJson >> renderTagRef: aCommitRef from: aRepo on: aRenderer [
 		aRenderer key: 'name' value: aCommitRef name.
 		aRenderer key: 'commit' value: [
 			self renderCommit: aCommitRef commit from: aRepo on: aRenderer ] ].
+]
+
+{ #category : #accessing }
+SPGitCommitJson >> repo [
+	^ repo
+]
+
+{ #category : #accessing }
+SPGitCommitJson >> repo: anObject [
+	repo := anObject
+]
+
+{ #category : #accessing }
+SPGitCommitJson >> repoRefs [
+	^ repoRefs
+]
+
+{ #category : #accessing }
+SPGitCommitJson >> repoRefs: anObject [
+	repoRefs := anObject
+]
+
+{ #category : #accessing }
+SPGitCommitJson >> tagNames [
+
+	^ (self repoRefs select: [ :each | each isTag ])
+			collect: [ :each | each name ]
 ]

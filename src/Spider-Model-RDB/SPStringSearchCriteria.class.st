@@ -69,6 +69,30 @@ SPStringSearchCriteria >> asWhereSelectorBlock [
 					ifFalse: [ [ :e | (e selector ilike: param) AND: [ e selector > self after ] ] ] ]
 ]
 
+{ #category : #converting }
+SPStringSearchCriteria >> asWhereUrlBlock [
+
+	| param |
+
+	self isExact 
+		ifTrue: [ ^ [ :e | e url = self term ] ].
+		
+	param := self termEscaped.
+	self wildcardBefore 
+		ifTrue: [ param := '%', param ].
+	self wildcardAfter 
+		ifTrue: [ param := param, '%' ].
+	^ self caseSensitive 
+			ifTrue: [ 
+				self after isEmptyOrNil 	
+					ifTrue: [ [ :e | e url like: param ] ]
+					ifFalse: [ [ :e | (e url like: param) AND: [ e url > self after ] ] ] ]
+			ifFalse: [ 
+				self after isEmptyOrNil 
+					ifTrue: [ [ :e | e url ilike: param ] ]
+					ifFalse: [ [ :e | (e url ilike: param) AND: [ e url > self after ] ] ] ]
+]
+
 { #category : #accessing }
 SPStringSearchCriteria >> caseSensitive [
 	^ caseSensitive

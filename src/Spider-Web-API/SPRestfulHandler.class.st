@@ -168,6 +168,19 @@ SPRestfulHandler >> requestParameterAt: aName ifAbsent: aBlock [
 	^ self requestContext request at: aName ifAbsent: aBlock
 ]
 
+{ #category : #'accessing parameters' }
+SPRestfulHandler >> requestStringSearchCriteria [
+	"Answer a SPStringSearchCriteria instance initialized using request parameters."
+
+	^ SPStringSearchCriteria new
+		term: (self requestParameterAt: 'q' ifAbsent: [ '' ]);
+		caseSensitive: (self requestBoolParameterAt: 'caseSensitive' ifAbsent: [ false ]);
+		wildcardBefore: (self requestBoolParameterAt: 'wcb' ifAbsent: [ false ]);
+		wildcardAfter: (self requestBoolParameterAt: 'wca' ifAbsent: [ true ]);
+		after: (self requestParameterAt: 'after' ifAbsent: [ nil ]);
+		yourself
+]
+
 { #category : #accessing }
 SPRestfulHandler >> webContext [
 

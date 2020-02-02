@@ -54,13 +54,22 @@ SPGitRestfulHandler >> getCommitAsJson: aCommitId [
 	<path: '/commit/{aCommitId}'>
 	<produces: 'application/json'>
 	
-	| commit |
+	| commit repos repo repoRefs |
 	
 	commit := self findCommit: aCommitId.
+	repos := self gitRepo getReposWithCommitSha: commit shaString.
+	repos size = 1
+		ifTrue: [ 
+			repo := repos first.
+			repoRefs := self gitRepo getRepoRefsFrom: repo id toCommit: commit id ]
+		ifFalse: [ 
+			repo := nil.
+			repoRefs := #() ].
 	
 	^ self renderJsonWith: [ :json |
-					SPGitCommitJson new
-						renderCommit: commit on: json ]
+			SPGitCommitJson new
+				repoRefs: repoRefs;
+				renderCommit: commit from: repo on: json ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -162,14 +171,17 @@ SPGitRestfulHandler >> getRepoCommitAsJson: aDomain owner: anOwner name: aName i
 	<path: '/repos/{aDomain}/{anOwner}/{aName}/commit/{aCommitId}'>
 	<produces: 'application/json'>
 	
-	| repo commit |
+	| repo commit repoRefs |
 	
 	repo := self gitRepo getRepo: aDomain owner: anOwner name: aName ifAbsent: [ ^ self notFound ].
 	commit := self findCommit: aCommitId in: repo. 
+	repoRefs := self gitRepo getRepoRefsFrom: repo id toCommit: commit id.
 	
 	^ self renderJsonWith: [ :json |
-					SPGitCommitJson new
-						renderCommit: commit from: repo on: json ]
+			SPGitCommitJson new
+				repo: repo;
+				repoRefs: repoRefs;
+				renderCommit: commit on: json ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -251,19 +263,22 @@ SPGitRestfulHandler >> getRepoListAsJson [
 	<path: '/repos'>
 	<produces: 'application/json'>
 	
-	| offset limit repos hasMore |
+	| limit criteria repos hasMore |
 	
-	offset := self offsetParameter.
-	limit := self limitParameter.
-	
-	repos := self gitRepo selectReposByUrl: offset limit: limit + 1.
-	hasMore := repos size > limit.
-	hasMore ifTrue: [ 
-		repos := repos allButLast ].
+	limit := self limitParameterDefault: 15 max: 50.
+	criteria := self requestStringSearchCriteria
+		wildcardBefore: true;
+		yourself.
+	repos := self gitRepo getRepos: criteria max: limit+1.
+	hasMore := false.
+	repos size > limit
+		ifTrue: [ 
+			hasMore := true. 
+			repos := repos allButLast ].
 	
 	^ self renderJsonWith: [ :json |
-					SPGitRepoJson new
-						renderList: repos more: hasMore on: json ]
+			SPGitRepoJson new
+				renderList: repos more: hasMore on: json ]
 ]
 
 { #category : #'as yet unclassified' }

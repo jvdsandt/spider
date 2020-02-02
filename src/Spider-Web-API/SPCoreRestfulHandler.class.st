@@ -161,13 +161,7 @@ SPCoreRestfulHandler >> getSearch [
 	| limit criteria result |
 	
 	limit := self limitParameterDefault: 10 max: 50.
-	criteria := SPStringSearchCriteria new
-		term: (self requestParameterAt: 'q' ifAbsent: [ '' ]);
-		caseSensitive: (self requestBoolParameterAt: 'caseSensitive' ifAbsent: [ false ]);
-		wildcardBefore: (self requestBoolParameterAt: 'wcb' ifAbsent: [ false ]);
-		wildcardAfter: (self requestBoolParameterAt: 'wca' ifAbsent: [ true ]);
-		after: (self requestParameterAt: 'after' ifAbsent: [ nil ]);
-		yourself.
+	criteria := self requestStringSearchCriteria.
 	
 	result := OrderedDictionary new.
 	criteria hasValidTerm

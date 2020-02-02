@@ -80,7 +80,7 @@ SPGitRDBRepository >> getAuthorsOfPackageNamed: aName [
 			SPGitAuthor name: each first email: each last ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getCommitById: anId ifAbsent: aBlock [
 
 	| gitCommit |
@@ -91,7 +91,7 @@ SPGitRDBRepository >> getCommitById: anId ifAbsent: aBlock [
 			ifFalse: [ gitCommit ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getCommitByShaString: aString ifAbsent: aBlock [
 
 	| gitCommit |
@@ -113,7 +113,7 @@ SPGitRDBRepository >> getCommitByShaString: aString ifAbsent: aBlock [
 			ifNil: aBlock
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getCommitIdByShaString: aString [
 
 	| q |
@@ -124,7 +124,7 @@ SPGitRDBRepository >> getCommitIdByShaString: aString [
 	^ self glorpSession execute: q
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getCommitsImportedAfter: aDateAndTime [
 
 	| q |
@@ -136,7 +136,7 @@ SPGitRDBRepository >> getCommitsImportedAfter: aDateAndTime [
 	^ self glorpSession execute: q
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getLatestCommits: aCount [
 
 	| q |
@@ -149,7 +149,30 @@ SPGitRDBRepository >> getLatestCommits: aCount [
 	^ self glorpSession execute: q
 ]
 
-{ #category : #queries }
+{ #category : #'queries-refs' }
+SPGitRDBRepository >> getLatestRepoRefs: aCount [
+	"Answer a collection of GitRepoToCommitRef instances with the most recent commit per repository."
+	"Note that currently the result can contain more than one item per repository if multiple branches
+	point to the same commit. Can be fixed using 'DISTINCT ON (..)' but I don't know how to do this in Glorp."
+
+	| q |
+	
+	q := Query read: SPGitRepoToCommitRef
+		where: [ :e | 
+			| maxQuery |
+			maxQuery := Query read: SPGitRepoToCommitRef
+				where: [ :me | me type = 'B' AND: [ me repo = e repo ] ].
+			maxQuery retrieve: [ :me | me commit authorSignature datetime max ].
+			e type = 'B' AND: [ e commit authorSignature datetime = maxQuery ] ].
+	q alsoFetch: [ :e | e repo ].
+	q alsoFetch: [ :e | e commit ].
+	q orderBy: [ :e | e commit authorSignature datetime descending ].
+	q limit: aCount.
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getNewestCommitWithPackageNamed: aName [
 
 	| q list |
@@ -165,7 +188,7 @@ SPGitRDBRepository >> getNewestCommitWithPackageNamed: aName [
 			ifFalse: [ nil ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getOldestCommitWithClass: aClassId [
 
 	| q list |
@@ -182,7 +205,7 @@ SPGitRDBRepository >> getOldestCommitWithClass: aClassId [
 			ifFalse: [ nil ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getOldestCommitWithPackage: aPackageId [
 
 	| q list |
@@ -197,7 +220,7 @@ SPGitRDBRepository >> getOldestCommitWithPackage: aPackageId [
 			ifFalse: [ nil ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getOldestCommitWithPackageNamed: aName [
 
 	| q list |
@@ -213,7 +236,7 @@ SPGitRDBRepository >> getOldestCommitWithPackageNamed: aName [
 			ifFalse: [ nil ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-refs' }
 SPGitRDBRepository >> getRefsToCommit: aCommit [
 
 	| q |
@@ -224,7 +247,7 @@ SPGitRDBRepository >> getRefsToCommit: aCommit [
 	^ self glorpSession execute: q
 ]
 
-{ #category : #queries }
+{ #category : #'queries-repos' }
 SPGitRDBRepository >> getRepo: aDomain owner: anOwner name: aName ifAbsent: aBlock [
 
 	| searchUrl query repo |
@@ -239,7 +262,7 @@ SPGitRDBRepository >> getRepo: aDomain owner: anOwner name: aName ifAbsent: aBlo
 			ifFalse: [ repo ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-repos' }
 SPGitRDBRepository >> getRepoByUrl: anUrl ifAbsent: aBlock [
 
 	| gitRepo |
@@ -252,7 +275,42 @@ SPGitRDBRepository >> getRepoByUrl: anUrl ifAbsent: aBlock [
 			ifFalse: [ gitRepo ]
 ]
 
-{ #category : #queries }
+{ #category : #'queries-refs' }
+SPGitRDBRepository >> getRepoRefsFrom: aRepoId toCommit: aCommitId [
+
+	| q |
+	
+	q := Query read: SPGitRepoToCommitRef
+		where: [ :e | e repo id = aRepoId AND: [ e commit id = aCommitId ] ].
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #'queries-repos' }
+SPGitRDBRepository >> getRepos: aStringSearchCriteria max: aLimit [
+
+	| q |
+	
+	q := Query read: SPGitRepo where: aStringSearchCriteria asWhereUrlBlock.
+	q orderBy: [ :e | e url ].
+	q limit: aLimit.
+	
+	^ self glorpSession execute: q
+]
+
+{ #category : #'queries-repos' }
+SPGitRDBRepository >> getReposWithCommitSha: aString [
+
+	| repoIds q |
+	
+	repoIds := self selectReposWithCommitShaQuery query: (Array with: aString).
+	
+	q := Query read: SPGitRepo 
+		where: [ :e | e id in: repoIds ].
+	^ self glorpSession execute: q
+]
+
+{ #category : #'queries-repos' }
 SPGitRDBRepository >> getReposWithPackageNamed: aName [
 
 	| q |
@@ -265,7 +323,7 @@ SPGitRDBRepository >> getReposWithPackageNamed: aName [
 	^ self glorpSession execute: q
 ]
 
-{ #category : #queries }
+{ #category : #'queries-repos' }
 SPGitRDBRepository >> getReposWithRootId: aRootId [
 
 	| q |
@@ -575,6 +633,17 @@ SPGitRDBRepository >> selectReposByUrlWithDomain: aDomain owner: anOwner offset:
 	^ self glorpSession execute: q
 ]
 
+{ #category : #'accessing - queries' }
+SPGitRDBRepository >> selectReposWithCommitShaQuery [
+
+	| sql |
+	
+	sql := 
+		self withRecursiveAllChildCommitsBySha, 
+		'SELECT DISTINCT repo_id FROM git_repo_refs grr WHERE grr.commit_id in (SELECT id from with_all_children)'.
+	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
 { #category : #storing }
 SPGitRDBRepository >> storeCommit: aGitCommit [
 
@@ -676,4 +745,17 @@ SPGitRDBRepository >> stringArrayAsPostgres: anArray [
 				do: [ :each | s nextPut: $"; nextPutAll: each; nextPut: $" ]
 				separatedBy: [ s nextPut: $, ].
 			s nextPut: $} ]
+]
+
+{ #category : #'accessing - queries' }
+SPGitRDBRepository >> withRecursiveAllChildCommitsBySha [
+	"Answer a Common Table Expression (CTE) with the id's of a commit and all its children."
+
+	^'WITH RECURSIVE with_all_children AS (
+	SELECT id FROM git_commits WHERE sha = $1
+	UNION
+	SELECT gcpr.commit_id 
+	FROM git_commit_parent_refs gcpr, with_all_children ap 
+	WHERE ap.id = gcpr.parent_id)
+'
 ]
