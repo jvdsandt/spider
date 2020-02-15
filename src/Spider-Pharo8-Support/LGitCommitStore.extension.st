@@ -1,11 +1,4 @@
-Class {
-	#name : #LGitCommitStore,
-	#superclass : #FileSystemStore,
-	#instVars : [
-		'commit'
-	],
-	#category : #'Spider-Pharo8-Support'
-}
+Extension { #name : #LGitCommitStore }
 
 { #category : #'*Spider-Pharo8-Support' }
 LGitCommitStore >> entryFromNode: node path: path for: aFileSystem [

@@ -69,5 +69,11 @@ BaselineOfSpider >> baselineOf: spec [
 			spec 
 				repository: 'github://jvdsandt/Ring2/src';
 				loads: 'core' ].
-		spec package: 'Spider-Model-Ring2' with: [ spec requires: #( 'Ring2' ) ] ]
+		spec package: 'Spider-Model-Ring2' with: [ spec requires: #( 'Ring2' ) ] ].
+	
+	spec for: #( #'pharo8.x' ) do: [ 
+		spec package: 'Spider-Pharo8-Support'.
+		spec package: 'Spider-Pharo8-Support-Tests' with: [ spec requires: 'Spider-Pharo8-Support' ].
+
+		spec package: 'Spider-Model-Git' with: [ spec requires: #( 'Spider-Pharo8-Support' ) ] ]
 ]
