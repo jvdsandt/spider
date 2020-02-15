@@ -122,9 +122,9 @@ SPClassRDBRepositoryTest >> testStoreClassWithSlots [
 	self assert: #SlotExampleMovie equals: c2 name.
 	self assert: #normal equals: c2 classType.
 	
-	self assert: c2 instanceVarNames sorted equals: #( actors director name year ).
+	self assert: c2 instanceVarNames sorted equals: SlotExampleMovie instVarNames sorted.
 	
-	self assert: (c2 instanceVarRefNamed: #year) expression equals: '#year'.
+	self assert: (c2 instanceVarRefNamed: #name) expression equals: '#name'.
 	self assert: (c2 instanceVarRefNamed: #director) expression equals: '#director => ToOneRelationSlot inverse: #directedMovies inClass: #SlotExamplePerson'.
 	
 	

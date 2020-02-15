@@ -69,22 +69,23 @@ SPRing2ClassTest >> testPackageAV1 [
 SPRing2ClassTest >> testSmalltalkClass: aClass [
 
 	| spiderClass package ringClass expected |
-	
+
 	spiderClass := SPClassBuilder new
 		setClass: aClass;
 		build.
-	
-	package := SPPackage name: aClass category 
+	package := SPPackage
+		name: aClass category
 		classRefs: (Array with: (SPPackageToClassRef spiderClass: spiderClass))
 		comment: ''.
-	
-	ringClass := package ring2ClassNamed: aClass name. 
-	
-	expected := aClass definitionForNautilus.
-	self assert: expected withSeparatorsCompacted equals: ringClass definition withSeparatorsCompacted.
-	
+	ringClass := package ring2ClassNamed: aClass name.
+	expected := aClass definition.
+	self
+		assert: expected withSeparatorsCompacted
+		equals: ringClass definition withSeparatorsCompacted.
 	expected := aClass class definitionForNautilus.
-	self assert: expected withSeparatorsCompacted equals: ringClass classDefinition withSeparatorsCompacted
+	self
+		assert: expected withSeparatorsCompacted
+		equals: ringClass classDefinition withSeparatorsCompacted
 ]
 
 { #category : #tests }
