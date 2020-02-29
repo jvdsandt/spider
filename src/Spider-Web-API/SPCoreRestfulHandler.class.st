@@ -163,7 +163,7 @@ SPCoreRestfulHandler >> getSearch [
 	limit := self limitParameterDefault: 10 max: 50.
 	criteria := self requestStringSearchCriteria.
 	
-	result := OrderedDictionary new.
+	result := Dictionary new.
 	criteria hasValidTerm
 		ifTrue: [ 
 			result

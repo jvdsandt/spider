@@ -31,8 +31,3 @@ SPGitClassDiffRecord >> newClass [
 SPGitClassDiffRecord >> oldClass [
 	^ oldClass
 ]
-
-{ #category : #accessing }
-SPGitClassDiffRecord >> oldClassId [
-	^ oldClass
-]

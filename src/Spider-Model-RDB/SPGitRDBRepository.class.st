@@ -137,6 +137,18 @@ SPGitRDBRepository >> getCommitsImportedAfter: aDateAndTime [
 ]
 
 { #category : #'queries-commits' }
+SPGitRDBRepository >> getCommitsWithRootId: anInteger after: aDateTime [ 
+
+	| q |
+	
+	q := Query read: SPGitCommit 
+		where: [ :e | e rootId = anInteger AND: [ e authorSignature datetime > aDateTime ] ].
+	q orderBy: [ :e | e authorSignature datetime descending ].
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #'queries-commits' }
 SPGitRDBRepository >> getLatestCommits: aCount [
 
 	| q |

@@ -38,7 +38,7 @@ SPDeleteCommitsWithImportErrors >> exampleDeleteMooseErrors [
 
 	| repo dt |
 	
-	repo := self gitRepo getRepoByUrl: 'https://github.com/moosetechnology/Moose.git'
+	repo := self gitRepo getRepoByUrl: 'https://github.com/PolyMathOrg/PolyMath.git'
 		ifAbsent: [ self error: 'Repo not found' ].
 		
 	dt := DateAndTime fromUnixTime: 0.
@@ -96,6 +96,29 @@ SPDeleteCommitsWithImportErrors >> executeForRepoRef: aRepoToCommitRef after: aD
 	errorCommits := errorCommits sorted: [ :a :b | a datetime > b datetime ].
 	
 	self logInfo: 'Found ', errorCommits size asString, ' commits with errors in ', aRepoToCommitRef name. 
+	
+	errorCommits do: [ :each | self deleteCommit: each ]
+	
+]
+
+{ #category : #'as yet unclassified' }
+SPDeleteCommitsWithImportErrors >> executeForRootId: anInteger [
+	"SPWebContext default do: [ self new executeForRootId: 663 ]"
+
+	self executeForRootId: anInteger after: (DateAndTime fromUnixTime: 0) 	
+]
+
+{ #category : #'as yet unclassified' }
+SPDeleteCommitsWithImportErrors >> executeForRootId: anInteger after: aDateTime [
+
+	| commits errorCommits |
+	
+	commits := self gitRepo getCommitsWithRootId: anInteger after: aDateTime.
+
+	errorCommits := commits select: [ :each | each isImportError ].
+	errorCommits := errorCommits sorted: [ :a :b | a datetime > b datetime ].
+	
+	self logInfo: 'Found ', errorCommits size asString, ' commits with errors foor rootId ', anInteger asString. 
 	
 	errorCommits do: [ :each | self deleteCommit: each ]
 	

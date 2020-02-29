@@ -44,6 +44,19 @@ SPDiffRDBRepository >> deleteGitDiffsFromCommit: aCommitId [
 ]
 
 { #category : #queries }
+SPDiffRDBRepository >> getAuthorAndCountsOfClassNamed: aName [
+
+	| q |
+	
+	q := Query read: SPGitClassDiffRecord where: (self selectBlockForClassNamed: aName).
+	q retrieve: [ :e | e commit authorSignature name ].
+	q retrieve: [ :e | e countStar ].
+	q groupBy: [ :e | e commit authorSignature name ].
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPDiffRDBRepository >> getAuthorAndCountsOfPackageNamed: aName [
 
 	| q |
@@ -56,6 +69,24 @@ SPDiffRDBRepository >> getAuthorAndCountsOfPackageNamed: aName [
 	q groupBy: [ :e | e commit authorSignature name ].
 
 	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> getAuthorsOfClassNamed: aName [
+
+	| q aType |
+	
+	aType := SPGlorpClass classType.
+	q := Query read: SPGitClassDiffRecord where: 
+		[ :e | ((e oldClass asOuterJoin name = aName) AND: (e oldClass type = aType)) OR: (
+				(e newClass asOuterJoin name = aName) AND: (e newClass type = aType)) ].
+		
+	q retrieve: [ :e | e commit authorSignature name distinct ].
+	q retrieve: [ :e | e commit authorSignature email ].
+	q orderBy: [ :e | e commit authorSignature name ].
+
+	^ (self glorpSession execute: q) collect: [ :each |
+			SPGitAuthor name: each first email: each last ]
 ]
 
 { #category : #queries }
@@ -110,6 +141,38 @@ SPDiffRDBRepository >> getGitRootIdsForClassNamed: aName [
 	q retrieve: [ :e | e commit rootId distinct ].
 
 	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> getNewestCommitWithClassNamed: aName [
+
+	| q list |
+	
+	q := Query read: SPGitClassDiffRecord where: (self selectBlockForClassNamed: aName).
+	q alsoFetch: [ :e | e commit ].
+	q orderBy: [ :e | e commit authorSignature datetime descending ].
+	q limit: 1.
+
+	list := self glorpSession execute: q.
+	^ list isEmpty
+			ifTrue: [ nil ]
+			ifFalse: [ list first commit ]
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> getOldestCommitWithClassNamed: aName [
+
+	| q list |
+	
+	q := Query read: SPGitClassDiffRecord where: (self selectBlockForClassNamed: aName).
+	q alsoFetch: [ :e | e commit ].
+	q orderBy: [ :e | e commit authorSignature datetime ].
+	q limit: 1.
+
+	list := self glorpSession execute: q.
+	^ list isEmpty
+			ifTrue: [ nil ]
+			ifFalse: [ list first commit ]
 ]
 
 { #category : #queries }
@@ -218,6 +281,14 @@ SPDiffRDBRepository >> insertDiffGitPackagesQuery [
 	
 	sql := 'INSERT INTO diff_git_packages (commit_id, old_package_id, new_package_id) VALUES ($1,$2,$3)'.
 	^ queries at: sql ifAbsentPut: [ queries createQuery: sql ]
+]
+
+{ #category : #internal }
+SPDiffRDBRepository >> selectBlockForClassNamed: aName [
+
+	^ [ :e | 
+			((e oldClass asOuterJoin name = aName) AND: (e oldClass type = SPGlorpClass classType)) OR: (
+				(e newClass asOuterJoin name = aName) AND: (e newClass type = SPGlorpClass classType)) ]
 ]
 
 { #category : #initialization }
