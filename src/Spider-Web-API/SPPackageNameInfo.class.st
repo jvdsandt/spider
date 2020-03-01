@@ -5,13 +5,6 @@ Class {
 }
 
 { #category : #initialization }
-SPPackageNameInfo >> initWithName: aName gitRootId: anId [
-
-	name := aName.
-	gitRootId := anId
-]
-
-{ #category : #initialization }
 SPPackageNameInfo >> retrieveInfo: aContext [
 
 	versionCount := aContext gitRepo packageRepo countOfPackagesNamed: name.

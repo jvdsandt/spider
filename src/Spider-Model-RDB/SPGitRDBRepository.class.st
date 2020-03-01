@@ -7,6 +7,18 @@ Class {
 	#category : #'Spider-Model-RDB-Repos'
 }
 
+{ #category : #internal }
+SPGitRDBRepository >> commitWithAllChildrenCTE [
+	"Answer a String with a SQL recursive Common Table Expression (CTE) with the id of a commit
+	and all its children/descendants commit id's."
+
+	^ 'WITH RECURSIVE all_children AS (
+	SELECT commit_id AS id FROM git_commit_parent_refs WHERE commit_id = {1}
+	UNION
+	SELECT gcpr.commit_id FROM git_commit_parent_refs gcpr, all_children ap WHERE ap.id = gcpr.parent_id)
+'
+]
+
 { #category : #storing }
 SPGitRDBRepository >> deleteCommit: aCommit from: aRepo [
 
@@ -259,6 +271,23 @@ SPGitRDBRepository >> getRefsToCommit: aCommit [
 	^ self glorpSession execute: q
 ]
 
+{ #category : #'queries-refs' }
+SPGitRDBRepository >> getRefsToCommitOrChild: aCommitId [ 
+	"Answer a collection "
+
+	| sql query |
+	
+	sql := self commitWithAllChildrenCTE, 'SELECT DISTINCT 
+	t1.REPO_ID, t1.TYPE, t1.NAME, t1.TXID, t1.COMMIT_ID
+FROM git_repo_refs t1
+WHERE t1.COMMIT_ID in (select id from all_children) order by t1.COMMIT_ID desc' format: (Array with: aCommitId).
+	
+	query := Query read: SPGitRepoToCommitRef.
+	query sql: sql.
+	
+	^ self glorpSession execute: query
+]
+
 { #category : #'queries-repos' }
 SPGitRDBRepository >> getRepo: aDomain owner: anOwner name: aName ifAbsent: aBlock [
 
@@ -308,6 +337,21 @@ SPGitRDBRepository >> getRepos: aStringSearchCriteria max: aLimit [
 	q limit: aLimit.
 	
 	^ self glorpSession execute: q
+]
+
+{ #category : #'queries-repos' }
+SPGitRDBRepository >> getReposReferencingCommitOrChild: aCommitId [
+
+	| sql query |
+	
+	sql := self commitWithAllChildrenCTE, 'SELECT DISTINCT t1.ID, t1.TXID, t1.URL, t1.FORKED_FROM
+FROM git_repos t1
+WHERE t1.ID IN (SELECT REPO_ID FROM git_repo_refs WHERE COMMIT_ID in (select id from all_children)) order by t1.ID desc' format: (Array with: aCommitId).
+	
+	query := Query read: SPGitRepo.
+	query sql: sql.
+	
+	^ self glorpSession execute: query
 ]
 
 { #category : #'queries-repos' }

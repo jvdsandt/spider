@@ -1,20 +1,20 @@
 Class {
-	#name : #SPClassNameInfo,
+	#name : #SPSelectorInfo,
 	#superclass : #SPNameInfo,
 	#category : #'Spider-Web-API'
 }
 
 { #category : #initialization }
-SPClassNameInfo >> retrieveInfo: aContext [
+SPSelectorInfo >> retrieveInfo: aContext [
 
-	versionCount := aContext classRepo countOfClassesNamed: name.
+	versionCount := aContext methodRepo countImplementorsOf: name.
 	versionCount = 0
 		ifTrue: [ ^ self ].
 
-	gitRepos := aContext gitRepo getReposWithPackageNamed: name.
-	oldestGitCommit := aContext diffRepo getOldestCommitWithClassNamed: name.
-	newestGitCommit := aContext diffRepo getNewestCommitWithClassNamed: name.
-	gitAuthors := (aContext diffRepo getAuthorAndCountsOfClassNamed: name)
+	gitRepos := #().
+	oldestGitCommit := aContext diffRepo getOldestCommitWithSelector: name.
+	newestGitCommit := aContext diffRepo getNewestCommitWithSelector: name.
+	gitAuthors := (aContext diffRepo getAuthorAndCountsOfSelector: name)
 		collect: [ :eachRow |
 			Dictionary new
 				at: 'author' put: eachRow first;

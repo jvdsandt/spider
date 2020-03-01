@@ -1,21 +1,21 @@
 Class {
-	#name : #SPPackageNameJson,
+	#name : #SPSelectorJson,
 	#superclass : #SPJsonNameInfoComponent,
 	#category : #'Spider-Web-API'
 }
 
 { #category : #rendering }
-SPPackageNameJson >> renderContentOn: aRenderer [
+SPSelectorJson >> renderContentOn: json [
 
-	self renderPackageOn: aRenderer
+	self renderSelectorOn: json
 ]
 
 { #category : #rendering }
-SPPackageNameJson >> renderPackageOn: json [
+SPSelectorJson >> renderSelectorOn: json [
 
 	json object: [ 
 		json 
-			key: 'name' value: info name;
+			key: 'selector' value: info name;
 			key: 'versionCount' value: info versionCount;
 			key: 'gitRepos' value: [ self renderGitReposOn: json ];
 			key: 'gitAuthors' value: [ self renderGitAuthorsOn: json ];

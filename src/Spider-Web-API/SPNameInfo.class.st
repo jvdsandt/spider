@@ -38,6 +38,13 @@ SPNameInfo >> gitRootId [
 	^ gitRootId
 ]
 
+{ #category : #initialization }
+SPNameInfo >> initWithName: aName gitRootId: anId [
+
+	name := aName.
+	gitRootId := anId
+]
+
 { #category : #accessing }
 SPNameInfo >> mcAuthors [
 	^ mcAuthors

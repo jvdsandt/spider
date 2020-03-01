@@ -7,6 +7,16 @@ Class {
 	#category : #'Spider-Model-RDB-Repos'
 }
 
+{ #category : #queries }
+SPMethodRDBRepository >> countImplementorsOf: aSelector [
+
+	| q |
+	
+	q := Query readOneOf: SPMethod where: [ :e | e selector = aSelector ].
+	q retrieve: [ :e | e countStar ].
+	^ self glorpSession execute: q
+]
+
 { #category : #internal }
 SPMethodRDBRepository >> escapeAndLowerLikeParameter: aString [
 

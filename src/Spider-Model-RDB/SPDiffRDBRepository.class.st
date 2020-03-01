@@ -61,9 +61,20 @@ SPDiffRDBRepository >> getAuthorAndCountsOfPackageNamed: aName [
 
 	| q |
 	
-	q := Query read: SPGitPackageDiffRecord where: 
-		[ :e | (e oldPackage asOuterJoin name = aName) OR: (e newPackage asOuterJoin name = aName) ].
-		
+	q := Query read: SPGitPackageDiffRecord where: [ :e | e newPackage name = aName ].
+	q retrieve: [ :e | e commit authorSignature name ].
+	q retrieve: [ :e | e countStar ].
+	q groupBy: [ :e | e commit authorSignature name ].
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> getAuthorAndCountsOfSelector: aName [
+
+	| q |
+	
+	q := Query read: SPGitMethodDiffRecord where: [ :e | e newMethod selector = aName ].
 	q retrieve: [ :e | e commit authorSignature name ].
 	q retrieve: [ :e | e countStar ].
 	q groupBy: [ :e | e commit authorSignature name ].
@@ -160,11 +171,43 @@ SPDiffRDBRepository >> getNewestCommitWithClassNamed: aName [
 ]
 
 { #category : #queries }
+SPDiffRDBRepository >> getNewestCommitWithSelector: aName [
+
+	| q list |
+	
+	q := Query read: SPGitMethodDiffRecord where: [ :e | e newMethod selector = aName ].
+	q alsoFetch: [ :e | e commit ].
+	q orderBy: [ :e | e commit authorSignature datetime descending ].
+	q limit: 1.
+
+	list := self glorpSession execute: q.
+	^ list isEmpty
+			ifTrue: [ nil ]
+			ifFalse: [ list first commit ]
+]
+
+{ #category : #queries }
 SPDiffRDBRepository >> getOldestCommitWithClassNamed: aName [
 
 	| q list |
 	
 	q := Query read: SPGitClassDiffRecord where: (self selectBlockForClassNamed: aName).
+	q alsoFetch: [ :e | e commit ].
+	q orderBy: [ :e | e commit authorSignature datetime ].
+	q limit: 1.
+
+	list := self glorpSession execute: q.
+	^ list isEmpty
+			ifTrue: [ nil ]
+			ifFalse: [ list first commit ]
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> getOldestCommitWithSelector: aName [
+
+	| q list |
+	
+	q := Query read: SPGitMethodDiffRecord where: [ :e | e newMethod selector = aName ].
 	q alsoFetch: [ :e | e commit ].
 	q orderBy: [ :e | e commit authorSignature datetime ].
 	q limit: 1.
@@ -286,9 +329,7 @@ SPDiffRDBRepository >> insertDiffGitPackagesQuery [
 { #category : #internal }
 SPDiffRDBRepository >> selectBlockForClassNamed: aName [
 
-	^ [ :e | 
-			((e oldClass asOuterJoin name = aName) AND: (e oldClass type = SPGlorpClass classType)) OR: (
-				(e newClass asOuterJoin name = aName) AND: (e newClass type = SPGlorpClass classType)) ]
+	^ [ :e | (e newClass name = aName) AND: (e newClass type = SPGlorpClass classType) ]
 ]
 
 { #category : #initialization }

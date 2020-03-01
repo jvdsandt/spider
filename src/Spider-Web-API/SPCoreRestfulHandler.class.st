@@ -173,3 +173,25 @@ SPCoreRestfulHandler >> getSearch [
 		
 	^ self renderJsonWith: result
 ]
+
+{ #category : #'as yet unclassified' }
+SPCoreRestfulHandler >> getSelectorAsJson: aName [
+	<get>
+	<path: '/selectors/{aName}'>
+	<produces: 'application/json'>
+	
+	| gitRootId info |
+	
+	gitRootId := self requestIntParameterAt: 'gitRootId' ifAbsent: [ nil ].
+
+	info := (SPSelectorInfo new initWithName: aName gitRootId: gitRootId)
+		retrieveInfo: self context;
+		yourself.
+	info versionCount = 0
+		ifTrue: [ ^ self notFoundJson ].
+
+	^ self renderJsonWith: [ :json |
+			SPSelectorJson new 
+				info: info;
+				renderContentOn: json ]
+]
