@@ -34,7 +34,7 @@ SPGitRepeCodeChecker >> addPackageNok: aName sha: sha commit: lgitCommit message
 ]
 
 { #category : #internal }
-SPGitRepeCodeChecker >> addPackageOk: aName sha: sha commit: lgitCommit snapshot: snapshot. [
+SPGitRepeCodeChecker >> addPackageOk: aName sha: sha commit: lgitCommit snapshot: snapshot [.
 
 	^ (packages at: aName ifAbsentPut: [ Dictionary new ])
 		at: sha put: (

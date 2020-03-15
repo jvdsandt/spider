@@ -56,6 +56,28 @@ SPGitCommit >> addAllTo: aSet after: aDateTime [
 	self parents do: [ :each | each addAllTo: aSet after: aDateTime ].
 ]
 
+{ #category : #adding }
+SPGitCommit >> addAllTo: aList max: aCount [
+	"Add the receiver to <aList>. Assume thah the list is sorted by
+	commit datetime descending."
+	
+	| index |
+	
+	index := aList size.
+	[ index > 0 and: [ (aList at: index) datetime < self datetime ] ]
+		whileTrue: [ index := index - 1 ].
+	((index between: 1 and: aList size) and: [ (aList at: index) = self ])
+		ifTrue: [ ^ self ].
+		
+	aList add: self afterIndex: index.
+	
+	(aList size < aCount or: [ index+1 < aList size ])
+		ifTrue: [ 
+			self parents do: [ :each | each addAllTo: aList max: aCount ] ].
+	[ aList size > aCount ]
+		whileTrue: [ aList removeLast ].
+]
+
 { #category : #accessing }
 SPGitCommit >> authorEmail [
 	^ self authorSignature email
@@ -355,5 +377,15 @@ SPGitCommit >> withAllParentsAfter: aDateTime [
 
 	coll := Set new.
 	self addAllTo: coll after: aDateTime.
+	^ coll
+]
+
+{ #category : #accessing }
+SPGitCommit >> withAllParentsMax: aCount [
+
+	| coll |
+
+	coll := OrderedCollection new: aCount.
+	self addAllTo: coll max: aCount.
 	^ coll
 ]

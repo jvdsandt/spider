@@ -5,6 +5,20 @@ Class {
 }
 
 { #category : #examples }
+SPDeleteCommitsWithImportErrors >> exampleDeleteCalypsoErrors [
+	"SPWebContext default do: [ self new exampleDeleteCalypsoErrors ]"
+
+	| repo dt |
+	
+	repo := self gitRepo getRepoByUrl: 'https://github.com/pharo-ide/Calypso.git'
+		ifAbsent: [ self error: 'Repo not found' ].
+		
+	dt := DateAndTime fromUnixTime: 0.
+	
+	self executeForRepo: repo after: dt
+]
+
+{ #category : #examples }
 SPDeleteCommitsWithImportErrors >> exampleDeleteIcebergErrors [
 	"self new context: SPWebContext default context; exampleDeleteIcebergErrors"
 

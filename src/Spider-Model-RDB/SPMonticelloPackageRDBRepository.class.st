@@ -99,6 +99,18 @@ SPMonticelloPackageRDBRepository >> getMCPackageForRepo: aRepoUrl andFile: aFile
 ]
 
 { #category : #queries }
+SPMonticelloPackageRDBRepository >> getMCPackagesByDatetime: aMax [
+
+	| q |
+	
+	q := Query read: SPMonticelloPackage where: [ :e | e package ~= nil ].
+	q orderBy: [ :e | e datetime descending ].
+	q limit: aMax.
+
+	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
 SPMonticelloPackageRDBRepository >> getMCRepoById: anId ifAbsent: aBlock [
 
 	| query mcRepo |

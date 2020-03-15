@@ -37,6 +37,12 @@ SPGitRepoToCommitRef >> allCommitsAfter: aDatetime [
 ]
 
 { #category : #accessing }
+SPGitRepoToCommitRef >> allCommitsMax: aCount [
+
+	^ self commit withAllParentsMax: aCount
+]
+
+{ #category : #accessing }
 SPGitRepoToCommitRef >> commit [
 	^ commit
 ]
