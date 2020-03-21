@@ -11,9 +11,14 @@ SPGitLatestCommitsBrowser >> createBrowser [
 			with: [ :t |
 				t title: 'Spider Latest Git Commits'.
 				t 
-					column: #commits.
+					row: #commits;
+					row: #description.
 				t transmit to: #commits; andShow: [ :composite | 
-					self createCommitsTable: composite ] ]
+					self createCommitsTable: composite ].
+				t transmit from: #commits; to: #description; andShow: [ :composite |
+					composite text
+						title: 'Commit Info';
+						display: [ :commit | commit summary ] ] ]
 ]
 
 { #category : #'instance creation' }

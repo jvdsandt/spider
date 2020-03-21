@@ -335,6 +335,31 @@ SPGitCommit >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
+{ #category : #printing }
+SPGitCommit >> printSummaryOn: aStream [
+
+	aStream 
+		nextPutAll: 'Commit: ';
+		nextPutAll: self shaString; cr.
+	self parents notEmpty
+		ifTrue: [ 
+			aStream
+				nextPutAll: (self parents size = 1 ifTrue: [ 'Parent' ] ifFalse: [ 'Parents' ]);
+				nextPutAll: ': '.
+			self parents
+				do: [ :each | aStream nextPutAll: self shaShortString ]
+				separatedBy: [ aStream nextPutAll: ', ' ].
+			aStream cr ].
+	aStream nextPutAll: 'Author: '.
+	self authorSignature printNameAndEmailOn: aStream.
+	aStream cr.
+	aStream nextPutAll: 'Date: '.
+	self authorSignature printDatetimeOn: aStream.
+	aStream
+		cr; cr;
+		nextPutAll: self message
+]
+
 { #category : #initialization }
 SPGitCommit >> privRootId: anInteger [
 	rootId := anInteger
@@ -368,6 +393,12 @@ SPGitCommit >> sourceDir [
 { #category : #accessing }
 SPGitCommit >> status [
 	^ status
+]
+
+{ #category : #printing }
+SPGitCommit >> summary [
+
+	^ String streamContents: [ :s | self printSummaryOn: s ]
 ]
 
 { #category : #accessing }

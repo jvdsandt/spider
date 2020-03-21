@@ -58,6 +58,22 @@ SPGitSignature >> name [
 	^ name
 ]
 
+{ #category : #printing }
+SPGitSignature >> printDatetimeOn: aStream [
+
+	self datetime printOn: aStream
+]
+
+{ #category : #printing }
+SPGitSignature >> printNameAndEmailOn: aStream [
+
+	aStream
+		nextPutAll: self name;
+		nextPutAll: ' <';
+		nextPutAll: self email;
+		nextPutAll: '>'
+]
+
 { #category : #accessing }
 SPGitSignature >> tzOffset [
 	^ tzOffset

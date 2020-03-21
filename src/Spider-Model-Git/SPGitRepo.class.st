@@ -99,9 +99,17 @@ SPGitRepo >> hash [
 ]
 
 { #category : #accessing }
-SPGitRepo >> homepageUrl [
+SPGitRepo >> htmlUrl [
 
-	^ self url allButLast: 4
+	^ (url endsWith: '.git')
+			ifTrue: [ url allButLast: 4 ]
+			ifFalse: [ url ]
+]
+
+{ #category : #accessing }
+SPGitRepo >> htmlUrlForSha: aSha [
+
+	^ self htmlUrl, '/commit/', aSha
 ]
 
 { #category : #initialization }

@@ -45,6 +45,11 @@ SPGlamourBrowser >> context [
 ]
 
 { #category : #accessing }
+SPGlamourBrowser >> gitRepo [
+	^ context gitRepo
+]
+
+{ #category : #accessing }
 SPGlamourBrowser >> packageRepo [
 	^ context packageRepo
 ]
