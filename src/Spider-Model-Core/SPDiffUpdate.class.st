@@ -19,6 +19,11 @@ SPDiffUpdate >> accept: aVisitor [
 	aVisitor visitDiffUpdate: self
 ]
 
+{ #category : #accessing }
+SPDiffUpdate >> iconName [
+	^ #changeUpdate
+]
+
 { #category : #initialization }
 SPDiffUpdate >> initOld: anOldObjects updated: aNewObject [
 

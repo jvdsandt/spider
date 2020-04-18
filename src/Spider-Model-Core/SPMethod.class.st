@@ -101,7 +101,7 @@ SPMethod >> printOn: aStream [
 	aStream nextPut: $[.
 	selector printOn: aStream.
 	aStream nextPut: $#.
-	aStream nextPutAll: (sourceHash last: 3) hex.
+	aStream nextPutAll: self sourceHashLabel.
 	aStream nextPut: $]
 ]
 
@@ -128,6 +128,11 @@ SPMethod >> source [
 { #category : #accessing }
 SPMethod >> sourceHash [
 	^ sourceHash
+]
+
+{ #category : #accessing }
+SPMethod >> sourceHashLabel [
+	^ (self sourceHash last: 4) hex
 ]
 
 { #category : #accessing }

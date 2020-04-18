@@ -19,6 +19,11 @@ SPAddedPackage >> calcClassDiffs [
 ]
 
 { #category : #accessing }
+SPAddedPackage >> children [
+	^ self classDiffs
+]
+
+{ #category : #accessing }
 SPAddedPackage >> classDiffs [
 
 	^ classDiffs ifNil: [ classDiffs := self calcClassDiffs ]

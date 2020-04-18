@@ -167,6 +167,11 @@ SPGlorpClass >> classHash [
 ]
 
 { #category : #accessing }
+SPGlorpClass >> classHashLabel [
+	^ (self classHash last: 4) hex
+]
+
+{ #category : #accessing }
 SPGlorpClass >> classInstanceVarNames [
 
 	^ variableRefs select: [ :each | each isClassInstanceVar ] thenCollect: [ :each | each variable ]
@@ -507,7 +512,7 @@ SPGlorpClass >> printOn: aStream [
 	aStream nextPut: $[.
 	name printOn: aStream.
 	aStream nextPut: $#.
-	aStream nextPutAll: (self classHash last: 3) hex.
+	aStream nextPutAll: self classHashLabel.
 	aStream nextPut: $]
 	
 	

@@ -18,6 +18,11 @@ SPDiffRemove >> accept: aVisitor [
 	aVisitor visitDiffRemove: self
 ]
 
+{ #category : #accessing }
+SPDiffRemove >> iconName [
+	^ #changeRemove
+]
+
 { #category : #initialization }
 SPDiffRemove >> initOld: anOldObjects [
 

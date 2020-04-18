@@ -101,6 +101,12 @@ SPDiffRDBRepository >> getAuthorsOfClassNamed: aName [
 ]
 
 { #category : #queries }
+SPDiffRDBRepository >> getClassDiffsOfCommit: aCommit [
+
+	^ self glorpSession read: SPGitClassDiffRecord where: [ :e | e commit = aCommit ]
+]
+
+{ #category : #queries }
 SPDiffRDBRepository >> getCommitOfClass: aClass in: aGitRootId [
 
 	| q |
@@ -152,6 +158,12 @@ SPDiffRDBRepository >> getGitRootIdsForClassNamed: aName [
 	q retrieve: [ :e | e commit rootId distinct ].
 
 	^ self glorpSession execute: q
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> getMethodDiffsOfCommit: aCommit [
+
+	^ self glorpSession read: SPGitMethodDiffRecord where: [ :e | e commit = aCommit ]
 ]
 
 { #category : #queries }
@@ -216,6 +228,12 @@ SPDiffRDBRepository >> getOldestCommitWithSelector: aName [
 	^ list isEmpty
 			ifTrue: [ nil ]
 			ifFalse: [ list first commit ]
+]
+
+{ #category : #queries }
+SPDiffRDBRepository >> getPackageDiffsOfCommit: aCommit [
+
+	^ self glorpSession read: SPGitPackageDiffRecord where: [ :e | e commit = aCommit ]
 ]
 
 { #category : #queries }

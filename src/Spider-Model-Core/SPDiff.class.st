@@ -10,6 +10,16 @@ SPDiff >> accept: aVisitor [
 ]
 
 { #category : #accessing }
+SPDiff >> children [
+	^ #()
+]
+
+{ #category : #accessing }
+SPDiff >> iconName [
+	^ #add
+]
+
+{ #category : #accessing }
 SPDiff >> newObject [
 	^ nil
 ]

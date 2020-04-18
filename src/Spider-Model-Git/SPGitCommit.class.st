@@ -347,7 +347,7 @@ SPGitCommit >> printSummaryOn: aStream [
 				nextPutAll: (self parents size = 1 ifTrue: [ 'Parent' ] ifFalse: [ 'Parents' ]);
 				nextPutAll: ': '.
 			self parents
-				do: [ :each | aStream nextPutAll: self shaShortString ]
+				do: [ :each | aStream nextPutAll: each shaShortString ]
 				separatedBy: [ aStream nextPutAll: ', ' ].
 			aStream cr ].
 	aStream nextPutAll: 'Author: '.

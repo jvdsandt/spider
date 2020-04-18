@@ -31,11 +31,33 @@ SPGitMethodDiffRecord >> isMeta [
 ]
 
 { #category : #accessing }
+SPGitMethodDiffRecord >> name [
+	^ self selector
+]
+
+{ #category : #accessing }
+SPGitMethodDiffRecord >> newHashLabel [
+	^ newMethod ifNotNil: [ newMethod sourceHashLabel ]
+]
+
+{ #category : #accessing }
 SPGitMethodDiffRecord >> newMethod [
 	^ newMethod
 ]
 
 { #category : #accessing }
+SPGitMethodDiffRecord >> oldHashLabel [
+	^ oldMethod ifNotNil: [ oldMethod sourceHashLabel ]
+]
+
+{ #category : #accessing }
 SPGitMethodDiffRecord >> oldMethod [
 	^ oldMethod
+]
+
+{ #category : #accessing }
+SPGitMethodDiffRecord >> selector [
+	^ self newMethod notNil
+			ifTrue: [ self newMethod selector ]
+			ifFalse: [ self oldMethod selector ]
 ]

@@ -45,6 +45,11 @@ SPGlamourBrowser >> context [
 ]
 
 { #category : #accessing }
+SPGlamourBrowser >> diffRepo [
+	^ context diffRepo
+]
+
+{ #category : #accessing }
 SPGlamourBrowser >> gitRepo [
 	^ context gitRepo
 ]
@@ -58,4 +63,9 @@ SPGlamourBrowser >> packageRepo [
 SPGlamourBrowser >> setContext: aSPiderContext [
 
 	context := aSPiderContext
+]
+
+{ #category : #accessing }
+SPGlamourBrowser >> theme [
+	^ Smalltalk ui theme
 ]

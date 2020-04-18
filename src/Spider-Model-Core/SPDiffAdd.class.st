@@ -18,6 +18,11 @@ SPDiffAdd >> accept: aVisitor [
 	aVisitor visitDiffAdd: self
 ]
 
+{ #category : #accessing }
+SPDiffAdd >> iconName [
+	^ #changeAdd
+]
+
 { #category : #initialization }
 SPDiffAdd >> initNew: aNewObject [
 

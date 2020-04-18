@@ -2,7 +2,6 @@ Class {
 	#name : #SPGitClassDiffRecord,
 	#superclass : #SPGitDiffRecord,
 	#instVars : [
-		'classType',
 		'newClass',
 		'oldClass'
 	],
@@ -11,7 +10,9 @@ Class {
 
 { #category : #accessing }
 SPGitClassDiffRecord >> classType [
-	^ classType
+	^ newClass notNil
+			ifTrue: [ newClass type ]
+			ifFalse: [ oldClass type ]
 ]
 
 { #category : #initialization }
@@ -23,11 +24,29 @@ SPGitClassDiffRecord >> initWith: aCommit old: old new: new [
 ]
 
 { #category : #accessing }
+SPGitClassDiffRecord >> name [
+
+	^ self newClass notNil
+		ifTrue: [ self newClass name ]
+		ifFalse: [ self oldClass name ]
+]
+
+{ #category : #accessing }
 SPGitClassDiffRecord >> newClass [
 	^ newClass
 ]
 
 { #category : #accessing }
+SPGitClassDiffRecord >> newHashLabel [
+	^ newClass ifNotNil: [ newClass classHashLabel ]
+]
+
+{ #category : #accessing }
 SPGitClassDiffRecord >> oldClass [
 	^ oldClass
+]
+
+{ #category : #accessing }
+SPGitClassDiffRecord >> oldHashLabel [
+	^ oldClass ifNotNil: [ oldClass classHashLabel ]
 ]

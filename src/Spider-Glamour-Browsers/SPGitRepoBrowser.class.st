@@ -4,7 +4,7 @@ Class {
 	#category : #'Spider-Glamour-Browsers'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SPGitRepoBrowser >> createBrowser [
 
 	^ GLMCompositePresentation new tabulator 
@@ -40,9 +40,14 @@ SPGitRepoBrowser >> createBrowser [
 				t transmit from: #commits; to: #description; andShow: [ :composite |
 					composite text
 						title: 'Commit Info';
-						display: [ :commit | commit summary ] ]
-					
-					 ]
+						display: [ :commit | commit summary ].
+					(self createPackageDiffsTable: composite)
+						display: [ :commit | self getPackageDiffsOfCommit: commit ].
+					(self createClassDiffsTable: composite)
+						display: [ :commit | self getClassDiffsOfCommit: commit ].
+					(self createMethodDiffsTable: composite)
+						display: [ :commit | self getMethodDiffsOfCommit: commit ] ]
+			]
 ]
 
 { #category : #'as yet unclassified' }

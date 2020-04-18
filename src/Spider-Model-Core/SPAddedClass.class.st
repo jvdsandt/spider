@@ -19,6 +19,11 @@ SPAddedClass >> calcMethodDiffs [
 ]
 
 { #category : #accessing }
+SPAddedClass >> children [
+	^ self methodDiffs
+]
+
+{ #category : #accessing }
 SPAddedClass >> methodDiffs [
 
 	^ methodDiffs ifNil: [ methodDiffs := self calcMethodDiffs ]

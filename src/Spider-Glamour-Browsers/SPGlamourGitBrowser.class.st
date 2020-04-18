@@ -4,7 +4,19 @@ Class {
 	#category : #'Spider-Glamour-Browsers'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #creating }
+SPGlamourGitBrowser >> createClassDiffsTable: composite [ 
+
+	^ composite fastTable
+			title: 'Class diffs';
+			column: 'Name' evaluated: [ :each | each name ] width: 160;
+			column: 'Type' evaluated: [ :each | each classType ] width: 80;
+			column: 'Old' evaluated: [ :each | each oldHashLabel ] width: 100;
+			column: 'New' evaluated: [ :each | each newHashLabel ] width: 100;
+			yourself
+]
+
+{ #category : #creating }
 SPGlamourGitBrowser >> createCommitsTable: composite [ 
 
 	^ composite fastTable
@@ -16,10 +28,66 @@ SPGlamourGitBrowser >> createCommitsTable: composite [
 			selectionAct: [ :table :a :b :c | { table. a. b. c. } inspect ] entitled: 'Browse';
 			selectionAct: [ :table | ] entitled: 'Check';
 			selectionAct: [ :table | self openCommitOnWeb: table rawSelection ] entitled: 'Open on web';
+			selectionAct: [ :table | SPGitDiffBrowser new openOn: table rawSelection ] entitled: 'Diffs';
+			selectionAct: [ :table | table rawSelection inspect ] entitled: 'Inspect it';
 			yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #creating }
+SPGlamourGitBrowser >> createMethodDiffsTable: composite [ 
+
+	^ composite fastTable
+			title: 'Method diffs';
+			column: 'Class' evaluated: [ :each | each className ] width: 160;
+			column: 'Meta' evaluated: [ :each | each isMeta ] width: 80;
+			column: 'Selector' evaluated: [ :each | each selector ] width: 200;
+			column: 'Old' evaluated: [ :each | each oldHashLabel ] width: 100;
+			column: 'New' evaluated: [ :each | each newHashLabel ] width: 100;
+			yourself
+]
+
+{ #category : #creating }
+SPGlamourGitBrowser >> createPackageDiffsTable: composite [ 
+
+	^ composite fastTable
+			title: 'Package diffs';
+			column: 'Name' evaluated: [ :each | each name ] width: 160;
+			column: 'Old' evaluated: [ :each | each oldHashLabel ] width: 100;
+			column: 'New' evaluated: [ :each | each newHashLabel ] width: 100;
+			yourself
+]
+
+{ #category : #queries }
+SPGlamourGitBrowser >> getClassDiffsOfCommit: aGitCommit [
+
+	| list |
+	
+	list := self diffRepo getClassDiffsOfCommit: aGitCommit.
+	^ list sorted: [ :a :b | a name <= b name ]
+]
+
+{ #category : #queries }
+SPGlamourGitBrowser >> getMethodDiffsOfCommit: aGitCommit [
+
+	| list |
+	
+	list := self diffRepo getMethodDiffsOfCommit: aGitCommit.
+	^ list sorted: [ :a :b | 
+		a className = b className
+			ifTrue: [ a selector <= b selector ]
+			ifFalse: [ a className <= b className ] ]
+]
+
+{ #category : #queries }
+SPGlamourGitBrowser >> getPackageDiffsOfCommit: aGitCommit [
+
+	| list |
+	
+	list := self diffRepo getPackageDiffsOfCommit: aGitCommit.
+	^ list sorted: [ :a :b | a name <= b name ]
+]
+
+{ #category : #actions }
 SPGlamourGitBrowser >> openCommitOnWeb: aGitCommit [
 
 	| repos |
@@ -31,13 +99,13 @@ SPGlamourGitBrowser >> openCommitOnWeb: aGitCommit [
 	self openRepoOnWeb: repos first commit: aGitCommit
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SPGlamourGitBrowser >> openRepoOnWeb: aGitRepo [
 
 	WebBrowser openOn: aGitRepo htmlUrl
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SPGlamourGitBrowser >> openRepoOnWeb: aGitRepo commit: aGitCommit [
 
 	WebBrowser openOn: (aGitRepo htmlUrlForSha: aGitCommit shaString)

@@ -13,6 +13,11 @@ SPUpdatedPackage >> accept: aVisitor [
 ]
 
 { #category : #accessing }
+SPUpdatedPackage >> children [
+	^ self classDiffs
+]
+
+{ #category : #accessing }
 SPUpdatedPackage >> classDiffs [
 
 	^ classDiffs ifNil: [ classDiffs := self newObject compareClassesWithAll: self oldObjects ]

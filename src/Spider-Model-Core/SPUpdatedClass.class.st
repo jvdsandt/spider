@@ -12,6 +12,11 @@ SPUpdatedClass >> accept: aVisitor [
 	aVisitor visitDiffUpdatedClass: self
 ]
 
+{ #category : #accessing }
+SPUpdatedClass >> children [
+	^ self methodDiffs
+]
+
 { #category : #testing }
 SPUpdatedClass >> hasCommentDiff [
 
