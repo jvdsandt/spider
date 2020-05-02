@@ -32,6 +32,15 @@ SPAddedMethod >> newMethod [
 ]
 
 { #category : #accessing }
+SPAddedMethod >> newSource [
+
+	^ String streamContents: [ :s |
+			s
+				nextPut: $"; nextPutAll: self newCategory; nextPut: $"; cr;
+				nextPutAll: self newMethod source ]
+]
+
+{ #category : #accessing }
 SPAddedMethod >> selector [
 
 	^ self newObject selector

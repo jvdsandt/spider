@@ -32,6 +32,15 @@ SPUpdatedMethod >> newMethod [
 ]
 
 { #category : #accessing }
+SPUpdatedMethod >> newSource [
+
+	^ String streamContents: [ :s |
+			s
+				nextPut: $"; nextPutAll: self newCategory; nextPut: $"; cr;
+				nextPutAll: self newMethod source ]
+]
+
+{ #category : #accessing }
 SPUpdatedMethod >> oldCategory [
 
 	^ self oldObject category
@@ -41,6 +50,15 @@ SPUpdatedMethod >> oldCategory [
 SPUpdatedMethod >> oldMethod [
 
 	^ self oldObject method
+]
+
+{ #category : #accessing }
+SPUpdatedMethod >> oldSource [
+
+	^ String streamContents: [ :s |
+			s
+				nextPut: $"; nextPutAll: self oldCategory; nextPut: $"; cr;
+				nextPutAll: self oldMethod source ]
 ]
 
 { #category : #accessing }

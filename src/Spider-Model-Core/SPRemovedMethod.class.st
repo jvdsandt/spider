@@ -32,6 +32,15 @@ SPRemovedMethod >> oldMethod [
 ]
 
 { #category : #accessing }
+SPRemovedMethod >> oldSource [
+
+	^ String streamContents: [ :s |
+			s
+				nextPut: $"; nextPutAll: self oldCategory; nextPut: $"; cr;
+				nextPutAll: self oldMethod source ]
+]
+
+{ #category : #accessing }
 SPRemovedMethod >> selector [
 
 	^ self oldObject selector

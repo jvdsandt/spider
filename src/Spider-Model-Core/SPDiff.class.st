@@ -25,6 +25,16 @@ SPDiff >> newObject [
 ]
 
 { #category : #accessing }
+SPDiff >> newSource [
+	^ ''
+]
+
+{ #category : #accessing }
 SPDiff >> oldObject [
 	^ nil
+]
+
+{ #category : #accessing }
+SPDiff >> oldSource [
+	^ ''
 ]
