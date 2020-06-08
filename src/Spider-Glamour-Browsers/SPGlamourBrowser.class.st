@@ -55,6 +55,11 @@ SPGlamourBrowser >> gitRepo [
 ]
 
 { #category : #accessing }
+SPGlamourBrowser >> mcPackageRepo [
+	^ context mcPackageRepo
+]
+
+{ #category : #accessing }
 SPGlamourBrowser >> packageRepo [
 	^ context packageRepo
 ]

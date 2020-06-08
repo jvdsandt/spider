@@ -18,9 +18,7 @@ SPTonelCodeReader >> getPackageFileRef: aPackageName ifAbsent: aBlock [
 { #category : #'API-packages' }
 SPTonelCodeReader >> getPackageSnapshot: aPackageName ifAbsent: aBlock [
 
-	| ref |
-	
-	ref := self getPackageFileRef: aPackageName ifAbsent: [ ^ aBlock value ].
+	self getPackageFileRef: aPackageName ifAbsent: [ ^ aBlock value ].
 	^ (TonelReader on: fileReference)
 			packageDirectory: aPackageName;
 			snapshot

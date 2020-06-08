@@ -46,6 +46,14 @@ SPMonticelloPackage >> = other [
 ]
 
 { #category : #accessing }
+SPMonticelloPackage >> ancestorString [
+	^ String streamContents: [ :s |
+			self ancestors 
+				do: [ :e | s nextPutAll: e fullName ]
+				separatedBy: [ s nextPutAll: ', ' ] ]
+]
+
+{ #category : #accessing }
 SPMonticelloPackage >> ancestors [
 	^ ancestors
 ]
@@ -136,6 +144,11 @@ SPMonticelloPackage >> message [
 ]
 
 { #category : #accessing }
+SPMonticelloPackage >> messageLine [
+	^ SPTextUtils messageLineFrom: message
+]
+
+{ #category : #accessing }
 SPMonticelloPackage >> name [
 	^ name
 ]
@@ -148,6 +161,26 @@ SPMonticelloPackage >> package [
 { #category : #accessing }
 SPMonticelloPackage >> rootId [
 	^ rootId
+]
+
+{ #category : #accessing }
+SPMonticelloPackage >> summary [
+	^ String streamContents: [:s |
+		s
+			nextPutAll: self summaryHeader; 
+			cr; cr;
+			nextPutAll: self message ]
+]
+
+{ #category : #accessing }
+SPMonticelloPackage >> summaryHeader [
+	^ String streamContents: [:s |
+		s
+			nextPutAll: 'Name: '; nextPutAll: self fullName; cr;
+			nextPutAll: 'Author: '; nextPutAll: author; cr;
+			nextPutAll: 'Time: '; nextPutAll: self datetime asDate asString; nextPutAll: ', '; nextPutAll: self datetime asTime asString; cr;
+			nextPutAll: 'UUID: '; nextPutAll: self uuid asString; cr;
+			nextPutAll: 'Ancestors: '; nextPutAll: self ancestorString ]
 ]
 
 { #category : #accessing }
