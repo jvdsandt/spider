@@ -21,6 +21,20 @@ SPMonticelloPackageTest >> assertMCPackageV1: mcPackage [
 ]
 
 { #category : #asserting }
+SPMonticelloPackageTest >> assertMCPackageV2: mcPackage [
+
+	self assert: mcPackage mcId equals: (ByteArray withAll: (UUID fromString: 'f87e159a-ec43-4835-884f-d75a2b08454f')).
+	self assert: mcPackage name equals: 'SmalltalkGraph-Tests-Package'.
+	self assert: mcPackage author equals: 'JanVanDeSandt'.
+	self assert: mcPackage version equals: 2.
+	self assert: mcPackage message equals: 'Added a second class'.
+	self assert: mcPackage datetime equals: (DateAndTime fromString: '2013-02-16T21:18:42.835Z').
+	
+	self assert: mcPackage ancestors size equals: 1.
+
+]
+
+{ #category : #asserting }
 SPMonticelloPackageTest >> assertPackageV1: package [
 
 	| spiderClass |
@@ -54,5 +68,53 @@ SPMonticelloPackageTest >> testPackageV1 [
 	
 	mcPackage := repo newBuilder buildFromMCVersion: mcVersion.
 	self assertMCPackageV1: mcPackage.
+
+]
+
+{ #category : #accessing }
+SPMonticelloPackageTest >> testPackageV2 [
+
+	| repo mcVersion2 mcPackage2 |
+
+	repo := SPiderImageContext new mcPackageRepo.
+
+	repo newBuilder buildFromMCVersion: self getTestPackages testPackageV1.
+
+	mcVersion2 := self getTestPackages testPackageV2.
+	mcPackage2 := repo newBuilder buildFromMCVersion: mcVersion2.
+	self assertMCPackageV2: mcPackage2.
+
+]
+
+{ #category : #accessing }
+SPMonticelloPackageTest >> testPackageV3 [
+
+	| repo mcVersion mcPackage |
+
+	repo := SPiderImageContext new mcPackageRepo.
+
+	repo newBuilder buildFromMCVersion: self getTestPackages testPackageV1.
+	repo newBuilder buildFromMCVersion: self getTestPackages testPackageV2.
+
+	mcVersion := self getTestPackages testPackageV3.
+	mcPackage := repo newBuilder buildFromMCVersion: mcVersion.
+
+]
+
+{ #category : #accessing }
+SPMonticelloPackageTest >> testPackageV3Diff [
+
+	| repo mcVersion mcPackage diffs |
+
+	repo := SPiderImageContext new mcPackageRepo.
+
+	repo newBuilder buildFromMCVersion: self getTestPackages testPackageV1.
+	repo newBuilder buildFromMCVersion: self getTestPackages testPackageV2.
+
+	mcVersion := self getTestPackages testPackageV3.
+	mcPackage := repo newBuilder buildFromMCVersion: mcVersion.
+	diffs := mcPackage diffs.
+	
+	self assert: diffs size equals: 2.
 
 ]

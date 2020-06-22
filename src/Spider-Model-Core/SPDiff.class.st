@@ -20,6 +20,11 @@ SPDiff >> iconName [
 ]
 
 { #category : #accessing }
+SPDiff >> name [
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
 SPDiff >> newObject [
 	^ nil
 ]
@@ -37,4 +42,14 @@ SPDiff >> oldObject [
 { #category : #accessing }
 SPDiff >> oldSource [
 	^ ''
+]
+
+{ #category : #printing }
+SPDiff >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream
+		nextPut: $[;
+		nextPutAll: self name;
+		nextPut: $]
 ]

@@ -68,6 +68,16 @@ SPMonticelloPackage >> branch [
 	^ branch
 ]
 
+{ #category : #comparing }
+SPMonticelloPackage >> compareClassesWithAll: olderMCPackages [
+
+	(self package isNil or: [ olderMCPackages anySatisfy: [ :e | e package isNil ] ])
+		ifTrue: [ self error: 'Compare not possible with empty MCPackage' ].
+
+	^ self package compareClassesWithAll: 
+			(olderMCPackages collect: [ :each | each package ])
+]
+
 { #category : #actions }
 SPMonticelloPackage >> createClassDiffRecords [
 
@@ -105,6 +115,11 @@ SPMonticelloPackage >> descendants [
 			each ancestors anySatisfy: [ :x | x = self ] ].
 		
 	^ self glorpSession execute: query
+]
+
+{ #category : #accessing }
+SPMonticelloPackage >> diffs [
+	^ self compareClassesWithAll: self ancestors
 ]
 
 { #category : #accessing }
